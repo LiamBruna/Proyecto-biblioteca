@@ -28,7 +28,3 @@ class BD:
                 messagebox.showerror("Error de inicio de sesión", "Credenciales invalidas")
         except Error as e:
             print("Error al ejecutar: ", e)
-        finally:
-            self.cursor.close()
-            self.connect.close()
-            print("Conexion cerrada")
