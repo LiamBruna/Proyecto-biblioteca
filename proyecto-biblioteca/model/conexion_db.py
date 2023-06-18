@@ -18,13 +18,25 @@ class BD:
 #Metodos
     def login(self, correo, contraseña):
         try:
-            sql = "SELECT * FROM bibliotecario WHERE CORREO_B = ? AND CONTRASENA = ?"
-            self.cursor.execute(sql, (correo, contraseña))
+            sql = "SELECT * FROM bibliotecario WHERE TRIM(CORREO_B) = ? AND CONTRASENA = ?"
+            self.cursor.execute(sql, (correo.strip(), contraseña))
             result = self.cursor.fetchone()
+            print(result)
 
             if result is not None:
-                messagebox.showinfo(f"Inicio de sesion exitoso", f"Bienvenido {correo}")
+                messagebox.showinfo("Inicio de sesión exitoso", f"Bienvenido {correo}")
+                return True
             else:
-                messagebox.showerror("Error de inicio de sesión", "Credenciales invalidas")
+                messagebox.showerror("Error de inicio de sesión", "Credenciales incorrectas")
+                return False
         except Error as e:
             print("Error al ejecutar: ", e)
+            return False
+
+
+    def registro(self, nombre, apellido, correo, contraseña, rut):
+        sql = "INSERT INTO bibliotecario (NOMBRE_B, APELLIDO_B, CORREO_B, CONTRASENA, RUT_B) VALUES (?, ?, ?, ?, ?)"
+        vals = (nombre, apellido, correo, contraseña, rut)
+        self.cursor.execute(sql, vals)
+        self.connect.commit()
+        messagebox.showinfo(f"Registro exitoso", f"El usuario {nombre} ha sido registrado correctamente.")
