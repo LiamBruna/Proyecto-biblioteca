@@ -5,7 +5,7 @@ import hashlib
 
 class BD:
     def __init__(self):
-        self.base_datos = 'database/biblioteca.db'
+        self.base_datos = 'proyecto-biblioteca/database/biblioteca.db'
         self.connect = sqlite3.connect(self.base_datos)
         self.cursor = self.connect.cursor()
         self.conexion_establecida = False
