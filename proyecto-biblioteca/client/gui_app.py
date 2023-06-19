@@ -55,11 +55,6 @@ class VentanaRegistro(tk.Toplevel):
 
         registrado = self.bd.registro(nombre, apellido, correo, contraseña, rut)
 
-        if registrado == None:
-            messagebox.showinfo("Registro exitoso", f"El usuario {nombre} ha sido registrado correctamente.")
-        else:
-            messagebox.showerror("Error de registro", f"El correo {correo} ingresado ya existe, ingrese otro correo.")
-
 class Frame(tk.Frame):
     def __init__(self, root=None):
         super().__init__(root)
@@ -73,7 +68,7 @@ class Frame(tk.Frame):
 
     def login(self):
         correo = self.correo.get()
-        contraseña = self.contraseña.get()
+        contraseña = self.contraseña_entry.get()
 
         if (not correo):
             messagebox.showerror("Error de inicio de sesión", "Debe ingresar un correo.")

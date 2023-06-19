@@ -30,7 +30,7 @@ class BD:
             result = self.cursor.fetchone()
 
             if result is not None:
-                stored_password_hash = result[3]
+                stored_password_hash = result[4]
                 entered_password_hash = hashlib.sha256(contraseña.encode()).hexdigest()
                 if stored_password_hash == entered_password_hash:
                     messagebox.showinfo("Inicio de sesión exitoso", f"Bienvenido {correo}")
