@@ -15,7 +15,6 @@ class BD:
             self.connect = sqlite3.connect(self.base_datos)
             self.cursor = self.connect.cursor()
             self.conexion_establecida = True
-            messagebox.showinfo("Mensaje", "Conectado a la base de datos")
 
     def cerrar(self):
         self.cursor.close()
@@ -51,7 +50,7 @@ class BD:
         self.cursor.execute(sql, (correo,))
         result = self.cursor.fetchone()
 
-        if result is not None:
+        if result == None:
             messagebox.showerror("Error de registro", f"El correo {correo} ingresado ya existe, ingrese otro correo.")
             return
 

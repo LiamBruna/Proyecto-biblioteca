@@ -13,7 +13,7 @@ class VentanaRegistro(tk.Toplevel):
         self.bd = BD()
         self.title("Registro")
         self.iconbitmap('img/libros.ico')
-        self.config(bg="black")  # Color de la ventana de registro
+        self.config(bg="white")  # Color de la ventana de registro
         self.resizable(0,0)
         
         self.registerWindow()
@@ -21,19 +21,19 @@ class VentanaRegistro(tk.Toplevel):
 
     def registerWindow(self):
         # Crea los campos de entrada de datos para el registro
-        self.nombre_entry = ck.CTkEntry(self, font=('sans-serif', 12), placeholder_text='Nombre', border_color='green', fg_color='black', width=220, height=40)
+        self.nombre_entry = ck.CTkEntry(self, font=('sans-serif', 12), placeholder_text='Nombre', border_color='black', fg_color='white', width=220, height=40)
         self.nombre_entry.grid(columnspan=2, row=1, padx=4, pady=4)
 
-        self.apellido_entry = ck.CTkEntry(self, font=('sans-serif', 12), placeholder_text='Apellido', border_color='green', fg_color='black', width=220, height=40)
+        self.apellido_entry = ck.CTkEntry(self, font=('sans-serif', 12), placeholder_text='Apellido', border_color='black', fg_color='white', width=220, height=40)
         self.apellido_entry.grid(columnspan=2, row=2, padx=4, pady=4)
 
-        self.correo_entry = ck.CTkEntry(self, font=('sans-serif', 12), placeholder_text='Correo electrónico', border_color='green', fg_color='black', width=220, height=40)
+        self.correo_entry = ck.CTkEntry(self, font=('sans-serif', 12), placeholder_text='Correo electrónico', border_color='black', fg_color='white', width=220, height=40)
         self.correo_entry.grid(columnspan=2, row=3, padx=4, pady=4)
 
-        self.contraseña_entry = ck.CTkEntry(self, font=('sans-serif', 12), placeholder_text='Contraseña', border_color='green', fg_color='black', width=220, height=40, show="*")
+        self.contraseña_entry = ck.CTkEntry(self, font=('sans-serif', 12), placeholder_text='Contraseña', border_color='black', fg_color='white', width=220, height=40, show="*")
         self.contraseña_entry.grid(columnspan=2, row=4, padx=4, pady=4)
 
-        self.rut_entry = ck.CTkEntry(self, font=('sans-serif', 12), placeholder_text='RUT', border_color='green', fg_color='black', width=220, height=40)
+        self.rut_entry = ck.CTkEntry(self, font=('sans-serif', 12), placeholder_text='RUT', border_color='black', fg_color='white', width=220, height=40)
         self.rut_entry.grid(columnspan=2, row=5, padx=4, pady=4)
 
     def crear_boton_registrar(self):
@@ -55,8 +55,7 @@ class VentanaRegistro(tk.Toplevel):
 
         registrado = self.bd.registro(nombre, apellido, correo, contraseña, rut)
 
-        if registrado:
-            self.limpiar_campos()
+        if registrado == None:
             messagebox.showinfo("Registro exitoso", f"El usuario {nombre} ha sido registrado correctamente.")
         else:
             messagebox.showerror("Error de registro", f"El correo {correo} ingresado ya existe, ingrese otro correo.")
@@ -68,7 +67,7 @@ class Frame(tk.Frame):
         self.bd = BD()
         self.bd.conectar()
         self.pack()
-        self.config(bg="black") #Color de la ventana
+        self.config(bg="white") #Color de la ventana
         
         self.loginWindow()
 
@@ -99,12 +98,12 @@ class Frame(tk.Frame):
 
     def loginWindow(self):
         # Correo electrónico
-        self.correo = ck.CTkEntry(self, font=('sans-serif', 12), placeholder_text='Correo electrónico', border_color='green', fg_color='black', width=220, height=40)
+        self.correo = ck.CTkEntry(self, font=('sans-serif', 12), placeholder_text='Correo electrónico', border_color='black', fg_color='white', width=220, height=40)
         self.correo.grid(columnspan=2, row=1, padx=4, pady=4)
 
         # Contraseña
         self.contraseña = tk.StringVar()
-        self.contraseña_entry = ck.CTkEntry(self, font=('sans-serif', 12), placeholder_text='Contraseña', border_color='green', fg_color='black', width=220, height=40, show="*")
+        self.contraseña_entry = ck.CTkEntry(self, font=('sans-serif', 12), placeholder_text='Contraseña', border_color='black', fg_color='white', width=220, height=40, show="*")
         self.contraseña_entry.grid(columnspan=2, row=2, padx=4, pady=4)
 
         # Checkbox para mostrar/ocultar la contraseña
