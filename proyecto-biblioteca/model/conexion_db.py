@@ -60,3 +60,4 @@ class BD:
         vals = (nombre, apellido, correo, contraHash, rut)
         self.cursor.execute(sql, vals)
         self.connect.commit()
+        messagebox.showinfo(f"Registro exitoso", f"El usuario {nombre} ha sido registrado correctamente.")
