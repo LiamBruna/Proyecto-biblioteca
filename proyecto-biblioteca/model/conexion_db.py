@@ -15,7 +15,6 @@ class BD:
             self.connect = sqlite3.connect(self.base_datos)
             self.cursor = self.connect.cursor()
             self.conexion_establecida = True
-            messagebox.showinfo("Mensaje", "Conectado a la base de datos")
 
     def cerrar(self):
         self.cursor.close()
@@ -31,9 +30,8 @@ class BD:
             result = self.cursor.fetchone()
 
             if result is not None:
-                stored_password_hash = result[3]
+                stored_password_hash = result[4]
                 entered_password_hash = hashlib.sha256(contraseña.encode()).hexdigest()
-
                 if stored_password_hash == entered_password_hash:
                     messagebox.showinfo("Inicio de sesión exitoso", f"Bienvenido {correo}")
                     return True
