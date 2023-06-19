@@ -50,7 +50,7 @@ class BD:
         self.cursor.execute(sql, (correo,))
         result = self.cursor.fetchone()
 
-        if result == None:
+        if result is not None:
             messagebox.showerror("Error de registro", f"El correo {correo} ingresado ya existe, ingrese otro correo.")
             return
 
