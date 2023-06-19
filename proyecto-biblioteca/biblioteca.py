@@ -4,7 +4,7 @@ from client.gui_app import Frame
 def main():
     root = tk.Tk()
     root.title('Biblioteca')
-    root.iconbitmap('proyecto-biblioteca\img\libros.ico')
+    root.iconbitmap('img\libros.ico')
     root.resizable(0,0)
 
     app = Frame(root = root)
