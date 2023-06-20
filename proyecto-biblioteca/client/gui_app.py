@@ -12,7 +12,7 @@ class VentanaRegistro(tk.Toplevel):
         self.parent = parent
         self.bd = BD()
         self.title("Registro")
-        self.iconbitmap('img/libros.ico')
+        self.iconbitmap('proyecto-biblioteca\img\libros.ico')
         self.config(bg="white")  # Color de la ventana de registro
         self.resizable(0,0)
         
