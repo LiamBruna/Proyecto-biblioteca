@@ -55,7 +55,10 @@ class VentanaRegistro(tk.Toplevel):
             messagebox.showerror("Error de registro", "Debe ingresar un correo")
             return
 
-        registrado = self.bd.registro(nombre, apellido, correo, contraseña, rut)
+        if self.bd.registro(nombre, apellido, correo, contraseña, rut):
+            self.parent.withdraw()
+            ventanaLogin = Frame(self.parent)
+            self.parent.wait_window(ventanaLogin)
 
 class Frame(tk.Frame):
     def __init__(self, root=None):
