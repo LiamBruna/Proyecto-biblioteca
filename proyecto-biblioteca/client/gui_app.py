@@ -21,7 +21,6 @@ class VentanaRegistro(tk.Toplevel):
 
         self.registerWindow()
         self.crear_boton_registrar()
-        self.crear_checkbox_mostrar_contraseña()
 
     def registerWindow(self):
         # Crea los campos de entrada de datos para el registro
@@ -48,20 +47,19 @@ class VentanaRegistro(tk.Toplevel):
         self.rut_entry.grid(columnspan=2, row=5, padx=4, pady=4)
         self.rut_entry.bind("<Return>", self.registrar)
 
+        self.mostrarContraseña_Registro = tk.BooleanVar()
+        show_password_checkbox = ck.CTkCheckBox(self, text_color="black", text="Mostrar contraseña", variable=self.mostrarContraseña_Registro, command=self.mostrarContraseñaRegistro)
+        show_password_checkbox.grid(column=4, row=4, padx=4, pady=4)
+
     def crear_boton_registrar(self):
         # Crea el botón de registro
         button_registrar = ck.CTkButton(self, text="Registrar", command=self.registrar)
         button_registrar.grid(columnspan=2, row=6, padx=4, pady=4)
 
-    def crear_checkbox_mostrar_contraseña(self):
-        # Crea el checkbox para mostrar/ocultar la contraseña
-        show_password_checkbox = ck.CTkCheckBox(self, text_color="black", text="Mostrar contraseña", variable=self.show_password,
-                                                command=self.mostrarContraseñaRegistro)
-        show_password_checkbox.grid(column=4, row=4, padx=4, pady=4)
 
     def mostrarContraseñaRegistro(self):
         # Cambia la visibilidad de la contraseña basado en el estado del checkbox
-        if self.show_password.get():
+        if self.mostrarContraseña_Registro.get():
             self.contraseña_entry.configure(show="")
         else:
             self.contraseña_entry.configure(show="*")
