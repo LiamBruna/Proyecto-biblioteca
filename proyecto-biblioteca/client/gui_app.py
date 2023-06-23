@@ -42,27 +42,34 @@ class VentanaRegistro(tk.Toplevel):
                                             width=220, height=40, show="*")
         self.contraseña_entry.grid(columnspan=2, row=4, padx=4, pady=4)
 
+        self.contraseña_entry_confirmar = ck.CTkEntry(self, text_color="black", font=('sans-serif', 12),
+                                            placeholder_text='Confirmar Contraseña', border_color='black', fg_color='white',
+                                            width=220, height=40, show="*")
+        self.contraseña_entry_confirmar.grid(columnspan=2, row=5, padx=4, pady=4)
+
         self.rut_entry = ck.CTkEntry(self, text_color="black", font=('sans-serif', 12), placeholder_text='RUT',
                                      border_color='black', fg_color='white', width=220, height=40)
-        self.rut_entry.grid(columnspan=2, row=5, padx=4, pady=4)
+        self.rut_entry.grid(columnspan=2, row=6, padx=4, pady=4)
         self.rut_entry.bind("<Return>", self.registrar)
 
         self.mostrarContraseña_Registro = tk.BooleanVar()
         show_password_checkbox = ck.CTkCheckBox(self, text_color="black", text="Mostrar contraseña", variable=self.mostrarContraseña_Registro, command=self.mostrarContraseñaRegistro)
-        show_password_checkbox.grid(column=4, row=4, padx=4, pady=4)
+        show_password_checkbox.grid(column=4, row=5, padx=4, pady=4)
 
     def crear_boton_registrar(self):
         # Crea el botón de registro
         button_registrar = ck.CTkButton(self, text="Registrar", command=self.registrar)
-        button_registrar.grid(columnspan=2, row=6, padx=4, pady=4)
+        button_registrar.grid(columnspan=2, row=7, padx=4, pady=4)
 
 
     def mostrarContraseñaRegistro(self):
         # Cambia la visibilidad de la contraseña basado en el estado del checkbox
         if self.mostrarContraseña_Registro.get():
             self.contraseña_entry.configure(show="")
+            self.contraseña_entry_confirmar.configure(show="")
         else:
             self.contraseña_entry.configure(show="*")
+            self.contraseña_entry_confirmar.configure(show="*")
 
     def registrar(self, event=None):
         # Obtiene los datos ingresados por el usuario
@@ -70,10 +77,15 @@ class VentanaRegistro(tk.Toplevel):
         apellido = self.apellido_entry.get()
         correo = self.correo_entry.get()
         contraseña = self.contraseña_entry.get()
+        confirmarContraseña = self.contraseña_entry_confirmar.get()
         rut = self.rut_entry.get()
 
         if correo == "":
             messagebox.showerror("Error de registro", "Debe ingresar un correo")
+            return
+        
+        if contraseña != confirmarContraseña:
+            messagebox.showerror("Error de registro", "Las contraseña no coinciden")
             return
 
         if self.bd.registro(nombre, apellido, correo, contraseña, rut):
