@@ -84,7 +84,7 @@ class VentanaRegistro(ck.CTkToplevel):
             self.destroy()
 
 
-class Frame(tk.Frame):
+class Frame(ck.CTkFrame):
     def __init__(self, root=None):
         super().__init__(root)
         self.root = root
@@ -92,7 +92,6 @@ class Frame(tk.Frame):
         self.bd.conectar()
 
         self.pack()
-        self.config(bg="white") #Color de la ventana
         
         self.loginWindow()
 
@@ -122,18 +121,18 @@ class Frame(tk.Frame):
 
     def loginWindow(self):
         # Correo electrónico
-        self.correo = ck.CTkEntry(self, text_color="black", font=('sans-serif', 12), placeholder_text='Correo electrónico', border_color='black', fg_color='white', width=220, height=40)
+        self.correo = ck.CTkEntry(self, placeholder_text='Correo electrónico', width=220, height=40)
         self.correo.grid(columnspan=2, row=1, padx=4, pady=4)
 
         # Contraseña
         self.contraseña = tk.StringVar()
-        self.contraseña_entry = ck.CTkEntry(self, text_color="black", font=('sans-serif', 12), placeholder_text='Contraseña', border_color='black', fg_color='white', width=220, height=40, show="*")
+        self.contraseña_entry = ck.CTkEntry(self, placeholder_text='Contraseña', width=220, height=40, show="*")
         self.contraseña_entry.grid(columnspan=2, row=2, padx=4, pady=4)
         self.contraseña_entry.bind("<Return>", self.login)
 
         # Checkbox para mostrar/ocultar la contraseña
         self.show_password = tk.BooleanVar()
-        show_password_checkbox = ck.CTkCheckBox(self, text_color="black", text="Mostrar contraseña", variable=self.show_password, command=self.mostrarContraseña)
+        show_password_checkbox = ck.CTkCheckBox(self, text="Mostrar contraseña", variable=self.show_password, command=self.mostrarContraseña)
         show_password_checkbox.grid(column=8, row=2, padx=4, pady=4)
 
         # Botón
@@ -152,12 +151,11 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.bd = BD()
         self.iconbitmap('img/libros.ico')
         self.title("Ventana Principal")
-        self.config(bg="blue")  # Color de la ventana principal
 
-        self.menu_principal = tk.Menu(self)
+        self.menu_principal = ck.CTkOptionMenu(self)
         self.config(menu=self.menu_principal)
 
-        self.menu_registro = tk.Menu(self.menu_principal, tearoff=0)
+        self.menu_registro = ck.CTkOptionMenu(self.menu_principal, tearoff=0)
         self.menu_principal.add_cascade(label="Registrar", menu=self.menu_registro)
         self.menu_registro.add_command(label="Registrar Préstamo", command=self.mostrar_formulario_prestamo)
 
@@ -170,17 +168,17 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.clear_main_window()
 
         # Crear los labels y los entrys para el formulario de préstamo
-        label_usuario = tk.Label(self, text="Usuario:")
+        label_usuario = ck.CTkLabel(self, text="Usuario:")
         label_usuario.pack()
-        entry_usuario = tk.Entry(self, textvariable=self.usuario_var)
+        entry_usuario = ck.CTkEntry(self, textvariable=self.usuario_var)
         entry_usuario.pack()
 
-        label_fecha_devolucion = tk.Label(self, text="Fecha de devolución:")
+        label_fecha_devolucion = ck.CTkLabel(self, text="Fecha de devolución:")
         label_fecha_devolucion.pack()
-        entry_fecha_devolucion = tk.Entry(self, textvariable=self.fecha_devolucion_var)
+        entry_fecha_devolucion = ck.CTkEntry(self, textvariable=self.fecha_devolucion_var)
         entry_fecha_devolucion.pack()
 
-        button_registrar = tk.Button(self, text="Registrar", command=self.registrar_prestamo_bd)
+        button_registrar = ck.CTkLabel(self, text="Registrar", command=self.registrar_prestamo_bd)
         button_registrar.pack()
 
     def registrar_prestamo_bd(self):
