@@ -159,16 +159,53 @@ class VentanaPrincipal(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-
+        self.bd = BD()
         self.iconbitmap('img/libros.ico')
         self.title("Ventana Principal")
         self.config(bg="blue")  # Color de la ventana principal
 
-        self.mainWindow()
+        self.menu_principal = tk.Menu(self)
+        self.config(menu=self.menu_principal)
 
-    def mainWindow(self):
-        button_cerrar_sesion = ck.CTkButton(self, text="Cerrar sesión", command=self.cerrar_sesion)
-        button_cerrar_sesion.grid(columnspan=2, row=1, padx=4, pady=4)
+        self.menu_registro = tk.Menu(self.menu_principal, tearoff=0)
+        self.menu_principal.add_cascade(label="Registrar", menu=self.menu_registro)
+        self.menu_registro.add_command(label="Registrar Préstamo", command=self.mostrar_formulario_prestamo)
+
+        # Variables de control para los entrys
+        self.usuario_var = tk.StringVar()
+        self.fecha_devolucion_var = tk.StringVar()
+
+    def mostrar_formulario_prestamo(self):
+        # Limpiar la ventana principal antes de mostrar el formulario
+        self.clear_main_window()
+
+        # Crear los labels y los entrys para el formulario de préstamo
+        label_usuario = tk.Label(self, text="Usuario:")
+        label_usuario.pack()
+        entry_usuario = tk.Entry(self, textvariable=self.usuario_var)
+        entry_usuario.pack()
+
+        label_fecha_devolucion = tk.Label(self, text="Fecha de devolución:")
+        label_fecha_devolucion.pack()
+        entry_fecha_devolucion = tk.Entry(self, textvariable=self.fecha_devolucion_var)
+        entry_fecha_devolucion.pack()
+
+        button_registrar = tk.Button(self, text="Registrar", command=self.registrar_prestamo_bd)
+        button_registrar.pack()
+
+    def registrar_prestamo_bd(self):
+        usuario = self.usuario_var.get()
+        fecha_devolucion = self.fecha_devolucion_var.get()
+
+        # Aquí puedes llamar al método registrarPrestamo de la clase BD
+        self.bd.registrarPrestamo(usuario)
+
+        self.clear_main_window()
+    
+    def clear_main_window(self):
+        # Limpiar la ventana principal eliminando todos los widgets existentes
+        for widget in self.winfo_children():
+            widget.destroy()
 
     def cerrar_sesion(self):
         self.destroy()

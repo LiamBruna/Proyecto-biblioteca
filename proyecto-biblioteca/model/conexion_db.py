@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime, timedelta
 from sqlite3 import Error
 from tkinter import messagebox
 import hashlib
@@ -34,6 +35,7 @@ class BD:
                 entered_password_hash = hashlib.sha256(contraseña.encode()).hexdigest()
                 if stored_password_hash == entered_password_hash:
                     messagebox.showinfo("Inicio de sesión exitoso", f"Bienvenido {correo}")
+                    self.bibliotecarioId = result[0]
                     return True
                 else:
                     messagebox.showerror("Error de inicio de sesión", "Contraseña incorrecta")
@@ -60,3 +62,27 @@ class BD:
         self.cursor.execute(sql, vals)
         self.connect.commit()
         messagebox.showinfo(f"Registro exitoso", f"El usuario {nombre} ha sido registrado correctamente.")
+
+    
+    def registrarPrestamo(self, usuario_actual):
+        try:
+            sql_bibliotecario = "SELECT ID_B FROM bibliotecario WHERE CORREO_B = ?"
+            self.cursor.execute(sql_bibliotecario, (usuario_actual,))
+            bibliotecario_result = self.cursor.fetchone()
+
+            if bibliotecario_result is None:
+                messagebox.showerror("Error de registro de préstamo", "El bibliotecario no esta registrado.")
+                return
+            
+            bibliotecarioId = bibliotecario_result[0]
+            f_prestamo = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+            sql_prestamo = "INSERT INTO prestamo (F_PRESTAMO, F_DEVOLUCION, ID_B) VALUES (?, ? ,?)"
+            vals_prestamo = (f_prestamo, '', bibliotecarioId)
+            self.cursor.execute(sql_prestamo, vals_prestamo)
+            self.connect.commit()
+
+            messagebox.showinfo("Registro de préstamo", "El préstamo ha sido registrado correctamente.")
+
+        except Error as e:
+            print(f"Error al ejecutar: {e}")
