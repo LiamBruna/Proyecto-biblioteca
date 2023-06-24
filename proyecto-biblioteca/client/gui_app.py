@@ -6,7 +6,7 @@ from tkinter import messagebox
 from model.conexion_db import *
 from model.classes import *
 
-class VentanaRegistro(tk.Toplevel):
+class VentanaRegistro(ck.CTkToplevel):
     def __init__(self, parent, bd):
         super().__init__(parent)
         self.parent = parent
@@ -14,7 +14,6 @@ class VentanaRegistro(tk.Toplevel):
 
         self.title("Registro")
         self.iconbitmap('img/libros.ico')
-        self.config(bg="white")  # Color de la ventana de registro
         self.resizable(0, 0)
 
         self.show_password = tk.BooleanVar(value=False)  # Variable para controlar la visibilidad de la contraseña
@@ -24,36 +23,27 @@ class VentanaRegistro(tk.Toplevel):
 
     def registerWindow(self):
         # Crea los campos de entrada de datos para el registro
-        self.nombre_entry = ck.CTkEntry(self, text_color="black", font=('sans-serif', 12), placeholder_text='Nombre',
-                                        border_color='black', fg_color='white', width=220, height=40)
+        self.nombre_entry = ck.CTkEntry(self, placeholder_text='Nombre', width=220, height=40)
         self.nombre_entry.grid(columnspan=2, row=1, padx=4, pady=4)
 
-        self.apellido_entry = ck.CTkEntry(self, text_color="black", font=('sans-serif', 12), placeholder_text='Apellido',
-                                          border_color='black', fg_color='white', width=220, height=40)
+        self.apellido_entry = ck.CTkEntry(self, placeholder_text='Apellido', width=220, height=40)
         self.apellido_entry.grid(columnspan=2, row=2, padx=4, pady=4)
 
-        self.correo_entry = ck.CTkEntry(self, text_color="black", font=('sans-serif', 12),
-                                        placeholder_text='Correo electrónico', border_color='black', fg_color='white',
-                                        width=220, height=40)
+        self.correo_entry = ck.CTkEntry(self, placeholder_text='Correo electrónico', width=220, height=40)
         self.correo_entry.grid(columnspan=2, row=3, padx=4, pady=4)
 
-        self.contraseña_entry = ck.CTkEntry(self, text_color="black", font=('sans-serif', 12),
-                                            placeholder_text='Contraseña', border_color='black', fg_color='white',
-                                            width=220, height=40, show="*")
+        self.contraseña_entry = ck.CTkEntry(self, placeholder_text='Contraseña', width=220, height=40, show="*")
         self.contraseña_entry.grid(columnspan=2, row=4, padx=4, pady=4)
 
-        self.contraseña_entry_confirmar = ck.CTkEntry(self, text_color="black", font=('sans-serif', 12),
-                                            placeholder_text='Confirmar Contraseña', border_color='black', fg_color='white',
-                                            width=220, height=40, show="*")
+        self.contraseña_entry_confirmar = ck.CTkEntry(self, placeholder_text='Confirmar Contraseña', width=220, height=40, show="*")
         self.contraseña_entry_confirmar.grid(columnspan=2, row=5, padx=4, pady=4)
 
-        self.rut_entry = ck.CTkEntry(self, text_color="black", font=('sans-serif', 12), placeholder_text='RUT',
-                                     border_color='black', fg_color='white', width=220, height=40)
+        self.rut_entry = ck.CTkEntry(self, placeholder_text='RUT', width=220, height=40)
         self.rut_entry.grid(columnspan=2, row=6, padx=4, pady=4)
         self.rut_entry.bind("<Return>", self.registrar)
 
         self.mostrarContraseña_Registro = tk.BooleanVar()
-        show_password_checkbox = ck.CTkCheckBox(self, text_color="black", text="Mostrar contraseña", variable=self.mostrarContraseña_Registro, command=self.mostrarContraseñaRegistro)
+        show_password_checkbox = ck.CTkCheckBox(self, text="Mostrar contraseña", variable=self.mostrarContraseña_Registro, command=self.mostrarContraseñaRegistro)
         show_password_checkbox.grid(column=4, row=5, padx=4, pady=4)
 
     def crear_boton_registrar(self):
@@ -155,7 +145,7 @@ class Frame(tk.Frame):
 
 
 
-class VentanaPrincipal(tk.Toplevel):
+class VentanaPrincipal(ck.CTkToplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
