@@ -6,6 +6,7 @@ def main():
     root.title('Biblioteca')
     root.iconbitmap('img\libros.ico')
     root.resizable(0,0)
+    root.geometry("600x440")
 
     Frame(root = root)
     root.mainloop()
