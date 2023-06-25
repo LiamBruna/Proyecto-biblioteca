@@ -1,7 +1,7 @@
 import tkinter as tk
 import customtkinter as ck
 from tkinter import messagebox
-from PIL import Image
+from PIL import Image, ImageTk
 import os
 
 from model.conexion_db import *
@@ -48,8 +48,11 @@ class VentanaRegistro(ck.CTkToplevel):
         show_password_checkbox.grid(column=4, row=5, padx=4, pady=4)
 
     def crear_boton_registrar(self):
+        registro_image = Image.open("img\\registro.png")
+        registro_photo = ck.CTkImage(registro_image)
+
         # Crea el botón de registro
-        button_registrar = ck.CTkButton(self, text="Registrar", command=self.registrar)
+        button_registrar = ck.CTkButton(self, text="Registrar", command=self.registrar, image=registro_photo)
         button_registrar.grid(columnspan=2, row=7, padx=4, pady=4)
 
 
@@ -96,14 +99,14 @@ class Frame(ck.CTkFrame):
         
         self.loginWindow()
 
-    def login(self, event = None):
+    def login(self, event=None):
         correo = self.correo.get()
         contraseña = self.contraseña_entry.get()
 
-        if (not correo):
+        if not correo:
             messagebox.showerror("Error de inicio de sesión", "Debe ingresar un correo.")
             return
-        
+
         # Verifica si el correo existe en la base de datos
         if self.bd.login(correo, contraseña):
             self.root.withdraw()
@@ -121,6 +124,12 @@ class Frame(ck.CTkFrame):
         self.root.wait_window(ventana_registro)
 
     def loginWindow(self):
+        iniciar_sesion_image = Image.open("img\\iniciar_sesion.png")
+        iniciar_sesion_photo = ck.CTkImage(iniciar_sesion_image)
+
+        registrarse_image = Image.open("img\\registrarse.png")
+        registrarse_photo = ck.CTkImage(registrarse_image)
+
         # Correo electrónico
         self.correo = ck.CTkEntry(self, placeholder_text='Correo electrónico', width=220, height=40)
         self.correo.grid(columnspan=2, row=1, padx=4, pady=4)
@@ -137,15 +146,11 @@ class Frame(ck.CTkFrame):
         show_password_checkbox.grid(column=8, row=2, padx=4, pady=4)
 
         # Botón
-        button_login = ck.CTkButton(self, text="Iniciar sesión", command=self.login)
+        button_login = ck.CTkButton(self, text="Iniciar sesión", command=self.login, image=iniciar_sesion_photo)
         button_login.grid(columnspan=2, row=4, padx=4, pady=4)
 
-        button_registrar = ck.CTkButton(self, text="Registrarse", command=self.abrir_ventana_registro)
+        button_registrar = ck.CTkButton(self, text="Registrarse", command=self.abrir_ventana_registro, image=registrarse_photo)
         button_registrar.grid(columnspan=2, row=5, padx=4, pady=4)
-
-    def limpiar_campos(self):
-        self.correo.delete(0, tk.END)
-        self.contraseña_entry.delete(0, tk.END)
 
 
 
@@ -156,52 +161,51 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.bd = BD()
         self.parent.iconbitmap('img\\libros.ico')
         self.title("Ventana Principal")
+        self.resizable(0, 0)
 
-        # set grid layout 1x2
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
 
-        # load images with light and dark mode image
-        self.logo_image = ck.CTkImage(Image.open("img\\CustomTkinter_logo_single.png"), size=(20, 20))
-        self.large_test_image = ck.CTkImage(Image.open("img\\large_test_image.png"), size=(20, 20))
-        self.image_icon_image = ck.CTkImage(Image.open("img\\image_icon_light.png"), size=(20, 20))
-        self.home_image = ck.CTkImage(light_image=Image.open("img\\home_dark.png"), size=(20, 20))
-        self.chat_image = ck.CTkImage(light_image=Image.open("img\\chat_dark.png"), size=(20, 20))
-        self.add_user_image = ck.CTkImage(light_image=Image.open("img\\add_user_dark.png"), size=(20, 20))
+        # Cargar imagenes para Menu
+        self.logo_imagen = ck.CTkImage(Image.open("img\\libros.ico"), size=(30, 30))
+        self.large_test_image = ck.CTkImage(Image.open("img\\large_test_image.png"), size=(500, 150))
+        self.image_icon_image = ck.CTkImage(Image.open("img\\image_icon_light.png"), size=(26, 26))
+        self.home_image = ck.CTkImage(light_image=Image.open("img\\home_dark.png"), size=(26, 26))
+        self.chat_image = ck.CTkImage(light_image=Image.open("img\\chat_dark.png"), size=(26, 26))
+        self.add_user_image = ck.CTkImage(light_image=Image.open("img\\add_user_dark.png"), size=(26, 26))
+        self.cerrar_sesion_imagen = ck.CTkImage(Image.open("img\\cerrar_sesion.png"))
 
-        # create navigation frame
-        self.navigation_frame = ck.CTkFrame(self, corner_radius=0)
-        self.navigation_frame.grid(row=0, column=0, sticky="nsew")
-        self.navigation_frame.grid_rowconfigure(4, weight=1)
+        # Crear Frame de navegacion
+        self.frameNavegacion = ck.CTkFrame(self, corner_radius=0)
+        self.frameNavegacion.grid(row=0, column=0, sticky="nsew")
+        self.frameNavegacion.grid_rowconfigure(4, weight=1)
 
-        self.navigation_frame_label = ck.CTkLabel(self.navigation_frame, text="  Image Example", image=self.logo_image,
+        self.frameNavegacion_label = ck.CTkLabel(self.frameNavegacion, text="  Biblioteca Virtual", image=self.logo_imagen,
                                                   compound="left", font=ck.CTkFont(size=15, weight="bold"))
-        self.navigation_frame_label.grid(row=0, column=0, padx=20, pady=20)
+        self.frameNavegacion_label.grid(row=0, column=0, padx=20, pady=20)
 
-        self.home_button = ck.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Home",
+        self.inicio_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Inicio",
                                         fg_color="transparent", text_color=("gray10", "gray90"),
                                         hover_color=("gray70", "gray30"), image=self.home_image, anchor="w",
                                         command=self.home_button_event)
-        self.home_button.grid(row=1, column=0, sticky="ew")
+        self.inicio_button.grid(row=1, column=0, sticky="ew")
 
-        self.frame_2_button = ck.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10,
-                                           text="Frame 2", fg_color="transparent", text_color=("gray10", "gray90"),
+        self.frame_realizar_prestamo = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
+                                           text="Realizar Prestamo", fg_color="transparent", text_color=("gray10", "gray90"),
                                            hover_color=("gray70", "gray30"), image=self.chat_image, anchor="w",
-                                           command=self.frame_2_button_event)
-        self.frame_2_button.grid(row=2, column=0, sticky="ew")
+                                           command=self.frame_realizar_prestamo_event)
+        self.frame_realizar_prestamo.grid(row=2, column=0, sticky="ew")
 
-        self.frame_3_button = ck.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10,
+        self.frame_3_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
                                            text="Frame 3", fg_color="transparent", text_color=("gray10", "gray90"),
                                            hover_color=("gray70", "gray30"), image=self.add_user_image, anchor="w",
                                            command=self.frame_3_button_event)
         self.frame_3_button.grid(row=3, column=0, sticky="ew")
 
-        self.appearance_mode_menu = ck.CTkOptionMenu(self.navigation_frame, values=["Light", "Dark", "System"],
-                                                     command=self.change_appearance_mode_event)
-        self.appearance_mode_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
+        self.menu_apariencia = ck.CTkOptionMenu(self.frameNavegacion, values=["Light", "Dark"], command=self.evento_cambiar_apariencia)
+        self.menu_apariencia.grid(row=6, column=0, padx=20, pady=20, sticky="s")
 
-        self.button_cerrarSesion = ck.CTkButton(self.navigation_frame, text="Cerrar sesión",
-                                                command=self.cerrar_sesion)
+        self.button_cerrarSesion = ck.CTkButton(self.frameNavegacion, text="Cerrar sesión", image=self.cerrar_sesion_imagen, command=self.cerrar_sesion)
         self.button_cerrarSesion.grid(row=7, column=0, padx=20, pady=20, sticky="s")
 
         # create main frame container
@@ -235,12 +239,12 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.third_frame = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
 
         # select default frame
-        self.select_frame_by_name("home")
+        self.seleccion_frame_nombre("home")
 
-    def select_frame_by_name(self, name):
+    def seleccion_frame_nombre(self, name):
         # set button color for selected button
-        self.home_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
-        self.frame_2_button.configure(fg_color=("gray75", "gray25") if name == "frame_2" else "transparent")
+        self.inicio_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
+        self.frame_realizar_prestamo.configure(fg_color=("gray75", "gray25") if name == "frame_2" else "transparent")
         self.frame_3_button.configure(fg_color=("gray75", "gray25") if name == "frame_3" else "transparent")
 
         # show selected frame
@@ -258,15 +262,15 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.third_frame.grid(row=0, column=0, sticky="nsew")
 
     def home_button_event(self):
-        self.select_frame_by_name("home")
+        self.seleccion_frame_nombre("home")
 
-    def frame_2_button_event(self):
-        self.select_frame_by_name("frame_2")
+    def frame_realizar_prestamo_event(self):
+        self.seleccion_frame_nombre("frame_2")
 
     def frame_3_button_event(self):
-        self.select_frame_by_name("frame_3")
+        self.seleccion_frame_nombre("frame_3")
 
-    def change_appearance_mode_event(self, new_appearance_mode):
+    def evento_cambiar_apariencia(self, new_appearance_mode):
         ck.set_appearance_mode(new_appearance_mode)
 
     def cerrar_sesion(self):
