@@ -1,8 +1,9 @@
-import tkinter as tk #Modulo para crear la interfaz gráfica
-import customtkinter as ck #Modulo para mejorar la interfaz gráfica
-from tkinter import messagebox #Modulo para mostrar mensajes en ventanas emergentes
-from PIL import Image, ImageTk #Modulo para importar imágenes
-import re
+import tkinter as tk # Modulo para crear la interfaz gráfica
+import customtkinter as ck # Modulo para mejorar la interfaz gráfica
+from tkinter import messagebox # Modulo para mostrar mensajes en ventanas emergentes
+from tkinter import ttk # Modulo para darle estilos a los widgets presentes en la app
+from PIL import Image, ImageTk # Modulo para importar imágenes
+import re # Modulo para poder validar si el correo electrónico es un correo electrónico
 
 from model.conexion_db import *
 from model.classes import *
@@ -192,6 +193,7 @@ class Frame(ck.CTkFrame):
             self.root.withdraw()
             ventana_principal = VentanaPrincipal(self.root)
             self.root.wait_window(ventana_principal)
+            self.limparCampos()
 
     def mostrarContraseña(self):
         if self.mostrar_contraseña.get():
@@ -203,6 +205,10 @@ class Frame(ck.CTkFrame):
         self.root.withdraw()
         ventana_registro = VentanaRegistro(self.root)
         self.root.wait_window(ventana_registro)
+
+    def limparCampos(self):
+        self.correo.delete(0, 'end')
+        self.contraseña_entry.delete(0, 'end')
         
 
 # Ventana principal de la aplicación
@@ -227,6 +233,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.add_user_image = ck.CTkImage(light_image=Image.open("img\\add_user_dark.png"), size=(26, 26))
         self.cerrar_sesion_imagen = ck.CTkImage(Image.open("img\\cerrar_sesion.png"))
         self.stock_image = ck.CTkImage(Image.open("img\\stock.png"), size=(26, 26))
+        self.usuario_image = ck.CTkImage(Image.open("img\\usuarios.png"), size=(26, 26))
 
         # Crear Frame lateral de navegación
         self.frameNavegacion = ck.CTkFrame(self, corner_radius=0)
@@ -243,7 +250,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.inicio_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Inicio",
                                         fg_color="transparent", text_color=("gray10", "gray90"),
                                         hover_color=("gray70", "gray30"), image=self.home_image, anchor="w",
-                                        command=self.home_button_event)
+                                        command=self.inicio_button_event)
         self.inicio_button.grid(row=1, column=0, sticky="ew")
 
         # Botón de Stock en navegación
@@ -253,19 +260,25 @@ class VentanaPrincipal(ck.CTkToplevel):
                                          command=self.frame_stock_event)
         self.stock_button.grid(row=2, column=0, sticky="ew")
 
+        # Botón de Usuarios en navegación
+        self.usuario_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Usuarios",
+                                           fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
+                                           image=self.usuario_image, anchor="w",command=self.frame_usuarios_event)
+        self.usuario_button.grid(row=3, column=0, sticky="ew")
+
         # Botón de Realizar prestamos en navegación
         self.realizar_prestamo_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
                                            text="Realizar Prestamo", fg_color="transparent", text_color=("gray10", "gray90"),
                                            hover_color=("gray70", "gray30"), image=self.chat_image, anchor="w",
                                            command=self.realizar_prestamo_button_event)
-        self.realizar_prestamo_button.grid(row=3, column=0, sticky="ew")
+        self.realizar_prestamo_button.grid(row=4, column=0, sticky="ew")
 
         # Otro botón
         self.frame_3_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
                                            text="Frame 3", fg_color="transparent", text_color=("gray10", "gray90"),
                                            hover_color=("gray70", "gray30"), image=self.add_user_image, anchor="w",
                                            command=self.frame_3_button_event)
-        self.frame_3_button.grid(row=4, column=0, sticky="ew")
+        self.frame_3_button.grid(row=5, column=0, sticky="ew")
 
         # Menu de opciones para cambiar de apariencia la app
         self.menu_apariencia = ck.CTkOptionMenu(self.frameNavegacion, values=["Dark", "Light"], command=self.evento_cambiar_apariencia)
@@ -280,27 +293,91 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.main_frame.grid(row=0, column=1, sticky="nsew")
 
         # Crear frame inicio
-        self.home_frame = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
-        self.home_frame.grid(row=0, column=0, sticky="nsew")
-        self.home_frame.grid_columnconfigure(0, weight=1)
+        self.inicio_frame = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+        self.inicio_frame.grid(row=0, column=0, sticky="nsew")
+        self.inicio_frame.grid_columnconfigure(0, weight=1)
 
-        self.home_frame_large_image_label = ck.CTkLabel(self.home_frame, text="", image=self.large_test_image)
-        self.home_frame_large_image_label.grid(row=0, column=0, padx=20, pady=10)
+        self.inicio_frame_large_image_label = ck.CTkLabel(self.inicio_frame, text="", image=self.large_test_image)
+        self.inicio_frame_large_image_label.grid(row=0, column=0, padx=20, pady=10)
 
-        self.home_frame_button_1 = ck.CTkButton(self.home_frame, text="", image=self.image_icon_image)
-        self.home_frame_button_1.grid(row=1, column=0, padx=20, pady=10)
-        self.home_frame_button_2 = ck.CTkButton(self.home_frame, text="CTkButton", image=self.image_icon_image,
+        self.inicio_frame_button_1 = ck.CTkButton(self.inicio_frame, text="", image=self.image_icon_image)
+        self.inicio_frame_button_1.grid(row=1, column=0, padx=20, pady=10)
+        self.inicio_frame_button_2 = ck.CTkButton(self.inicio_frame, text="CTkButton", image=self.image_icon_image,
                                                 compound="right")
-        self.home_frame_button_2.grid(row=2, column=0, padx=20, pady=10)
-        self.home_frame_button_3 = ck.CTkButton(self.home_frame, text="CTkButton", image=self.image_icon_image,
+        self.inicio_frame_button_2.grid(row=2, column=0, padx=20, pady=10)
+        self.inicio_frame_button_3 = ck.CTkButton(self.inicio_frame, text="CTkButton", image=self.image_icon_image,
                                                 compound="top")
-        self.home_frame_button_3.grid(row=3, column=0, padx=20, pady=10)
-        self.home_frame_button_4 = ck.CTkButton(self.home_frame, text="CTkButton", image=self.image_icon_image,
+        self.inicio_frame_button_3.grid(row=3, column=0, padx=20, pady=10)
+        self.inicio_frame_button_4 = ck.CTkButton(self.inicio_frame, text="CTkButton", image=self.image_icon_image,
                                                 compound="bottom", anchor="w")
-        self.home_frame_button_4.grid(row=4, column=0, padx=20, pady=10)
+        self.inicio_frame_button_4.grid(row=4, column=0, padx=20, pady=10)
 
         # Crear frame para el stock
         self.stock = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+
+        # Crear frame para mostrar a los usuarios
+        self.usuario = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent", bg_color="gray90")
+        self.usuario.grid(row=0, column=0, sticky="nsew")
+        self.usuario.grid_columnconfigure(0, weight=10)
+        self.usuario.grid_rowconfigure(0, weight=10)
+
+        # Estilo de la tabla para mostrar los datos
+        estilo_tabla = ttk.Style()
+        estilo_tabla.configure("Treeview", font=('Helvetica', 10, 'bold'), foreground='black', background='white')
+        estilo_tabla.map('Treeview', background=[('selected', 'DarkOrchid1')], foreground=[('selected', 'black')])
+        estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=('Calibri (body)', 10, 'bold'))
+        estilo_tabla.configure('Item', foreground='white', focuscolor='DarkOrchid1')
+        estilo_tabla.configure('TScrollbar', arrowcolor='DarkOrchid1', bordercolor='black', troughcolor='DarkOrchid1', background='white')
+
+        # Mostrar la tabla en el frame usuario
+        self.frame_tabla_uno = ck.CTkFrame(self.usuario)
+        self.frame_tabla_uno.grid(columnspan=3, row=2, sticky='nsew')
+
+        self.tabla_uno = ttk.Treeview(self.frame_tabla_uno)
+        self.tabla_uno.grid(column=0, row=0, sticky='nsew')
+
+        ladox = ttk.Scrollbar(self.frame_tabla_uno, orient='horizontal', command=self.tabla_uno.xview)
+        ladox.grid(column=0, row=1, sticky='ew')
+
+        ladoy = ttk.Scrollbar(self.frame_tabla_uno, orient='vertical', command=self.tabla_uno.yview)
+        ladoy.grid(column=1, row=0, sticky='ns')
+
+        # Configurar expansión en todas las direcciones (norte, sur, este, oeste)
+        self.frame_tabla_uno.grid_rowconfigure(0, weight=1)
+        self.frame_tabla_uno.grid_columnconfigure(0, weight=1)
+
+        # Configurar expansión en todas las direcciones para la tabla y las barras de desplazamiento
+        self.tabla_uno.grid(sticky='nsew')
+        ladox.grid(sticky='ew')
+        ladoy.grid(sticky='ns')
+
+        # Columnas que se mostrarán en la tabla
+        self.tabla_uno.configure(xscrollcommand=ladox.set, yscrollcommand=ladoy.set)
+        self.tabla_uno['columns'] = ('Nombre', 'Apellido', 'Dirección', 'RUT', 'Celular', 'Correo electrónico', 'Tipo de usuario')
+
+        # Ajustar ancho mínimo y ancho de cada columna de encabezado
+        self.tabla_uno.column('#0', minwidth=60, width=70, anchor='center')
+        self.tabla_uno.column('Nombre', minwidth=100, width=130, anchor='center')
+        self.tabla_uno.column('Apellido', minwidth=100, width=120, anchor='center')
+        self.tabla_uno.column('Dirección', minwidth=100, width=120, anchor='center')
+        self.tabla_uno.column('RUT', minwidth=100, width=105, anchor='center')
+        self.tabla_uno.column('Celular', minwidth=100, width=105, anchor='center')
+        self.tabla_uno.column('Correo electrónico', minwidth=100, width=150, anchor='center')
+        self.tabla_uno.column('Tipo de usuario', minwidth=100, width=120, anchor='center')
+
+        # Configurar el texto de encabezado para que se muestre completo
+        self.tabla_uno.heading('#0', text='Id', anchor='center')
+        self.tabla_uno.heading('Nombre', text='Nombre', anchor='center')
+        self.tabla_uno.heading('Apellido', text='Apellido', anchor='center')
+        self.tabla_uno.heading('Dirección', text='Dirección', anchor='center')
+        self.tabla_uno.heading('RUT', text='RUT', anchor='center')
+        self.tabla_uno.heading('Celular', text='Celular', anchor='center')
+        self.tabla_uno.heading('Correo electrónico', text='Correo electrónico', anchor='center')
+        self.tabla_uno.heading('Tipo de usuario', text='Tipo de usuario', anchor='center')
+
+        self.tabla_uno.bind("<<TreeviewSelect>>")
+
+        self.mostrarDatos()
 
         # Crear frame realizar préstamos
         self.realizar_prestamo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
@@ -311,39 +388,55 @@ class VentanaPrincipal(ck.CTkToplevel):
         # select default frame
         self.seleccion_frame_nombre("home")
 
+
+    # Método para buscar el frame por el nombre del frame
     def seleccion_frame_nombre(self, name):
         self.inicio_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
+        self.usuario_button.configure(fg_color=("gray75", "gray25") if name == "usuarios" else "transparent")
         self.stock_button.configure(fg_color=("gray75", "gray25") if name == "stock" else "transparent")
         self.realizar_prestamo_button.configure(fg_color=("gray75", "gray25") if name == "realizar_prestamo" else "transparent")
         self.frame_3_button.configure(fg_color=("gray75", "gray25") if name == "frame_3" else "transparent")
 
         # Mostrar frame seleccionado
         if name == "home":
-            self.home_frame.grid(row=0, column=0, sticky="nsew")
+            self.inicio_frame.grid(row=0, column=0, sticky="nsew")
             self.stock.grid_forget()
+            self.usuario.grid_forget()
             self.realizar_prestamo.grid_forget()
             self.third_frame.grid_forget()
         elif name == "stock":
-            self.home_frame.grid_forget()
+            self.inicio_frame.grid_forget()
             self.stock.grid(row=0, column=0, sticky="nsew")
+            self.usuario.grid_forget()
+            self.realizar_prestamo.grid_forget()
+            self.third_frame.grid_forget()
+        elif name == "usuarios":
+            self.inicio_frame.grid_forget()
+            self.stock.grid_forget()
+            self.usuario.grid(row=0, column=0, sticky="nsew")
             self.realizar_prestamo.grid_forget()
             self.third_frame.grid_forget()
         elif name == "realizar_prestamo":
-            self.home_frame.grid_forget()
+            self.inicio_frame.grid_forget()
             self.stock.grid_forget()
+            self.usuario.grid_forget()
             self.realizar_prestamo.grid(row=0, column=0, sticky="nsew")
             self.third_frame.grid_forget()
         elif name == "frame_3":
-            self.home_frame.grid_forget()
+            self.inicio_frame.grid_forget()
             self.stock.grid_forget()
+            self.usuario.grid_forget()
             self.realizar_prestamo.grid_forget()
             self.third_frame.grid(row=0, column=0, sticky="nsew")
 
-    def home_button_event(self):
+    def inicio_button_event(self):
         self.seleccion_frame_nombre("home")
 
     def frame_stock_event(self):
         self.seleccion_frame_nombre("stock")
+
+    def frame_usuarios_event(self):
+        self.seleccion_frame_nombre("usuarios")
 
     def realizar_prestamo_button_event(self):
         self.seleccion_frame_nombre("realizar_prestamo")
@@ -353,6 +446,14 @@ class VentanaPrincipal(ck.CTkToplevel):
 
     def evento_cambiar_apariencia(self, new_appearance_mode):
         ck.set_appearance_mode(new_appearance_mode)
+
+    def mostrarDatos(self):
+        datos = self.bd.mostrarUsuarios()
+        self.tabla_uno.delete(*self.tabla_uno.get_children())
+        i = -1
+        for dato in datos:
+            i = i + 1
+            self.tabla_uno.insert('', i, text=datos[i][0], values=datos[i][1:8])
 
     def cerrar_sesion(self):
         self.destroy()

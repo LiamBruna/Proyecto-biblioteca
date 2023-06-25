@@ -1,8 +1,8 @@
-import sqlite3
-from datetime import datetime, timedelta
-from sqlite3 import Error
-from tkinter import messagebox
-import hashlib
+import sqlite3 #Modulo para crear la conexión con la base de datos
+from datetime import datetime, timedelta # Modulo para controlar el tiempo en la app
+from sqlite3 import Error # Modulo para mostrar errores por si se presentan
+from tkinter import messagebox # Modulo para mostrar mensajes en ventanas emergentes
+import hashlib # Modulo para hashear las contraseñas ingresadas
 
 class BD:
     def __init__(self):
@@ -23,7 +23,7 @@ class BD:
         messagebox.showinfo(f"Mensaje", f"Conexión cerrada")
 
 
-#Metodos
+    # Método para logearse en la app
     def login(self, correo, contraseña):
         try:
             sql = "SELECT * FROM bibliotecario WHERE CORREO_B = ?"
@@ -46,7 +46,7 @@ class BD:
 
         return False
 
-
+    # Método para registrarse en la app
     def registro(self, nombre, apellido, correo, contraseña, rut):
         sql = "SELECT * FROM bibliotecario WHERE CORREO_B = ?"
         self.cursor.execute(sql, (correo,))
@@ -63,7 +63,7 @@ class BD:
         self.connect.commit()
         messagebox.showinfo(f"Registro exitoso", f"El usuario {nombre} ha sido registrado correctamente.")
 
-    
+    # Método para registrar un préstamo de libro
     def registrarPrestamo(self, usuario_actual):
         try:
             sql_bibliotecario = "SELECT ID_B FROM bibliotecario WHERE CORREO_B = ?"
@@ -86,3 +86,13 @@ class BD:
 
         except Error as e:
             print(f"Error al ejecutar: {e}")
+
+    # Método para mostrar información personal de los usuarios registrados
+    def mostrarUsuarios(self):
+        try:
+            sql = "SELECT * FROM usuario"
+            self.cursor.execute(sql)
+            results = self.cursor.fetchall()
+            return results
+        except Exception as e:
+            messagebox.showerror("Mostrar Usuarios", str(e))
