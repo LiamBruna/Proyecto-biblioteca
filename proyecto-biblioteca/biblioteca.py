@@ -1,14 +1,14 @@
 import tkinter as tk
-from customtkinter import *
+import customtkinter as ck
 from client.gui_app import Frame
 
 def main():
-    root = CTkToplevel()
+    root = tk.Tk()
     root.title('Biblioteca')
-    root.iconbitmap('img\libros.ico')
-    root.resizable(0,0)
+    root.iconbitmap('img/libros.ico')
+    root.resizable(False, False)
 
-    app = Frame(root = root)
+    app = Frame(root=root)
     app.mainloop()
 
 if __name__ == "__main__":
