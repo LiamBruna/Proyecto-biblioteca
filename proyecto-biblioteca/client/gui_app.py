@@ -108,28 +108,28 @@ class Frame(ck.CTkFrame):
         label_log = ck.CTkLabel(master=frame, text="Iniciar Sesión", font=('Century Gothic',35))
         label_log.place(x=50, y=45)
 
-        correo = ck.CTkEntry(master=frame, placeholder_text='Correo electrónico', width=220, height=40)
-        correo.place(x=50, y=110)
+        self.correo = ck.CTkEntry(master=frame, placeholder_text='Correo electrónico', width=220, height=40)
+        self.correo.place(x=50, y=110)
 
         self.contraseña = tk.StringVar()
-        contraseña_entry = ck.CTkEntry(master=frame, placeholder_text='Contraseña', width=220, height=40, show="*")
-        contraseña_entry.place(x=50, y=165)
-        contraseña_entry.bind("<Return>", self.login)
+        self.contraseña_entry = ck.CTkEntry(master=frame, placeholder_text='Contraseña', width=220, height=40, show="*")
+        self.contraseña_entry.place(x=50, y=165)
+        self.contraseña_entry.bind("<Return>", self.login)
 
         # Checkbox para mostrar/ocultar la contraseña
         self.mostrar_contraseña = tk.BooleanVar()
-        checkbox_mostrar_contraseña = ck.CTkCheckBox(master=frame, text="Mostrar contraseña", variable=self.show_password, command=self.mostrarContraseña)
-        checkbox_mostrar_contraseña.place(x=30, y=220)
+        self.checkbox_mostrar_contraseña = ck.CTkCheckBox(master=frame, text="Mostrar contraseña", variable=self.mostrar_contraseña, command=self.mostrarContraseña)
+        self.checkbox_mostrar_contraseña.place(x=30, y=220)
 
         iniciar_sesion_image = Image.open("img\\iniciar_sesion.png")
         iniciar_sesion_photo = ck.CTkImage(iniciar_sesion_image)
-        button_login = ck.CTkButton(master=frame, text="Iniciar sesión", command=self.login, image=iniciar_sesion_photo)
-        button_login.place(x=12, y=280)
+        self.button_login = ck.CTkButton(master=frame, text="Iniciar sesión", command=self.login, image=iniciar_sesion_photo)
+        self.button_login.place(x=12, y=280)
 
         registrarse_image = Image.open("img\\registrarse.png")
         registrarse_photo = ck.CTkImage(registrarse_image)
-        button_registrar = ck.CTkButton(master=frame, text="Registrarse", command=self.abrir_ventana_registro, image=registrarse_photo)
-        button_registrar.place(x=168, y=280)
+        self.button_registrar = ck.CTkButton(master=frame, text="Registrarse", command=self.abrir_ventana_registro, image=registrarse_photo)
+        self.button_registrar.place(x=168, y=280)
 
     def login(self, event=None):
         correo = self.correo.get()
@@ -204,17 +204,17 @@ class VentanaPrincipal(ck.CTkToplevel):
                                            command=self.frame_3_button_event)
         self.frame_3_button.grid(row=3, column=0, sticky="ew")
 
-        self.menu_apariencia = ck.CTkOptionMenu(self.frameNavegacion, values=["Light", "Dark"], command=self.evento_cambiar_apariencia)
+        self.menu_apariencia = ck.CTkOptionMenu(self.frameNavegacion, values=["Dark", "Light"], command=self.evento_cambiar_apariencia)
         self.menu_apariencia.grid(row=6, column=0, padx=20, pady=20, sticky="s")
 
         self.button_cerrarSesion = ck.CTkButton(self.frameNavegacion, text="Cerrar sesión", image=self.cerrar_sesion_imagen, command=self.cerrar_sesion)
         self.button_cerrarSesion.grid(row=7, column=0, padx=20, pady=20, sticky="s")
 
-        # create main frame container
+        # Crear contenedor main
         self.main_frame = ck.CTkFrame(self, corner_radius=0, fg_color="transparent")
         self.main_frame.grid(row=0, column=1, sticky="nsew")
 
-        # create home frame
+        # Crear frame inicio
         self.home_frame = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.home_frame.grid(row=0, column=0, sticky="nsew")
         self.home_frame.grid_columnconfigure(0, weight=1)
@@ -234,8 +234,8 @@ class VentanaPrincipal(ck.CTkToplevel):
                                                 compound="bottom", anchor="w")
         self.home_frame_button_4.grid(row=4, column=0, padx=20, pady=10)
 
-        # create second frame
-        self.second_frame = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+        # Crear frame realizar préstamos
+        self.realizar_prestamo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
 
         # create third frame
         self.third_frame = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
@@ -244,30 +244,29 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.seleccion_frame_nombre("home")
 
     def seleccion_frame_nombre(self, name):
-        # set button color for selected button
         self.inicio_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
-        self.frame_realizar_prestamo.configure(fg_color=("gray75", "gray25") if name == "frame_2" else "transparent")
+        self.frame_realizar_prestamo.configure(fg_color=("gray75", "gray25") if name == "realizar_prestamo" else "transparent")
         self.frame_3_button.configure(fg_color=("gray75", "gray25") if name == "frame_3" else "transparent")
 
         # show selected frame
         if name == "home":
             self.home_frame.grid(row=0, column=0, sticky="nsew")
-            self.second_frame.grid_forget()
+            self.realizar_prestamo.grid_forget()
             self.third_frame.grid_forget()
-        elif name == "frame_2":
+        elif name == "realizar_prestamo":
             self.home_frame.grid_forget()
-            self.second_frame.grid(row=0, column=0, sticky="nsew")
+            self.realizar_prestamo.grid(row=0, column=0, sticky="nsew")
             self.third_frame.grid_forget()
         elif name == "frame_3":
             self.home_frame.grid_forget()
-            self.second_frame.grid_forget()
+            self.realizar_prestamo.grid_forget()
             self.third_frame.grid(row=0, column=0, sticky="nsew")
 
     def home_button_event(self):
         self.seleccion_frame_nombre("home")
 
     def frame_realizar_prestamo_event(self):
-        self.seleccion_frame_nombre("frame_2")
+        self.seleccion_frame_nombre("realizar_prestamo")
 
     def frame_3_button_event(self):
         self.seleccion_frame_nombre("frame_3")
