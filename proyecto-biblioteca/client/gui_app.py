@@ -1,6 +1,5 @@
 import tkinter as tk
 import customtkinter as ck
-import tkinter.ttk as ttk
 from tkinter import messagebox
 
 from model.conexion_db import *
