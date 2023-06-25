@@ -1,5 +1,4 @@
 import tkinter as tk
-import customtkinter as ck
 from client.gui_app import Frame
 
 def main():
