@@ -1,12 +1,14 @@
-import tkinter as tk
-import customtkinter as ck
-from tkinter import messagebox
-from PIL import Image, ImageTk
-import os
+import tkinter as tk #Modulo para crear la interfaz gráfica
+import customtkinter as ck #Modulo para mejorar la interfaz gráfica
+from tkinter import messagebox #Modulo para mostrar mensajes en ventanas emergentes
+from PIL import Image, ImageTk #Modulo para importar imágenes
+import re
 
 from model.conexion_db import *
 from model.classes import *
 
+
+# Ventana de registro
 class VentanaRegistro(ck.CTkToplevel):
     def __init__(self, parent):
         super().__init__(parent)
@@ -20,17 +22,16 @@ class VentanaRegistro(ck.CTkToplevel):
         self.show_password = tk.BooleanVar(value=False)  # Variable para controlar la visibilidad de la contraseña
 
         self.registerWindow()
-        self.crear_boton_registrar()
 
     def registerWindow(self):
         # Crea los campos de entrada de datos para el registro
-        self.nombre_entry = ck.CTkEntry(self, placeholder_text='Nombre', width=220, height=40)
+        self.nombre_entry = ck.CTkEntry(self, placeholder_text='Nombre (*)', width=220, height=40)
         self.nombre_entry.grid(columnspan=2, row=1, padx=4, pady=4)
 
-        self.apellido_entry = ck.CTkEntry(self, placeholder_text='Apellido', width=220, height=40)
+        self.apellido_entry = ck.CTkEntry(self, placeholder_text='Apellido (*)', width=220, height=40)
         self.apellido_entry.grid(columnspan=2, row=2, padx=4, pady=4)
 
-        self.correo_entry = ck.CTkEntry(self, placeholder_text='Correo electrónico', width=220, height=40)
+        self.correo_entry = ck.CTkEntry(self, placeholder_text='Correo electrónico (*)', width=220, height=40)
         self.correo_entry.grid(columnspan=2, row=3, padx=4, pady=4)
 
         self.contraseña_entry = ck.CTkEntry(self, placeholder_text='Contraseña', width=220, height=40, show="*")
@@ -39,7 +40,7 @@ class VentanaRegistro(ck.CTkToplevel):
         self.contraseña_entry_confirmar = ck.CTkEntry(self, placeholder_text='Confirmar Contraseña', width=220, height=40, show="*")
         self.contraseña_entry_confirmar.grid(columnspan=2, row=5, padx=4, pady=4)
 
-        self.rut_entry = ck.CTkEntry(self, placeholder_text='RUT', width=220, height=40)
+        self.rut_entry = ck.CTkEntry(self, placeholder_text='RUT (con puntos y guión)', width=220, height=40)
         self.rut_entry.grid(columnspan=2, row=6, padx=4, pady=4)
         self.rut_entry.bind("<Return>", self.registrar)
 
@@ -47,7 +48,6 @@ class VentanaRegistro(ck.CTkToplevel):
         show_password_checkbox = ck.CTkCheckBox(self, text="Mostrar contraseña", variable=self.mostrarContraseña_Registro, command=self.mostrarContraseñaRegistro)
         show_password_checkbox.grid(column=4, row=5, padx=4, pady=4)
 
-    def crear_boton_registrar(self):
         registro_image = Image.open("img\\registro.png")
         registro_photo = ck.CTkImage(registro_image)
 
@@ -55,7 +55,39 @@ class VentanaRegistro(ck.CTkToplevel):
         button_registrar = ck.CTkButton(self, text="Registrar", command=self.registrar, image=registro_photo)
         button_registrar.grid(columnspan=2, row=7, padx=4, pady=4)
 
+# Método para validar el correo electrónico
+    def validarCorreo(self, correo):
+        patron = r'^[\w\.-]+@\w+\.\w+$'
 
+        if re.match(patron, correo):
+            return True
+        else:
+            return False
+
+# Método para validar el RUT ingresado
+    def validarRut(self, rut):
+        rut = rut.replace(".", "").replace("-", "") #Remover puntos y guiones
+        rutSinDv = rut[:-1] #Obtener el rut sin dígito verificador
+        dv = rut[-1] #Obtener el dígito verificador
+
+        #Calcular el dígito verificador
+        suma = 0
+        multiplo = 2
+        for i in reversed(rutSinDv):
+            suma += int(i) * multiplo
+            multiplo +=1
+            if multiplo == 8:
+                multiplo = 2
+
+        resto = suma % 11
+        dvEsperado = str(11 - resto) if resto > 1 else "0"
+
+        if dv == dvEsperado:
+            return True
+        else:
+            return False
+        
+# Método para mostrar la contraseña al presionar el Checkbox
     def mostrarContraseñaRegistro(self):
         # Cambia la visibilidad de la contraseña basado en el estado del checkbox
         if self.mostrarContraseña_Registro.get():
@@ -65,6 +97,7 @@ class VentanaRegistro(ck.CTkToplevel):
             self.contraseña_entry.configure(show="*")
             self.contraseña_entry_confirmar.configure(show="*")
 
+# Método para registrar un Bibliotecario
     def registrar(self, event=None):
         # Obtiene los datos ingresados por el usuario
         nombre = self.nombre_entry.get()
@@ -74,20 +107,35 @@ class VentanaRegistro(ck.CTkToplevel):
         confirmarContraseña = self.contraseña_entry_confirmar.get()
         rut = self.rut_entry.get()
 
-        if correo == "":
-            messagebox.showerror("Error de registro", "Debe ingresar un correo")
+        if nombre == "": # Comprobar que haya un nombre en el campo
+            messagebox.showerror("Error de registro", "El campo 'nombre' no puede estar vació.")
+            return
+
+        if apellido == "": # Comprobar que haya un apellido en el campo
+            messagebox.showerror("Error de registro", "El campo 'apellido' no puede estar vació.")
+
+        if correo == "": #Comprobar que haya un correo en el campo
+            messagebox.showerror("Error de registro", "Debe ingresar un correo.")
             return
         
-        if contraseña != confirmarContraseña:
-            messagebox.showerror("Error de registro", "Las contraseña no coinciden")
+        if not self.validarCorreo(correo):
+            messagebox.showerror("Error de registro", f"Correo {correo} no válido.")
+            return
+        
+        if contraseña != confirmarContraseña: #Validación de contraseña
+            messagebox.showerror("Error de registro", "Las contraseña no coinciden.")
+            return
+        
+        if not self.validarRut(rut): # Validación del RUT
+            messagebox.showerror("Error de registro", f"Rut {rut} no válido.")
             return
 
         if self.bd.registro(nombre, apellido, correo, contraseña, rut):
             self.withdraw()  # Oculta la ventana de registro
-            self.parent.deiconify()  # Muestra la ventana principal
-            self.destroy()
+        self.parent.deiconify()  # Muestra la ventana de login
+        self.destroy()
 
-
+# Ventana Login
 class Frame(ck.CTkFrame):
     def __init__(self, root=None):
         super().__init__(root)
@@ -152,23 +200,25 @@ class Frame(ck.CTkFrame):
             self.contraseña_entry.configure(show="*")
 
     def abrir_ventana_registro(self):
+        self.root.withdraw()
         ventana_registro = VentanaRegistro(self.root)
         self.root.wait_window(ventana_registro)
         
 
+# Ventana principal de la aplicación
 class VentanaPrincipal(ck.CTkToplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
         self.bd = BD()
-        self.parent.iconbitmap('img\\libros.ico')
+        self.iconbitmap('img\\libros.ico')
         self.title("Ventana Principal")
         self.resizable(0, 0)
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
 
-        # Cargar imagenes para Menu
+        # Cargar imágenes para Menu
         self.logo_imagen = ck.CTkImage(Image.open("img\\libros.ico"), size=(30, 30))
         self.large_test_image = ck.CTkImage(Image.open("img\\large_test_image.png"), size=(500, 150))
         self.image_icon_image = ck.CTkImage(Image.open("img\\image_icon_light.png"), size=(26, 26))
@@ -176,37 +226,52 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.chat_image = ck.CTkImage(light_image=Image.open("img\\chat_dark.png"), size=(26, 26))
         self.add_user_image = ck.CTkImage(light_image=Image.open("img\\add_user_dark.png"), size=(26, 26))
         self.cerrar_sesion_imagen = ck.CTkImage(Image.open("img\\cerrar_sesion.png"))
+        self.stock_image = ck.CTkImage(Image.open("img\\stock.png"), size=(26, 26))
 
-        # Crear Frame de navegacion
+        # Crear Frame lateral de navegación
         self.frameNavegacion = ck.CTkFrame(self, corner_radius=0)
         self.frameNavegacion.grid(row=0, column=0, sticky="nsew")
         self.frameNavegacion.grid_rowconfigure(4, weight=1)
 
+
+        # Crear icono en frame lateral
         self.frameNavegacion_label = ck.CTkLabel(self.frameNavegacion, text="  Biblioteca Virtual", image=self.logo_imagen,
                                                   compound="left", font=ck.CTkFont(size=15, weight="bold"))
         self.frameNavegacion_label.grid(row=0, column=0, padx=20, pady=20)
 
+        # Botón de Inicio en navegación
         self.inicio_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Inicio",
                                         fg_color="transparent", text_color=("gray10", "gray90"),
                                         hover_color=("gray70", "gray30"), image=self.home_image, anchor="w",
                                         command=self.home_button_event)
         self.inicio_button.grid(row=1, column=0, sticky="ew")
 
-        self.frame_realizar_prestamo = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
+        # Botón de Stock en navegación
+        self.stock_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Stock",
+                                         fg_color="transparent", text_color=("gray10", "gray90"),
+                                         hover_color=("gray70", "gray30"), image=self.stock_image, anchor="w",
+                                         command=self.frame_stock_event)
+        self.stock_button.grid(row=2, column=0, sticky="ew")
+
+        # Botón de Realizar prestamos en navegación
+        self.realizar_prestamo_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
                                            text="Realizar Prestamo", fg_color="transparent", text_color=("gray10", "gray90"),
                                            hover_color=("gray70", "gray30"), image=self.chat_image, anchor="w",
-                                           command=self.frame_realizar_prestamo_event)
-        self.frame_realizar_prestamo.grid(row=2, column=0, sticky="ew")
+                                           command=self.realizar_prestamo_button_event)
+        self.realizar_prestamo_button.grid(row=3, column=0, sticky="ew")
 
+        # Otro botón
         self.frame_3_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
                                            text="Frame 3", fg_color="transparent", text_color=("gray10", "gray90"),
                                            hover_color=("gray70", "gray30"), image=self.add_user_image, anchor="w",
                                            command=self.frame_3_button_event)
-        self.frame_3_button.grid(row=3, column=0, sticky="ew")
+        self.frame_3_button.grid(row=4, column=0, sticky="ew")
 
+        # Menu de opciones para cambiar de apariencia la app
         self.menu_apariencia = ck.CTkOptionMenu(self.frameNavegacion, values=["Dark", "Light"], command=self.evento_cambiar_apariencia)
         self.menu_apariencia.grid(row=6, column=0, padx=20, pady=20, sticky="s")
 
+        # Botón para cerrar sesion
         self.button_cerrarSesion = ck.CTkButton(self.frameNavegacion, text="Cerrar sesión", image=self.cerrar_sesion_imagen, command=self.cerrar_sesion)
         self.button_cerrarSesion.grid(row=7, column=0, padx=20, pady=20, sticky="s")
 
@@ -234,6 +299,9 @@ class VentanaPrincipal(ck.CTkToplevel):
                                                 compound="bottom", anchor="w")
         self.home_frame_button_4.grid(row=4, column=0, padx=20, pady=10)
 
+        # Crear frame para el stock
+        self.stock = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+
         # Crear frame realizar préstamos
         self.realizar_prestamo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
 
@@ -245,27 +313,39 @@ class VentanaPrincipal(ck.CTkToplevel):
 
     def seleccion_frame_nombre(self, name):
         self.inicio_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
-        self.frame_realizar_prestamo.configure(fg_color=("gray75", "gray25") if name == "realizar_prestamo" else "transparent")
+        self.stock_button.configure(fg_color=("gray75", "gray25") if name == "stock" else "transparent")
+        self.realizar_prestamo_button.configure(fg_color=("gray75", "gray25") if name == "realizar_prestamo" else "transparent")
         self.frame_3_button.configure(fg_color=("gray75", "gray25") if name == "frame_3" else "transparent")
 
-        # show selected frame
+        # Mostrar frame seleccionado
         if name == "home":
             self.home_frame.grid(row=0, column=0, sticky="nsew")
+            self.stock.grid_forget()
+            self.realizar_prestamo.grid_forget()
+            self.third_frame.grid_forget()
+        elif name == "stock":
+            self.home_frame.grid_forget()
+            self.stock.grid(row=0, column=0, sticky="nsew")
             self.realizar_prestamo.grid_forget()
             self.third_frame.grid_forget()
         elif name == "realizar_prestamo":
             self.home_frame.grid_forget()
+            self.stock.grid_forget()
             self.realizar_prestamo.grid(row=0, column=0, sticky="nsew")
             self.third_frame.grid_forget()
         elif name == "frame_3":
             self.home_frame.grid_forget()
+            self.stock.grid_forget()
             self.realizar_prestamo.grid_forget()
             self.third_frame.grid(row=0, column=0, sticky="nsew")
 
     def home_button_event(self):
         self.seleccion_frame_nombre("home")
 
-    def frame_realizar_prestamo_event(self):
+    def frame_stock_event(self):
+        self.seleccion_frame_nombre("stock")
+
+    def realizar_prestamo_button_event(self):
         self.seleccion_frame_nombre("realizar_prestamo")
 
     def frame_3_button_event(self):
