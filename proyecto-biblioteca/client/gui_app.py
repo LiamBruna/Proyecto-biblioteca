@@ -11,9 +11,8 @@ class VentanaRegistro(ck.CTkToplevel):
         super().__init__(parent)
         self.parent = parent
         self.bd = bd
-
-        self.title("Registro")
-        self.iconbitmap('img/libros.ico')
+        self.title("Registro") #Titulo de la Ventana
+        self.wm_iconbitmap('img/libros.ico')
         self.resizable(0, 0)
 
         self.show_password = tk.BooleanVar(value=False)  # Variable para controlar la visibilidad de la contraseña

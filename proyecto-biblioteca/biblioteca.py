@@ -1,8 +1,9 @@
 import tkinter as tk
+import customtkinter as ck
 from client.gui_app import Frame
 
 def main():
-    root = tk.Tk()
+    root = ck.CTk()
     root.title('Biblioteca')
     root.iconbitmap('img\libros.ico')
     root.resizable(0,0)
