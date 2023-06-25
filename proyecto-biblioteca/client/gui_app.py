@@ -143,6 +143,10 @@ class Frame(ck.CTkFrame):
         button_registrar = ck.CTkButton(self, text="Registrarse", command=self.abrir_ventana_registro)
         button_registrar.grid(columnspan=2, row=5, padx=4, pady=4)
 
+    def limpiar_campos(self):
+        self.correo.delete(0, tk.END)
+        self.contraseña_entry.delete(0, tk.END)
+
 
 
 class VentanaPrincipal(ck.CTkToplevel):
@@ -163,7 +167,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.image_icon_image = ck.CTkImage(Image.open("img\\image_icon_light.png"), size=(20, 20))
         self.home_image = ck.CTkImage(light_image=Image.open("img\\home_dark.png"), size=(20, 20))
         self.chat_image = ck.CTkImage(light_image=Image.open("img\\chat_dark.png"), size=(20, 20))
-        self.add_user_image = ck.CTkImage(light_image=Image.open("img\\add_user_dark.png"),size=(20, 20))
+        self.add_user_image = ck.CTkImage(light_image=Image.open("img\\add_user_dark.png"), size=(20, 20))
 
         # create navigation frame
         self.navigation_frame = ck.CTkFrame(self, corner_radius=0)
@@ -171,34 +175,42 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.navigation_frame.grid_rowconfigure(4, weight=1)
 
         self.navigation_frame_label = ck.CTkLabel(self.navigation_frame, text="  Image Example", image=self.logo_image,
-                                                             compound="left", font=ck.CTkFont(size=15, weight="bold"))
+                                                  compound="left", font=ck.CTkFont(size=15, weight="bold"))
         self.navigation_frame_label.grid(row=0, column=0, padx=20, pady=20)
 
         self.home_button = ck.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Home",
-                                                   fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                   image=self.home_image, anchor="w", command=self.home_button_event)
+                                        fg_color="transparent", text_color=("gray10", "gray90"),
+                                        hover_color=("gray70", "gray30"), image=self.home_image, anchor="w",
+                                        command=self.home_button_event)
         self.home_button.grid(row=1, column=0, sticky="ew")
 
-        self.frame_2_button = ck.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Frame 2",
-                                                      fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                      image=self.chat_image, anchor="w", command=self.frame_2_button_event)
+        self.frame_2_button = ck.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10,
+                                           text="Frame 2", fg_color="transparent", text_color=("gray10", "gray90"),
+                                           hover_color=("gray70", "gray30"), image=self.chat_image, anchor="w",
+                                           command=self.frame_2_button_event)
         self.frame_2_button.grid(row=2, column=0, sticky="ew")
 
-        self.frame_3_button = ck.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Frame 3",
-                                                      fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                      image=self.add_user_image, anchor="w", command=self.frame_3_button_event)
+        self.frame_3_button = ck.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10,
+                                           text="Frame 3", fg_color="transparent", text_color=("gray10", "gray90"),
+                                           hover_color=("gray70", "gray30"), image=self.add_user_image, anchor="w",
+                                           command=self.frame_3_button_event)
         self.frame_3_button.grid(row=3, column=0, sticky="ew")
 
         self.appearance_mode_menu = ck.CTkOptionMenu(self.navigation_frame, values=["Light", "Dark", "System"],
-                                                                command=self.change_appearance_mode_event)
+                                                     command=self.change_appearance_mode_event)
         self.appearance_mode_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
 
-        self.button_cerrarSesion = ck.CTkButton(self.navigation_frame, text="Cerrar sesión", command=self.cerrar_sesion)
-        self.button_cerrarSesion.grid(row = 7, column = 0, padx=20, pady=20, sticky="s")
+        self.button_cerrarSesion = ck.CTkButton(self.navigation_frame, text="Cerrar sesión",
+                                                command=self.cerrar_sesion)
+        self.button_cerrarSesion.grid(row=7, column=0, padx=20, pady=20, sticky="s")
 
+        # create main frame container
+        self.main_frame = ck.CTkFrame(self, corner_radius=0, fg_color="transparent")
+        self.main_frame.grid(row=0, column=1, sticky="nsew")
 
         # create home frame
-        self.home_frame = ck.CTkFrame(self, corner_radius=0, fg_color="transparent")
+        self.home_frame = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+        self.home_frame.grid(row=0, column=0, sticky="nsew")
         self.home_frame.grid_columnconfigure(0, weight=1)
 
         self.home_frame_large_image_label = ck.CTkLabel(self.home_frame, text="", image=self.large_test_image)
@@ -206,18 +218,21 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         self.home_frame_button_1 = ck.CTkButton(self.home_frame, text="", image=self.image_icon_image)
         self.home_frame_button_1.grid(row=1, column=0, padx=20, pady=10)
-        self.home_frame_button_2 = ck.CTkButton(self.home_frame, text="CTkButton", image=self.image_icon_image, compound="right")
+        self.home_frame_button_2 = ck.CTkButton(self.home_frame, text="CTkButton", image=self.image_icon_image,
+                                                compound="right")
         self.home_frame_button_2.grid(row=2, column=0, padx=20, pady=10)
-        self.home_frame_button_3 = ck.CTkButton(self.home_frame, text="CTkButton", image=self.image_icon_image, compound="top")
+        self.home_frame_button_3 = ck.CTkButton(self.home_frame, text="CTkButton", image=self.image_icon_image,
+                                                compound="top")
         self.home_frame_button_3.grid(row=3, column=0, padx=20, pady=10)
-        self.home_frame_button_4 = ck.CTkButton(self.home_frame, text="CTkButton", image=self.image_icon_image, compound="bottom", anchor="w")
+        self.home_frame_button_4 = ck.CTkButton(self.home_frame, text="CTkButton", image=self.image_icon_image,
+                                                compound="bottom", anchor="w")
         self.home_frame_button_4.grid(row=4, column=0, padx=20, pady=10)
 
         # create second frame
-        self.second_frame = ck.CTkFrame(self, corner_radius=0, fg_color="transparent")
+        self.second_frame = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
 
         # create third frame
-        self.third_frame = ck.CTkFrame(self, corner_radius=0, fg_color="transparent")
+        self.third_frame = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
 
         # select default frame
         self.select_frame_by_name("home")
@@ -230,17 +245,17 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         # show selected frame
         if name == "home":
-            self.home_frame.grid(row=0, column=1, sticky="nsew")
-        else:
-            self.home_frame.grid_forget()
-        if name == "frame_2":
-            self.second_frame.grid(row=0, column=1, sticky="nsew")
-        else:
+            self.home_frame.grid(row=0, column=0, sticky="nsew")
             self.second_frame.grid_forget()
-        if name == "frame_3":
-            self.third_frame.grid(row=0, column=1, sticky="nsew")
-        else:
             self.third_frame.grid_forget()
+        elif name == "frame_2":
+            self.home_frame.grid_forget()
+            self.second_frame.grid(row=0, column=0, sticky="nsew")
+            self.third_frame.grid_forget()
+        elif name == "frame_3":
+            self.home_frame.grid_forget()
+            self.second_frame.grid_forget()
+            self.third_frame.grid(row=0, column=0, sticky="nsew")
 
     def home_button_event(self):
         self.select_frame_by_name("home")
