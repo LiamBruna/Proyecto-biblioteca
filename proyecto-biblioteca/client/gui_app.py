@@ -1,6 +1,8 @@
 import tkinter as tk
 import customtkinter as ck
 from tkinter import messagebox
+from PIL import Image
+import os
 
 from model.conexion_db import *
 from model.classes import *
@@ -9,11 +11,11 @@ class VentanaRegistro(ck.CTkToplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-        self.bd = BD()
-
         self.title("Registro")
         self.parent.iconbitmap('img\libros.ico')
         self.resizable(0, 0)
+
+        self.bd = BD()
 
         self.show_password = tk.BooleanVar(value=False)  # Variable para controlar la visibilidad de la contraseña
 
@@ -115,7 +117,7 @@ class Frame(ck.CTkFrame):
             self.contraseña_entry.configure(show="*")
 
     def abrir_ventana_registro(self):
-        ventana_registro = VentanaRegistro(self.root, self.bd)
+        ventana_registro = VentanaRegistro(self.root)
         self.root.wait_window(ventana_registro)
 
     def loginWindow(self):
@@ -148,51 +150,109 @@ class VentanaPrincipal(ck.CTkToplevel):
         super().__init__(parent)
         self.parent = parent
         self.bd = BD()
-        self.parent.iconbitmap('img\libros.ico')
+        self.parent.iconbitmap('img\\libros.ico')
         self.title("Ventana Principal")
 
-        self.menu_principal = ck.CTkOptionMenu(self)
-        self.config(menu=self.menu_principal)
+        # set grid layout 1x2
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
 
-        self.menu_registro = ck.CTkOptionMenu(self.menu_principal, tearoff=0)
-        self.menu_principal.add_cascade(label="Registrar", menu=self.menu_registro)
-        self.menu_registro.add_command(label="Registrar Préstamo", command=self.mostrar_formulario_prestamo)
+        # load images with light and dark mode image
+        self.logo_image = ck.CTkImage(Image.open("img\\CustomTkinter_logo_single.png"), size=(20, 20))
+        self.large_test_image = ck.CTkImage(Image.open("img\\large_test_image.png"), size=(20, 20))
+        self.image_icon_image = ck.CTkImage(Image.open("img\\image_icon_light.png"), size=(20, 20))
+        self.home_image = ck.CTkImage(light_image=Image.open("img\\home_dark.png"), size=(20, 20))
+        self.chat_image = ck.CTkImage(light_image=Image.open("img\\chat_dark.png"), size=(20, 20))
+        self.add_user_image = ck.CTkImage(light_image=Image.open("img\\add_user_dark.png"),size=(20, 20))
 
-        # Variables de control para los entrys
-        self.usuario_var = tk.StringVar()
-        self.fecha_devolucion_var = tk.StringVar()
+        # create navigation frame
+        self.navigation_frame = ck.CTkFrame(self, corner_radius=0)
+        self.navigation_frame.grid(row=0, column=0, sticky="nsew")
+        self.navigation_frame.grid_rowconfigure(4, weight=1)
 
-    def mostrar_formulario_prestamo(self):
-        # Limpiar la ventana principal antes de mostrar el formulario
-        self.clear_main_window()
+        self.navigation_frame_label = ck.CTkLabel(self.navigation_frame, text="  Image Example", image=self.logo_image,
+                                                             compound="left", font=ck.CTkFont(size=15, weight="bold"))
+        self.navigation_frame_label.grid(row=0, column=0, padx=20, pady=20)
 
-        # Crear los labels y los entrys para el formulario de préstamo
-        label_usuario = ck.CTkLabel(self, text="Usuario:")
-        label_usuario.pack()
-        entry_usuario = ck.CTkEntry(self, textvariable=self.usuario_var)
-        entry_usuario.pack()
+        self.home_button = ck.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Home",
+                                                   fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
+                                                   image=self.home_image, anchor="w", command=self.home_button_event)
+        self.home_button.grid(row=1, column=0, sticky="ew")
 
-        label_fecha_devolucion = ck.CTkLabel(self, text="Fecha de devolución:")
-        label_fecha_devolucion.pack()
-        entry_fecha_devolucion = ck.CTkEntry(self, textvariable=self.fecha_devolucion_var)
-        entry_fecha_devolucion.pack()
+        self.frame_2_button = ck.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Frame 2",
+                                                      fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
+                                                      image=self.chat_image, anchor="w", command=self.frame_2_button_event)
+        self.frame_2_button.grid(row=2, column=0, sticky="ew")
 
-        button_registrar = ck.CTkLabel(self, text="Registrar", command=self.registrar_prestamo_bd)
-        button_registrar.pack()
+        self.frame_3_button = ck.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Frame 3",
+                                                      fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
+                                                      image=self.add_user_image, anchor="w", command=self.frame_3_button_event)
+        self.frame_3_button.grid(row=3, column=0, sticky="ew")
 
-    def registrar_prestamo_bd(self):
-        usuario = self.usuario_var.get()
-        fecha_devolucion = self.fecha_devolucion_var.get()
+        self.appearance_mode_menu = ck.CTkOptionMenu(self.navigation_frame, values=["Light", "Dark", "System"],
+                                                                command=self.change_appearance_mode_event)
+        self.appearance_mode_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
 
-        # Aquí puedes llamar al método registrarPrestamo de la clase BD
-        self.bd.registrarPrestamo(usuario)
+        self.button_cerrarSesion = ck.CTkButton(self.navigation_frame, text="Cerrar sesión", command=self.cerrar_sesion)
+        self.button_cerrarSesion.grid(row = 7, column = 0, padx=20, pady=20, sticky="s")
 
-        self.clear_main_window()
-    
-    def clear_main_window(self):
-        # Limpiar la ventana principal eliminando todos los widgets existentes
-        for widget in self.winfo_children():
-            widget.destroy()
+
+        # create home frame
+        self.home_frame = ck.CTkFrame(self, corner_radius=0, fg_color="transparent")
+        self.home_frame.grid_columnconfigure(0, weight=1)
+
+        self.home_frame_large_image_label = ck.CTkLabel(self.home_frame, text="", image=self.large_test_image)
+        self.home_frame_large_image_label.grid(row=0, column=0, padx=20, pady=10)
+
+        self.home_frame_button_1 = ck.CTkButton(self.home_frame, text="", image=self.image_icon_image)
+        self.home_frame_button_1.grid(row=1, column=0, padx=20, pady=10)
+        self.home_frame_button_2 = ck.CTkButton(self.home_frame, text="CTkButton", image=self.image_icon_image, compound="right")
+        self.home_frame_button_2.grid(row=2, column=0, padx=20, pady=10)
+        self.home_frame_button_3 = ck.CTkButton(self.home_frame, text="CTkButton", image=self.image_icon_image, compound="top")
+        self.home_frame_button_3.grid(row=3, column=0, padx=20, pady=10)
+        self.home_frame_button_4 = ck.CTkButton(self.home_frame, text="CTkButton", image=self.image_icon_image, compound="bottom", anchor="w")
+        self.home_frame_button_4.grid(row=4, column=0, padx=20, pady=10)
+
+        # create second frame
+        self.second_frame = ck.CTkFrame(self, corner_radius=0, fg_color="transparent")
+
+        # create third frame
+        self.third_frame = ck.CTkFrame(self, corner_radius=0, fg_color="transparent")
+
+        # select default frame
+        self.select_frame_by_name("home")
+
+    def select_frame_by_name(self, name):
+        # set button color for selected button
+        self.home_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
+        self.frame_2_button.configure(fg_color=("gray75", "gray25") if name == "frame_2" else "transparent")
+        self.frame_3_button.configure(fg_color=("gray75", "gray25") if name == "frame_3" else "transparent")
+
+        # show selected frame
+        if name == "home":
+            self.home_frame.grid(row=0, column=1, sticky="nsew")
+        else:
+            self.home_frame.grid_forget()
+        if name == "frame_2":
+            self.second_frame.grid(row=0, column=1, sticky="nsew")
+        else:
+            self.second_frame.grid_forget()
+        if name == "frame_3":
+            self.third_frame.grid(row=0, column=1, sticky="nsew")
+        else:
+            self.third_frame.grid_forget()
+
+    def home_button_event(self):
+        self.select_frame_by_name("home")
+
+    def frame_2_button_event(self):
+        self.select_frame_by_name("frame_2")
+
+    def frame_3_button_event(self):
+        self.select_frame_by_name("frame_3")
+
+    def change_appearance_mode_event(self, new_appearance_mode):
+        ck.set_appearance_mode(new_appearance_mode)
 
     def cerrar_sesion(self):
         self.destroy()
