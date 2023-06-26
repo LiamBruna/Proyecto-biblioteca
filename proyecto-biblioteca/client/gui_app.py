@@ -234,6 +234,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.cerrar_sesion_imagen = ck.CTkImage(Image.open("img\\cerrar_sesion.png"))
         self.stock_image = ck.CTkImage(Image.open("img\\stock.png"), size=(26, 26))
         self.usuario_image = ck.CTkImage(Image.open("img\\usuarios.png"), size=(26, 26))
+        self.actualizar_stock_image = ck.CTkImage(Image.open("img\\actualizar_stock.png"), size=(450, 120))
 
         # Crear Frame lateral de navegación
         self.frameNavegacion = ck.CTkFrame(self, corner_radius=0)
@@ -287,11 +288,11 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.frame_3_button.grid(row=6, column=0, sticky="ew")
 
         # Menu de opciones para cambiar de apariencia la app
-        self.menu_apariencia = ck.CTkOptionMenu(self.frameNavegacion, values=["Dark", "Light"], command=self.evento_cambiar_apariencia)
+        self.menu_apariencia = ck.CTkOptionMenu(self.frameNavegacion, font=('Calibri (body)', 15, 'bold'), values=["Dark", "Light"], command=self.evento_cambiar_apariencia)
         self.menu_apariencia.grid(row=7, column=0, padx=20, pady=20, sticky="s")
 
         # Botón para cerrar sesion
-        self.button_cerrarSesion = ck.CTkButton(self.frameNavegacion, text="Cerrar sesión", image=self.cerrar_sesion_imagen, command=self.cerrar_sesion)
+        self.button_cerrarSesion = ck.CTkButton(self.frameNavegacion, font=('Calibri (body)', 15, 'bold'), text="Cerrar sesión", image=self.cerrar_sesion_imagen, command=self.cerrar_sesion)
         self.button_cerrarSesion.grid(row=8, column=0, padx=20, pady=20, sticky="s")
 
         # Crear contenedor main
@@ -327,11 +328,54 @@ class VentanaPrincipal(ck.CTkToplevel):
         # Crear frame para el stock
         self.stock = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.stock.grid(row=0, column=0, sticky="nsew")
-        self.stock.grid_columnconfigure(0, weight=1)  # Expansión horizontal
-        self.stock.grid_rowconfigure(1, weight=1)  # Expansión vertical
 
-        self.actualizar_stock_label = ck.CTkLabel(self.stock, text="", image=self.large_test_image)
-        self.actualizar_stock_label.grid(row=0, column=0, padx=20, pady=10)
+        self.actualizar_stock_label_image = ck.CTkLabel(self.stock, text="", image=self.actualizar_stock_image)
+        self.actualizar_stock_label_image.grid(row=0, columnspan=3, padx=20)
+
+        self.buscar_libro_isbn_label = ck.CTkLabel(self.stock, text="Ingrese el ISBM del libro para actualizar stock: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.buscar_libro_isbn_label.grid(row=10, column=0, padx=10)
+
+        self.buscar_libro_isbn_entry = ck.CTkEntry(self.stock, width=140)
+        self.buscar_libro_isbn_entry.grid(row=10, column=1, padx=10)
+
+        # Botón para buscar el libro
+        self.buscar_libro_isbn_button = ck.CTkButton(self.stock, text="BUSCAR")
+        self.buscar_libro_isbn_button.grid(row=10, column=2, padx=3)
+
+        # Widgets del frame stock a mostrar
+        self.isbn_label = ck.CTkLabel(self.stock, text="ISBN: ",
+                        font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.isbn_label.grid(row=14, column=0, pady=15)
+
+        self.isbn_entry = ck.CTkEntry(self.stock, width=140)
+        self.isbn_entry.grid(row=14, columnspan=7, padx=10)
+
+        self.titulo_label = ck.CTkLabel(self.stock, text="Titulo: ",
+                        font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.titulo_label.grid(row=15, column=0, pady=10)
+
+        self.titulo_entry = ck.CTkEntry(self.stock, width=140)
+        self.titulo_entry.grid(row=15, columnspan=7, padx=10)
+
+        self.numero_paginas_label = ck.CTkLabel(self.stock, text="N° de Paginas: ",
+                        font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.numero_paginas_label.grid(row=16, column=0, pady=10)
+
+        self.numero_paginas_entry = ck.CTkEntry(self.stock, width=140)
+        self.numero_paginas_entry.grid(row=16, columnspan=7, padx=10)
+
+        # Campo que se va a actualizar
+        self.stock_label = ck.CTkLabel(self.stock, text="Stock: ",
+                        font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.stock_label.grid(row=17, column=0, pady=10)
+
+        self.stock_entry = ck.CTkEntry(self.stock, width=140)
+        self.stock_entry.grid(row=17, columnspan=7, padx=10)
+
+        # Botón para actualizar el stock del libro
+        self.buscar_libro_isbn_button = ck.CTkButton(self.stock, text="ACTUALIZAR")
+        self.buscar_libro_isbn_button.place(x=600, y=400)
 
         # Crear frame para mostrar a los usuarios
         self.usuario = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent", bg_color="gray90")
