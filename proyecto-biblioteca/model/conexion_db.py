@@ -115,12 +115,13 @@ class BD:
             messagebox.showerror("Existe libro", f"{str(e)}")
         return existe'''
     
-    # Método para buscar un libro
+    # Método para buscar un libro por ISBN
     def buscarLibro(self, isbn):
         sql = "SELECT * FROM libro WHERE ISBN = ?"
         self.cursor.execute(sql, (isbn,))
         results = self.cursor.fetchall()
         return results
+        
 
     # Método para mostrar los libros en el Catalogo
     def modificarStock(self, isbn, stock):
