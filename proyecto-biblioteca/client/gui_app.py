@@ -346,32 +346,32 @@ class VentanaPrincipal(ck.CTkToplevel):
         # Widgets del frame stock a mostrar
         self.isbn_label = ck.CTkLabel(self.stock, text="ISBN: ",
                         font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
-        self.isbn_label.grid(row=14, column=0, pady=15)
+        self.isbn_label.grid(row=15, column=0, pady=15)
 
         self.isbn_entry = ck.CTkEntry(self.stock, width=140)
-        self.isbn_entry.grid(row=14, columnspan=7, padx=10)
+        self.isbn_entry.grid(row=15, columnspan=7, padx=10)
 
         self.titulo_label = ck.CTkLabel(self.stock, text="Titulo: ",
                         font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
-        self.titulo_label.grid(row=15, column=0, pady=10)
+        self.titulo_label.grid(row=16, column=0, pady=10)
 
         self.titulo_entry = ck.CTkEntry(self.stock, width=140)
-        self.titulo_entry.grid(row=15, columnspan=7, padx=10)
+        self.titulo_entry.grid(row=16, columnspan=7, padx=10)
 
         self.numero_paginas_label = ck.CTkLabel(self.stock, text="N° de Paginas: ",
                         font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
-        self.numero_paginas_label.grid(row=16, column=0, pady=10)
+        self.numero_paginas_label.grid(row=17, column=0, pady=10)
 
         self.numero_paginas_entry = ck.CTkEntry(self.stock, width=140)
-        self.numero_paginas_entry.grid(row=16, columnspan=7, padx=10)
+        self.numero_paginas_entry.grid(row=17, columnspan=7, padx=10)
 
         # Campo que se va a actualizar
         self.stock_label = ck.CTkLabel(self.stock, text="Stock: ",
                         font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
-        self.stock_label.grid(row=17, column=0, pady=10)
+        self.stock_label.grid(row=18, column=0, pady=10)
 
         self.stock_entry = ck.CTkEntry(self.stock, width=140)
-        self.stock_entry.grid(row=17, columnspan=7, padx=10)
+        self.stock_entry.grid(row=18, columnspan=7, padx=10)
 
         # Botón para actualizar el stock del libro
         self.buscar_libro_isbn_button = ck.CTkButton(self.stock, text="ACTUALIZAR")
