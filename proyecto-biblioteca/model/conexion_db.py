@@ -4,6 +4,8 @@ from sqlite3 import Error # Modulo para mostrar errores por si se presentan
 from tkinter import messagebox # Modulo para mostrar mensajes en ventanas emergentes
 import hashlib # Modulo para hashear las contraseñas ingresadas
 
+from model.classes import Libro
+
 class BD:
     def __init__(self):
         self.base_datos = 'database/biblioteca.db'
@@ -89,10 +91,40 @@ class BD:
 
     # Método para mostrar información personal de los usuarios registrados
     def mostrarUsuarios(self):
+        sql = "SELECT * FROM usuario"
         try:
-            sql = "SELECT * FROM usuario"
             self.cursor.execute(sql)
             results = self.cursor.fetchall()
             return results
         except Exception as e:
-            messagebox.showerror("Mostrar Usuarios", str(e))
+            messagebox.showerror("Mostrar usuarios", f"{str(e)}")
+
+    # Método para saber si existe un libro por su código ISBN
+    def existeLibro(self, libro):
+        sql = "SELECT * FROM libro WHERE ISBN = ?"
+        vals = (libro.getIsbn())
+        existe = False
+        try:
+            self.cursor.execute(sql, vals)
+            result = self.cursor.fetchone()
+            if result != None:
+                existe = True
+            else:
+                existe = False
+        except Exception as e:
+            messagebox.showerror("Existe libro", f"{str(e)}")
+        return existe
+
+    # Método para mostrar los libros en el Catalogo
+    def modificarStock(self, libro):
+        sql = "UPDATE libro SET STOCK = ? WHERE ISBN = ?"
+        vals = (libro.setStock(), libro.getIsbn())
+        try:
+            if self.existeLibro(libro.getIsbn() == False):
+                self.cursor.execute(sql, vals)
+                self.connect.commit()
+                messagebox.showinfo("Modificar stock", f"Stock del libro {libro.getTitulo()} se ha actualizado.")
+            else:
+                messagebox.showerror("Modificar stock", f"El codigo {libro.getIsbn()} del libro no existe.")
+        except Exception as e:
+            messagebox.showerror(f"Modificar stock", f"{str(e)}")

@@ -250,43 +250,49 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.inicio_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Inicio",
                                         fg_color="transparent", text_color=("gray10", "gray90"),
                                         hover_color=("gray70", "gray30"), image=self.home_image, anchor="w",
-                                        command=self.inicio_button_event, font=('Calibri (body)', 20, 'bold'))
+                                        command=self.inicio_button_evento, font=('Calibri (body)', 20, 'bold'))
         self.inicio_button.grid(row=1, column=0, sticky="ew")
+
+        self.catalogo_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Catalogo",
+                                        fg_color="transparent", text_color=("gray10", "gray90"),
+                                        hover_color=("gray70", "gray30"), image=self.home_image, anchor="w",
+                                        command=self.catalogo_button_evento, font=('Calibri (body)', 20, 'bold'))
+        self.catalogo_button.grid(row=2, column=0, sticky="ew")
 
         # Botón de Stock en navegación
         self.stock_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Stock",
                                          fg_color="transparent", text_color=("gray10", "gray90"),
                                          hover_color=("gray70", "gray30"), image=self.stock_image, anchor="w",
-                                         command=self.frame_stock_event, font=('Calibri (body)', 20, 'bold'))
-        self.stock_button.grid(row=2, column=0, sticky="ew")
+                                         command=self.stock_button_evento, font=('Calibri (body)', 20, 'bold'))
+        self.stock_button.grid(row=3, column=0, sticky="ew")
 
         # Botón de Usuarios en navegación
-        self.usuario_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Usuarios",
+        self.usuario_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Usuarios Registrados",
                                            fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                           image=self.usuario_image, anchor="w",command=self.frame_usuarios_event, font=('Calibri (body)', 20, 'bold'))
-        self.usuario_button.grid(row=3, column=0, sticky="ew")
+                                           image=self.usuario_image, anchor="w",command=self.usuario_button_evento, font=('Calibri (body)', 20, 'bold'))
+        self.usuario_button.grid(row=4, column=0, sticky="ew")
 
         # Botón de Realizar prestamos en navegación
         self.realizar_prestamo_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
                                            text="Realizar Prestamo", fg_color="transparent", text_color=("gray10", "gray90"),
                                            hover_color=("gray70", "gray30"), image=self.chat_image, anchor="w",
-                                           command=self.realizar_prestamo_button_event, font=('Calibri (body)', 20, 'bold'))
-        self.realizar_prestamo_button.grid(row=4, column=0, sticky="ew")
+                                           command=self.realizarPrestamo_button_evento, font=('Calibri (body)', 20, 'bold'))
+        self.realizar_prestamo_button.grid(row=5, column=0, sticky="ew")
 
         # Otro botón
         self.frame_3_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
                                            text="Frame 3", fg_color="transparent", text_color=("gray10", "gray90"),
                                            hover_color=("gray70", "gray30"), image=self.add_user_image, anchor="w",
                                            command=self.frame_3_button_event, font=('Calibri (body)', 20, 'bold'))
-        self.frame_3_button.grid(row=5, column=0, sticky="ew")
+        self.frame_3_button.grid(row=6, column=0, sticky="ew")
 
         # Menu de opciones para cambiar de apariencia la app
         self.menu_apariencia = ck.CTkOptionMenu(self.frameNavegacion, values=["Dark", "Light"], command=self.evento_cambiar_apariencia)
-        self.menu_apariencia.grid(row=6, column=0, padx=20, pady=20, sticky="s")
+        self.menu_apariencia.grid(row=7, column=0, padx=20, pady=20, sticky="s")
 
         # Botón para cerrar sesion
         self.button_cerrarSesion = ck.CTkButton(self.frameNavegacion, text="Cerrar sesión", image=self.cerrar_sesion_imagen, command=self.cerrar_sesion)
-        self.button_cerrarSesion.grid(row=7, column=0, padx=20, pady=20, sticky="s")
+        self.button_cerrarSesion.grid(row=8, column=0, padx=20, pady=20, sticky="s")
 
         # Crear contenedor main
         self.main_frame = ck.CTkFrame(self, corner_radius=0, fg_color="transparent")
@@ -312,8 +318,20 @@ class VentanaPrincipal(ck.CTkToplevel):
                                                 compound="bottom", anchor="w")
         self.inicio_frame_button_4.grid(row=4, column=0, padx=20, pady=10)
 
+        # Crear frame para el catalogo
+        self.catalogo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+        self.catalogo.grid(row=0, column=0, sticky="nsew")
+        self.catalogo.grid_columnconfigure(0, weight=1)  # Expansión horizontal
+        self.catalogo.grid_rowconfigure(1, weight=1)  # Expansión vertical
+
         # Crear frame para el stock
         self.stock = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+        self.stock.grid(row=0, column=0, sticky="nsew")
+        self.stock.grid_columnconfigure(0, weight=1)  # Expansión horizontal
+        self.stock.grid_rowconfigure(1, weight=1)  # Expansión vertical
+
+        self.actualizar_stock_label = ck.CTkLabel(self.stock, text="", image=self.large_test_image)
+        self.actualizar_stock_label.grid(row=0, column=0, padx=20, pady=10)
 
         # Crear frame para mostrar a los usuarios
         self.usuario = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent", bg_color="gray90")
@@ -322,12 +340,12 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.usuario.grid_rowconfigure(1, weight=1)  # Expansión vertical
 
         actualizar_button = ck.CTkButton(self.usuario, text='ACTUALIZAR TABLA', font=('Arial', 11, 'bold'), command=self.mostrarDatos)
-        actualizar_button.grid(columnspan=1, row=2, padx=5)
+        actualizar_button.grid(columnspan=1, row=2, pady=5)
         
         # Estilo de la tabla para mostrar los datos
         estilo_tabla = ttk.Style()
         estilo_tabla.configure("Treeview", font=('Helvetica', 10, 'bold'), foreground='black', background='white')
-        estilo_tabla.map('Treeview', background=[('selected', 'DarkOrchid1')], foreground=[('selected', 'black')])
+        estilo_tabla.map('Treeview', background=[('selected', 'green')], foreground=[('selected', 'black')])
         estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=('Calibri (body)', 10, 'bold'))
         estilo_tabla.configure('Item', foreground='transparent', focuscolor='DarkOrchid1')
         estilo_tabla.configure('TScrollbar', arrowcolor='DarkOrchid1', bordercolor='black', troughcolor='DarkOrchid1', background='white')
@@ -374,10 +392,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.tabla_uno.heading('Correo electrónico', text='Correo electrónico', anchor='center')
         self.tabla_uno.heading('Tipo de usuario', text='Tipo de usuario', anchor='center')
 
-        self.tabla_uno.bind("<<TreeviewSelect>>")
-
-        # Llamada al método para mostrar los datos en la tabla
-        self.mostrarDatos()
+        self.tabla_uno.bind("<<TreeviewSelect>>", self.obtener_fila)
 
         # Ajustar expansión del marco principal
         self.main_frame.grid_rowconfigure(0, weight=1)
@@ -397,6 +412,7 @@ class VentanaPrincipal(ck.CTkToplevel):
     # Método para buscar el frame por el nombre del frame
     def seleccion_frame_nombre(self, name):
         self.inicio_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
+        self.catalogo_button.configure(fg_color=("gray75", "gray25") if name == "catalogo" else "transparent")
         self.usuario_button.configure(fg_color=("gray75", "gray25") if name == "usuarios" else "transparent")
         self.stock_button.configure(fg_color=("gray75", "gray25") if name == "stock" else "transparent")
         self.realizar_prestamo_button.configure(fg_color=("gray75", "gray25") if name == "realizar_prestamo" else "transparent")
@@ -405,6 +421,14 @@ class VentanaPrincipal(ck.CTkToplevel):
         # Mostrar frame seleccionado
         if name == "home":
             self.inicio_frame.grid(row=0, column=0, sticky="nsew")
+            self.catalogo.grid_forget()
+            self.stock.grid_forget()
+            self.usuario.grid_forget()
+            self.realizar_prestamo.grid_forget()
+            self.third_frame.grid_forget()
+        elif name == "catalogo":
+            self.inicio_frame.grid_forget()
+            self.catalogo.grid(row=0, column=0, sticky="nsew")
             self.stock.grid_forget()
             self.usuario.grid_forget()
             self.realizar_prestamo.grid_forget()
@@ -434,24 +458,30 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.realizar_prestamo.grid_forget()
             self.third_frame.grid(row=0, column=0, sticky="nsew")
 
-    def inicio_button_event(self):
+    # Métodos para que cuando se presione el botón con este método, muestre el frame relacionado
+    def inicio_button_evento(self):
         self.seleccion_frame_nombre("home")
 
-    def frame_stock_event(self):
+    def catalogo_button_evento(self):
+        self.seleccion_frame_nombre("catalogo")
+
+    def stock_button_evento(self):
         self.seleccion_frame_nombre("stock")
 
-    def frame_usuarios_event(self):
+    def usuario_button_evento(self):
         self.seleccion_frame_nombre("usuarios")
 
-    def realizar_prestamo_button_event(self):
+    def realizarPrestamo_button_evento(self):
         self.seleccion_frame_nombre("realizar_prestamo")
 
     def frame_3_button_event(self):
         self.seleccion_frame_nombre("frame_3")
 
+    # Método para cambiar la apariencia de la app
     def evento_cambiar_apariencia(self, new_appearance_mode):
         ck.set_appearance_mode(new_appearance_mode)
 
+    # Método para mostrar los datos en la tabla de usuarios
     def mostrarDatos(self):
         datos = self.bd.mostrarUsuarios()
         self.tabla_uno.delete(*self.tabla_uno.get_children())
@@ -460,6 +490,17 @@ class VentanaPrincipal(ck.CTkToplevel):
             i = i + 1
             self.tabla_uno.insert('', i, text=datos[i][0], values=datos[i][1:8])
 
+        messagebox.showinfo("Usuarios registrados", "La tabla ha sido actualizada.")
+
+    # Método para poder seleccionar la fila en la tabla de usuarios
+    def obtener_fila(self, event):
+        current_item = self.tabla_uno.focus()
+        if not current_item:
+            return
+        data = self.tabla_uno.item(current_item)
+        self.nombre_borrar = data['values'][0]
+
+    # Método para cerrar sesion en la app
     def cerrar_sesion(self):
         self.destroy()
         self.parent.deiconify()

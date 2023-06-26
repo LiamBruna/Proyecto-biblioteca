@@ -87,3 +87,34 @@ class Usuario:
         return self.__tipo
     def setTipoU(self, tipo):
         self.__tipo = tipo
+
+class Libro:
+    def __init__(self, isbn, titulo, numero_paginas, stock):
+        self.__isbn = isbn
+        self.__titulo = titulo
+        self.__numeroPaginas = numero_paginas
+        self.__stock = stock
+
+    # ISBN
+    def getIsbn(self):
+        return self.__isbn
+    def setIsbn(self, isbn):
+        self.__isbn = isbn
+
+    # Título
+    def getTitulo(self):
+        return self.__titulo
+    def setTitulo(self, titulo):
+        self.__titulo = titulo
+
+    # Número de páginas
+    def getNumeroPaginas(self):
+        return self.__numeroPaginas
+    def setNumeroPaginas(self, numero_paginas):
+        self.__numeroPaginas = numero_paginas
+
+    # Stock
+    def getStock(self):
+        return self.__stock
+    def setStock(self, stock):
+        self.__stock = stock
