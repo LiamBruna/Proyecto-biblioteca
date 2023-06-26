@@ -326,6 +326,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.catalogo.grid_rowconfigure(1, weight=1)  # Expansión vertical
 
         # Crear frame para el stock
+        self.buscar_actualiza = ck.StringVar()
         self.stock = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.stock.grid(row=0, column=0, sticky="nsew")
 
@@ -336,21 +337,23 @@ class VentanaPrincipal(ck.CTkToplevel):
                                                 font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.buscar_libro_isbn_label.grid(row=10, column=0, padx=10)
 
-        self.buscar_libro_isbn_entry = ck.CTkEntry(self.stock, width=140)
+        self.buscar_libro_isbn_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.buscar_actualiza)
         self.buscar_libro_isbn_entry.grid(row=10, column=1, padx=10)
 
         # Botón para buscar el libro
-        self.buscar_libro_isbn_button = ck.CTkButton(self.stock, text="BUSCAR")
+        self.buscar_libro_isbn_button = ck.CTkButton(self.stock, command=self.actualizarStock, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.buscar_libro_isbn_button.grid(row=10, column=2, padx=3)
 
         # Widgets del frame stock a mostrar
+        self.isbn = ck.StringVar()
         self.isbn_label = ck.CTkLabel(self.stock, text="ISBN: ",
                         font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.isbn_label.grid(row=15, column=0, pady=15)
 
         self.isbn_entry = ck.CTkEntry(self.stock, width=140)
         self.isbn_entry.grid(row=15, columnspan=7, padx=10)
-
+        
+        self.titulo = ck.StringVar()
         self.titulo_label = ck.CTkLabel(self.stock, text="Titulo: ",
                         font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.titulo_label.grid(row=16, column=0, pady=10)
@@ -358,6 +361,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.titulo_entry = ck.CTkEntry(self.stock, width=140)
         self.titulo_entry.grid(row=16, columnspan=7, padx=10)
 
+        self.numero_paginas = ck.IntVar()
         self.numero_paginas_label = ck.CTkLabel(self.stock, text="N° de Paginas: ",
                         font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.numero_paginas_label.grid(row=17, column=0, pady=10)
@@ -366,6 +370,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.numero_paginas_entry.grid(row=17, columnspan=7, padx=10)
 
         # Campo que se va a actualizar
+        self.stockLibro = ck.IntVar()
         self.stock_label = ck.CTkLabel(self.stock, text="Stock: ",
                         font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.stock_label.grid(row=18, column=0, pady=10)
@@ -524,6 +529,32 @@ class VentanaPrincipal(ck.CTkToplevel):
     # Método para cambiar la apariencia de la app
     def evento_cambiar_apariencia(self, new_appearance_mode):
         ck.set_appearance_mode(new_appearance_mode)
+
+    # Método para actualizar el stock de libros
+    def actualizarStock(self):
+        dato = self.buscar_actualiza.get()
+        dato = str("'" + dato + "'")
+        isbn_buscado = self.bd.buscarLibro(dato)
+        if isbn_buscado == []:
+            messagebox.showerror("Stock", f"El ISBN {dato} del libro no existe.")
+            self.limpiarCampos()
+        else:
+            i = -1
+            for dato in isbn_buscado:
+                i += 1
+                self.isbn.set(isbn_buscado[i][1])
+                self.titulo.set(isbn_buscado[i][2])
+                self.numero_paginas.set(isbn_buscado[i][3])
+                self.stockLibro.set(isbn_buscado[i][4])
+
+
+    def limpiarCampos(self):
+        self.isbn.set('')
+        self.titulo.set('')
+        self.numero_paginas.set('')
+        self.stockLibro.set('')
+
+
 
     # Método para mostrar los datos en la tabla de usuarios
     def mostrarDatos(self):
