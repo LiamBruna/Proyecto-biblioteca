@@ -6,4 +6,4 @@
 4. Instalar Módulos: `pip install -r requirements.txt`
 
 
-5. Cambios en la Base de Datos 
+5. Cambios en la Base de Datos: Se elimino la columna CATALOGO de la tabla libro
