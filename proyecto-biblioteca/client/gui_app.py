@@ -243,6 +243,10 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.isbn = ck.StringVar()
         self.buscar_actualiza = ck.StringVar()
 
+        # Variables de texto para el Frame Realizar Préstamo
+        self.rut_usuario = ck.StringVar()
+        self.tipo_usuario = ck.StringVar()
+
         # Cargar imágenes para Menu
         self.logo_imagen = ck.CTkImage(Image.open("img\\libros.ico"), size=(30, 30))
         self.large_test_image = ck.CTkImage(Image.open("img\\large_test_image.png"), size=(500, 150))
@@ -481,8 +485,12 @@ class VentanaPrincipal(ck.CTkToplevel):
                                                 font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.rut_usuario_label.grid(row=10, column=0, pady=5)
 
-        self.rut_usuario_entry = ck.CTkEntry(self.frame_realizar_prestamo, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.rut_usuario_entry = ck.CTkEntry(self.frame_realizar_prestamo, textvariable=self.rut_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.rut_usuario_entry.grid(row=10, column=1, pady=5)
+        
+        # Botón para buscar al usuario por el rut
+        self.buscar_usuario_rut = ck.CTkButton(self.frame_realizar_prestamo, command=self.obtenerTipoUsuario, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.buscar_usuario_rut.grid(row=10, column=2, padx=3)
 
         self.isbn_libro_label = ck.CTkLabel(self.frame_realizar_prestamo, text="Ingrese el ISBN del Libro: ",
                                                 font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
@@ -513,7 +521,7 @@ class VentanaPrincipal(ck.CTkToplevel):
                                                 font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.tipo_usuario_label.grid(row=14, column=0, pady=5)
 
-        self.tipo_usuario_entry = ck.CTkEntry(self.frame_realizar_prestamo, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.tipo_usuario_entry = ck.CTkEntry(self.frame_realizar_prestamo, textvariable=self.tipo_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.tipo_usuario_entry.grid(row=14, column=1, padx=5)
 
         # Botón que realizara el prestamo
@@ -630,7 +638,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid(row=0, column=0, sticky="nsew")
 
-    # Métodos para que cuando se presione el botón con este método, muestre el frame relacionado
+    # Metodos para que cuando se presione el botón con este método, muestre el frame relacionado
     def inicio_button_evento(self):
         self.seleccion_frame_nombre("home")
 
@@ -653,7 +661,7 @@ class VentanaPrincipal(ck.CTkToplevel):
     def evento_cambiar_apariencia(self, new_appearance_mode):
         ck.set_appearance_mode(new_appearance_mode)
 
-    # MÉTODOS PARA EL FRAME STOCK
+    # METODOS PARA EL FRAME STOCK
     # Método para buscar un libro
     def buscarLibroStock(self, event = None):
         isbn = self.buscar_actualiza.get()  # Obtener el ISBN ingresado
@@ -679,8 +687,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.bd.actualizarStock(stock, isbn)  
         self.limpiarCampos()
 
-
-    # MÉTODOS PARA EL FRAME USUARIOS REGISTRADOS
+    # METODOS PARA EL FRAME USUARIOS REGISTRADOS
     # Método para mostrar los datos en la tabla de usuarios
     def mostrarDatosUsuario(self):
         datos = self.bd.mostrarUsuarios()
@@ -699,7 +706,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         data = self.tabla_uno.item(current_item)
         self.nombre_borrar = data['values'][0]
 
-    # MÉTODOS PARA EL FRAME LIBROS EN PRESTAMO
+    # METODOS PARA EL FRAME LIBROS EN PRESTAMO
     # Método para mostrar los datos en la tabla libros en préstamo
     def mostrarDatosLibros(self):
         datos = self.bd.mostrarLibrosPrestamo()
@@ -717,6 +724,14 @@ class VentanaPrincipal(ck.CTkToplevel):
             return
         data = self.tabla_dos.item(current_item)
         self.nombre_borrar = data['values'][0]
+
+    # METODOS PARA EL FRAME REALIZAR PRESTAMO
+    # Método para obtener el tipo de usuario mediante su RUT
+    def obtenerTipoUsuario(self, event=None):
+        rut = self.rut_usuario.get()
+        tipo_usuario = self.bd.obtenerTipoUsuario(rut)
+        if tipo_usuario:
+            self.tipo_usuario.set(tipo_usuario)
 
     # Método para limpiar los valores en los entry's
     def limpiarCampos(self):

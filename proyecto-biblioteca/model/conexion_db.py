@@ -125,3 +125,18 @@ class BD:
             return results
         except Exception as e:
             messagebox.showerror("Mostrar Libros en Préstamo", f"{str(e)}")
+
+    # MÉTODOS PARA FRAME REALIZAR PRÉSTAMO
+    # Método para obtener el tipo de usuario mediante el RUT
+    def obtenerTipoUsuario(self, rut):
+        sql = "SELECT TIPO_U FROM usuario WHERE RUT_U = ?"
+        try:
+            self.cursor.execute(sql, (rut,))
+            results = self.cursor.fetchone()
+            if results:
+                tipo_usuario = results[0]
+                return tipo_usuario
+            else:
+                messagebox.showerror("Realizar Préstamo", f"El RUT {rut} no esta registrado en la base de datos.")
+        except Exception as e:
+            messagebox.showerror("Realizar Préstamo", f"{str(e)}")
