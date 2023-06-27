@@ -471,7 +471,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.frame_libros_en_prestamo.grid_columnconfigure(0, weight=1) # Expansión horizontal
         self.frame_libros_en_prestamo.grid_rowconfigure(1, weight=1) # Expansión vertical
 
-        actualizar_librosPrestamo_button = ck.CTkButton(self.usuario, text='ACTUALIZAR TABLA PRESTAMOS', font=('Arial', 11, 'bold')) # FALTA EL COMMAND
+        actualizar_librosPrestamo_button = ck.CTkButton(self.frame_libros_en_prestamo, text='ACTUALIZAR TABLA PRESTAMOS', font=('Arial', 11, 'bold')) # FALTA EL COMMAND
         actualizar_librosPrestamo_button.grid(columnspan=1, row=2, pady=5)
 
         # Estilo de la tabla para mostrar los datos
@@ -483,38 +483,38 @@ class VentanaPrincipal(ck.CTkToplevel):
         estilo_tabla.configure('TScrollbar', arrowcolor='DarkOrchid1', bordercolor='black', troughcolor='DarkOrchid1', background='white')
 
         # Mostrar la tabla en el frame libros en prestamo
-        self.frame_tabla_uno = ck.CTkFrame(self.frame_libros_en_prestamo)
-        self.frame_tabla_uno.grid(column=0, row=1, sticky='nsew')
+        self.frame_tabla_dos = ck.CTkFrame(self.frame_libros_en_prestamo)
+        self.frame_tabla_dos.grid(column=0, row=1, sticky='nsew')
 
-        self.tabla_uno = ttk.Treeview(self.frame_tabla_uno)
-        self.tabla_uno.grid(column=0, row=0, sticky='nsew')
+        self.tabla_dos = ttk.Treeview(self.frame_tabla_dos)
+        self.tabla_dos.grid(column=0, row=0, sticky='nsew')
 
-        ladox = ttk.Scrollbar(self.frame_tabla_uno, orient='horizontal', command=self.tabla_uno.xview)
+        ladox = ttk.Scrollbar(self.frame_tabla_dos, orient='horizontal', command=self.tabla_dos.xview)
         ladox.grid(column=0, row=1, sticky='ew')
 
-        ladoy = ttk.Scrollbar(self.frame_tabla_uno, orient='vertical', command=self.tabla_uno.yview)
+        ladoy = ttk.Scrollbar(self.frame_tabla_dos, orient='vertical', command=self.tabla_dos.yview)
         ladoy.grid(column=1, row=0, sticky='ns')
 
         # Configurar expansión en todas las direcciones para el frame y la tabla
-        self.frame_tabla_uno.grid_rowconfigure(0, weight=1)
-        self.frame_tabla_uno.grid_columnconfigure(0, weight=1)
-        self.tabla_uno.grid(sticky='nsew')
+        self.frame_tabla_dos.grid_rowconfigure(0, weight=1)
+        self.frame_tabla_dos.grid_columnconfigure(0, weight=1)
+        self.tabla_dos.grid(sticky='nsew')
 
         # Columnas que se mostrarán en la tabla
-        self.tabla_uno.configure(xscrollcommand=ladox.set, yscrollcommand=ladoy.set)
-        self.tabla_uno['columns'] = ('Titulo', 'Estado')
+        self.tabla_dos.configure(xscrollcommand=ladox.set, yscrollcommand=ladoy.set)
+        self.tabla_dos['columns'] = ('Titulo', 'Estado')
 
         # Ajustar ancho mínimo y ancho de cada columna de encabezado
-        self.tabla_uno.column('#0', minwidth=60, width=70, anchor='center')
-        self.tabla_uno.column('Titulo', minwidth=100, width=130, anchor='center')
-        self.tabla_uno.column('Estado', minwidth=100, width=120, anchor='center')
+        self.tabla_dos.column('#0', minwidth=60, width=70, anchor='center')
+        self.tabla_dos.column('Titulo', minwidth=100, width=130, anchor='center')
+        self.tabla_dos.column('Estado', minwidth=100, width=120, anchor='center')
 
         # Configurar el texto de encabezado para que se muestre completo
-        self.tabla_uno.heading('#0', text='Id', anchor='center')
-        self.tabla_uno.heading('Titulo', text='Titulo', anchor='center')
-        self.tabla_uno.heading('Estado', text='Estado', anchor='center')
+        self.tabla_dos.heading('#0', text='Id', anchor='center')
+        self.tabla_dos.heading('Titulo', text='Titulo', anchor='center')
+        self.tabla_dos.heading('Estado', text='Estado', anchor='center')
 
-        self.tabla_uno.bind("<<TreeviewSelect>>", self.obtener_fila) #AUN NO USARRRRRRR
+        self.tabla_dos.bind("<<TreeviewSelect>>", self.obtener_fila) #AUN NO USARRRRRRR
 
         # Ajustar expansión del marco principal
         self.main_frame.grid_rowconfigure(0, weight=1)
