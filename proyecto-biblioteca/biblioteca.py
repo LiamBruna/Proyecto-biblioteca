@@ -8,7 +8,8 @@ def main():
     root.resizable(0,0)
     root.geometry("600x440")
 
-    Frame(root = root)
+    ventana_principal = Frame(root = root)
+    ventana_principal.pack()
     root.mainloop()
 
 if __name__ == "__main__":

@@ -11,50 +11,62 @@ from model.classes import *
 
 # Ventana de registro
 class VentanaRegistro(ck.CTkToplevel):
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.parent = parent
         self.title("Registro")
         self.parent.iconbitmap('img\libros.ico')
+        self.geometry("700x600")
         self.resizable(0, 0)
 
         self.bd = BD()
 
-        self.show_password = tk.BooleanVar(value=False)  # Variable para controlar la visibilidad de la contraseña
+        self.mostrar_contraseña = tk.BooleanVar(value=False)  # Variable para controlar la visibilidad de la contraseña
 
-        self.registerWindow()
+        # Crear imagen de fondo como PhotoImage
+        imagen_fondo = ImageTk.PhotoImage(Image.open("img\\pattern.png"))
 
-    def registerWindow(self):
+        # Crear etiqueta para la imagen de fondo
+        fondo = ck.CTkLabel(master=self, image=imagen_fondo)
+        fondo.pack()
+
+        frame_registro = ck.CTkFrame(master=fondo, corner_radius=15)
+        frame_registro.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        frame_registro.configure(width=500, height=500)
+
+        label_log = ck.CTkLabel(master=frame_registro, text="Registrarse", font=ck.CTkFont(size=30, weight="bold", family="Calibri (body)"))
+        label_log.place(x=170, y=45)
+
         # Crea los campos de entrada de datos para el registro
-        self.nombre_entry = ck.CTkEntry(self, placeholder_text='Nombre (*)', width=220, height=40)
-        self.nombre_entry.grid(columnspan=2, row=1, padx=4, pady=4)
+        self.nombre_entry = ck.CTkEntry(frame_registro, placeholder_text='Nombre (*)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.nombre_entry.place(x=90, y=100)
 
-        self.apellido_entry = ck.CTkEntry(self, placeholder_text='Apellido (*)', width=220, height=40)
-        self.apellido_entry.grid(columnspan=2, row=2, padx=4, pady=4)
+        self.apellido_entry = ck.CTkEntry(frame_registro, placeholder_text='Apellido (*)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.apellido_entry.place(x=90, y=150)
 
-        self.correo_entry = ck.CTkEntry(self, placeholder_text='Correo electrónico (*)', width=220, height=40)
-        self.correo_entry.grid(columnspan=2, row=3, padx=4, pady=4)
+        self.correo_entry = ck.CTkEntry(frame_registro, placeholder_text='Correo electrónico (*)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.correo_entry.place(x=90, y=200)
 
-        self.contraseña_entry = ck.CTkEntry(self, placeholder_text='Contraseña', width=220, height=40, show="*")
-        self.contraseña_entry.grid(columnspan=2, row=4, padx=4, pady=4)
+        self.contraseña_entry = ck.CTkEntry(frame_registro, placeholder_text='Contraseña', width=220, height=40, show="*",font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.contraseña_entry.place(x=90, y=250)
 
-        self.contraseña_entry_confirmar = ck.CTkEntry(self, placeholder_text='Confirmar Contraseña', width=220, height=40, show="*")
-        self.contraseña_entry_confirmar.grid(columnspan=2, row=5, padx=4, pady=4)
+        self.contraseña_entry_confirmar = ck.CTkEntry(frame_registro, placeholder_text='Confirmar Contraseña', width=220, height=40, show="*", font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.contraseña_entry_confirmar.place(x=90, y=300)
 
-        self.rut_entry = ck.CTkEntry(self, placeholder_text='RUT (con puntos y guión)', width=220, height=40)
-        self.rut_entry.grid(columnspan=2, row=6, padx=4, pady=4)
+        # Este es un checkbox para mostrar la contraseña que estamos ingresando
+        self.mostrarContraseña_Registro = tk.BooleanVar()
+        mostrar_contraseña_checkbox = ck.CTkCheckBox(frame_registro, text="Mostrar contraseña", variable=self.mostrarContraseña_Registro, command=self.mostrarContraseñaRegistro, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        mostrar_contraseña_checkbox.place(x=320, y=308)
+
+        self.rut_entry = ck.CTkEntry(frame_registro, placeholder_text='RUT (con puntos y guión)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.rut_entry.place(x=90, y=350)
         self.rut_entry.bind("<Return>", self.registrar)
 
-        self.mostrarContraseña_Registro = tk.BooleanVar()
-        show_password_checkbox = ck.CTkCheckBox(self, text="Mostrar contraseña", variable=self.mostrarContraseña_Registro, command=self.mostrarContraseñaRegistro)
-        show_password_checkbox.grid(column=4, row=5, padx=4, pady=4)
+        self.registro_photo = ck.CTkImage(Image.open("img\\registro.png"), size=(30,30))
 
-        registro_image = Image.open("img\\registro.png")
-        registro_photo = ck.CTkImage(registro_image)
-
-        # Crea el botón de registro
-        button_registrar = ck.CTkButton(self, text="Registrar", command=self.registrar, image=registro_photo)
-        button_registrar.grid(columnspan=2, row=7, padx=4, pady=4)
+        # Botón para registrarse
+        button_registrar = ck.CTkButton(frame_registro, width=200, text="Registrarse", command=self.registrar, image=self.registro_photo, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        button_registrar.place(x=150, y=420)
 
 # Método para validar el correo electrónico
     def validarCorreo(self, correo):
@@ -136,6 +148,7 @@ class VentanaRegistro(ck.CTkToplevel):
         self.parent.deiconify()  # Muestra la ventana de login
         self.destroy()
 
+
 # Ventana Login
 class Frame(ck.CTkFrame):
     def __init__(self, root=None):
@@ -154,31 +167,29 @@ class Frame(ck.CTkFrame):
         frame=ck.CTkFrame(master=fondo, width=320, height=360, corner_radius=15)
         frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
-        label_log = ck.CTkLabel(master=frame, text="Iniciar Sesión", font=('Century Gothic',35))
-        label_log.place(x=50, y=45)
+        label_log = ck.CTkLabel(master=frame, text="Iniciar Sesión", font=ck.CTkFont(size=30, weight="bold", family="Calibri (body)"))
+        label_log.place(x=60, y=45)
 
-        self.correo = ck.CTkEntry(master=frame, placeholder_text='Correo electrónico', width=220, height=40)
+        self.correo = ck.CTkEntry(master=frame, placeholder_text='Correo electrónico', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
         self.correo.place(x=50, y=110)
 
         self.contraseña = tk.StringVar()
-        self.contraseña_entry = ck.CTkEntry(master=frame, placeholder_text='Contraseña', width=220, height=40, show="*")
+        self.contraseña_entry = ck.CTkEntry(master=frame, placeholder_text='Contraseña', width=220, height=40, show="*", font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
         self.contraseña_entry.place(x=50, y=165)
         self.contraseña_entry.bind("<Return>", self.login)
 
         # Checkbox para mostrar/ocultar la contraseña
         self.mostrar_contraseña = tk.BooleanVar()
-        self.checkbox_mostrar_contraseña = ck.CTkCheckBox(master=frame, text="Mostrar contraseña", variable=self.mostrar_contraseña, command=self.mostrarContraseña)
+        self.checkbox_mostrar_contraseña = ck.CTkCheckBox(master=frame, text="Mostrar contraseña", variable=self.mostrar_contraseña, command=self.mostrarContraseña, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
         self.checkbox_mostrar_contraseña.place(x=30, y=220)
 
-        iniciar_sesion_image = Image.open("img\\iniciar_sesion.png")
-        iniciar_sesion_photo = ck.CTkImage(iniciar_sesion_image)
-        self.button_login = ck.CTkButton(master=frame, text="Iniciar sesión", command=self.login, image=iniciar_sesion_photo)
-        self.button_login.place(x=12, y=280)
+        iniciar_sesion_photo = ck.CTkImage(Image.open("img\\iniciar_sesion.png"), size=(25, 25))
+        self.button_login = ck.CTkButton(master=frame, text="Iniciar sesión", command=self.login, image=iniciar_sesion_photo, font=ck.CTkFont(size=18, weight="bold", family="Calibri (body)"))
+        self.button_login.place(x=80, y=253)
 
-        registrarse_image = Image.open("img\\registrarse.png")
-        registrarse_photo = ck.CTkImage(registrarse_image)
-        self.button_registrar = ck.CTkButton(master=frame, text="Registrarse", command=self.abrir_ventana_registro, image=registrarse_photo)
-        self.button_registrar.place(x=168, y=280)
+        registrarse_photo = ck.CTkImage(Image.open("img\\registrarse.png"), size=(25, 25))
+        self.button_registrar = ck.CTkButton(master=frame, text="Registrarse", command=self.abrir_ventana_registro, image=registrarse_photo, font=ck.CTkFont(size=18, weight="bold", family="Calibri (body)"))
+        self.button_registrar.place(x=86, y=300)
 
     def login(self, event=None):
         correo = self.correo.get()
@@ -343,12 +354,12 @@ class VentanaPrincipal(ck.CTkToplevel):
                                                 font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.buscar_libro_isbn_label.grid(row=10, column=0, padx=10)
 
-        self.buscar_libro_isbn_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.buscar_actualiza)
+        self.buscar_libro_isbn_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.buscar_actualiza, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.buscar_libro_isbn_entry.grid(row=10, column=1, padx=10)
-        self.buscar_libro_isbn_entry.bind("<Return>", self.actualizarStock)
+        self.buscar_libro_isbn_entry.bind("<Return>", self.buscarLibroStock)
 
         # Botón para buscar el libro
-        self.buscar_libro_isbn_button = ck.CTkButton(self.stock, command=self.actualizarStock, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.buscar_libro_isbn_button = ck.CTkButton(self.stock, command=self.buscarLibroStock, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.buscar_libro_isbn_button.grid(row=10, column=2, padx=3)
 
         # Widgets del frame stock a mostrar
@@ -380,10 +391,12 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         self.stock_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.stockLibro, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.stock_entry.grid(row=18, columnspan=7, padx=10)
+        self.stock_entry.bind("<Return>", self.actualizarStock)
 
         # Botón para actualizar el stock del libro
-        self.buscar_libro_isbn_button = ck.CTkButton(self.stock, text="ACTUALIZAR", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
-        self.buscar_libro_isbn_button.place(x=600, y=400)
+        self.actualizar_stock_button = ck.CTkButton(self.stock, command=self.actualizarStock, text="ACTUALIZAR", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.actualizar_stock_button.place(x=600, y=400)
+        
 
         # Crear frame para mostrar a los usuarios
         self.usuario = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent", bg_color="gray90")
@@ -533,36 +546,34 @@ class VentanaPrincipal(ck.CTkToplevel):
     def evento_cambiar_apariencia(self, new_appearance_mode):
         ck.set_appearance_mode(new_appearance_mode)
 
-    # Método para actualizar el stock de libros
-    def actualizarStock(self, event = None):
+    # MÉTODOS PARA EL FRAME STOCK
+    # Método para buscar un libro
+    def buscarLibroStock(self, event = None):
         isbn = self.buscar_actualiza.get()  # Obtener el ISBN ingresado
-
         if isbn == "":
             messagebox.showerror("Stock", "Debe de ingresar un ISBN para realizar la busqueda.")
-            return
-        
+            self.limpiarCampos()
         libros = self.bd.buscarLibro(isbn)  # Buscar el libro en la base de datos
-        
         if libros:
             isbn, titulo, num_paginas, stock = libros[0][1:5]  # Tomar los elementos del índice 1 al 4
-            self.isbn.set(str(isbn))  # Actualizar el campo ISBN
-            self.titulo.set(str(titulo))  # Actualizar el campo Título
-            self.numero_paginas.set(int(num_paginas))  # Actualizar el campo Número de Páginas
-            self.stockLibro.set(int(stock))  # Actualizar el campo Stock
+            self.isbn.set(str(isbn))  # Actualizar el valor del campo ISBN
+            self.titulo.set(str(titulo))  # Actualizar el valor del campo Título
+            self.numero_paginas.set(int(num_paginas))  # Actualizar el valor del campo Número de Páginas
+            self.stockLibro.set(int(stock))  # Actualizar el valor del campo Stock
         else:
             messagebox.showerror("Stock", f"El libro con el ISBN {isbn} no existe.")
             self.limpiarCampos()
 
+    # Método para actualizar el stock de un libro
+    def actualizarStock(self, event = None):
+        isbn = self.isbn.get()
+        stock = self.stockLibro.get()
+        titulo = self.titulo.get()
+        self.bd.actualizarStock(stock, isbn)  
+        self.limpiarCampos()
 
 
-    def limpiarCampos(self):
-        self.isbn.set('')
-        self.titulo.set('')
-        self.numero_paginas.set('')
-        self.stockLibro.set('')
-
-
-
+    # MÉTODOS PARA EL FRAME USUARIOS REGISTRADOS
     # Método para mostrar los datos en la tabla de usuarios
     def mostrarDatos(self):
         datos = self.bd.mostrarUsuarios()
@@ -581,6 +592,14 @@ class VentanaPrincipal(ck.CTkToplevel):
             return
         data = self.tabla_uno.item(current_item)
         self.nombre_borrar = data['values'][0]
+
+    # Método para limpiar los valores en los entry's
+    def limpiarCampos(self):
+        self.buscar_actualiza.set('')
+        self.isbn.set('')
+        self.titulo.set('')
+        self.numero_paginas.set('')
+        self.stockLibro.set('')
 
     # Método para cerrar sesion en la app
     def cerrar_sesion(self):

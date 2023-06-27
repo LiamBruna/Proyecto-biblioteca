@@ -98,41 +98,20 @@ class BD:
             return results
         except Exception as e:
             messagebox.showerror("Mostrar usuarios", f"{str(e)}")
-
-    # Método para saber si existe un libro por su código ISBN
-    '''def existeLibro(self, isbn):
-        sql = "SELECT * FROM libro WHERE ISBN = ?"
-        vals = (isbn)
-        existe = False
-        try:
-            self.cursor.execute(sql, vals)
-            result = self.cursor.fetchone()
-            if result != None:
-                existe = True
-            else:
-                existe = False
-        except Exception as e:
-            messagebox.showerror("Existe libro", f"{str(e)}")
-        return existe'''
-    
+ 
     # Método para buscar un libro por ISBN
     def buscarLibro(self, isbn):
         sql = "SELECT * FROM libro WHERE ISBN = ?"
         self.cursor.execute(sql, (isbn,))
         results = self.cursor.fetchall()
         return results
-        
 
     # Método para mostrar los libros en el Catalogo
-    def modificarStock(self, isbn, stock):
+    def actualizarStock(self, stock, isbn):
         sql = "UPDATE libro SET STOCK = ? WHERE ISBN = ?"
-        vals = (stock, isbn)
         try:
-            if self.existeLibro(isbn == False):
-                self.cursor.execute(sql, vals)
-                self.connect.commit()
-                messagebox.showinfo("Modificar stock", f"Stock del libro se ha actualizado.")
-            else:
-                messagebox.showerror("Modificar stock", f"El codigo {isbn} del libro no existe.")
+            self.cursor.execute(sql, (stock, isbn))
+            self.connect.commit()
+            messagebox.showinfo("Stock", f"El stock del libro ha sido actualizado")
         except Exception as e:
             messagebox.showerror(f"Modificar stock", f"{str(e)}")
