@@ -252,6 +252,8 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.stock_image = ck.CTkImage(Image.open("img\\stock.png"), size=(26, 26))
         self.usuario_image = ck.CTkImage(Image.open("img\\usuarios.png"), size=(26, 26))
         self.actualizar_stock_image = ck.CTkImage(Image.open("img\\actualizar_stock.png"), size=(450, 120))
+        self.usuarios_registrados_image = ck.CTkImage(Image.open("img\\usuarios_registrados.png"), size=(450, 120))
+        self.libros_prestamo_image = ck.CTkImage(Image.open("img\\libros_en_prestamo.png"), size=(450, 120))
 
         # Crear Frame lateral de navegación
         self.frameNavegacion = ck.CTkFrame(self, corner_radius=0)
@@ -397,17 +399,20 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.actualizar_stock_button.place(x=600, y=400)
         
         # FRAME MOSTRAR USUARIOS REGISTRADOS
-        self.usuario = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent", bg_color="gray90")
+        self.usuario = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.usuario.grid(row=0, column=0, sticky="nsew")
         self.usuario.grid_columnconfigure(0, weight=1)  # Expansión horizontal
         self.usuario.grid_rowconfigure(1, weight=1)  # Expansión vertical
 
-        actualizar_button = ck.CTkButton(self.usuario, text='ACTUALIZAR TABLA', font=('Arial', 11, 'bold'), command=self.mostrarDatosUsuario)
-        actualizar_button.grid(columnspan=1, row=2, pady=5)
+        self.usuarios_registrados_label_image = ck.CTkLabel(self.usuario, text="", image=self.usuarios_registrados_image)
+        self.usuarios_registrados_label_image.grid(row=0, columnspan=1, padx=20)
+
+        self.actualizar_button = ck.CTkButton(self.usuario, text='ACTUALIZAR TABLA', font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"), command=self.mostrarDatosUsuario)
+        self.actualizar_button.grid(columnspan=1, row=2, pady=5)
         
         # Estilo de la tabla para mostrar los datos
         estilo_tabla = ttk.Style()
-        estilo_tabla.configure("Treeview", font=('Helvetica', 10, 'bold'), foreground='black', background='white')
+        estilo_tabla.configure("Treeview", font=('Calibri (body)', 10, 'bold'), foreground='black', background='white')
         estilo_tabla.map('Treeview', background=[('selected', 'green')], foreground=[('selected', 'black')])
         estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=('Calibri (body)', 10, 'bold'))
         estilo_tabla.configure('Item', foreground='transparent', focuscolor='DarkOrchid1')
@@ -455,7 +460,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.tabla_uno.heading('Correo electrónico', text='Correo electrónico', anchor='center')
         self.tabla_uno.heading('Tipo de usuario', text='Tipo de usuario', anchor='center')
 
-        self.tabla_uno.bind("<<TreeviewSelect>>", self.obtener_fila)
+        self.tabla_uno.bind("<<TreeviewSelect>>", self.obtener_filaUsuario)
 
         # Ajustar expansión del marco principal
         self.main_frame.grid_rowconfigure(0, weight=1)
@@ -471,12 +476,15 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.frame_libros_en_prestamo.grid_columnconfigure(0, weight=1) # Expansión horizontal
         self.frame_libros_en_prestamo.grid_rowconfigure(1, weight=1) # Expansión vertical
 
-        actualizar_librosPrestamo_button = ck.CTkButton(self.frame_libros_en_prestamo, text='ACTUALIZAR TABLA PRESTAMOS', font=('Arial', 11, 'bold')) # FALTA EL COMMAND
+        self.librosPrestamos_label_image = ck.CTkLabel(self.frame_libros_en_prestamo, text="", image=self.libros_prestamo_image)
+        self.librosPrestamos_label_image.grid(row=0, columnspan=1, padx=20)
+
+        actualizar_librosPrestamo_button = ck.CTkButton(self.frame_libros_en_prestamo, text='ACTUALIZAR TABLA LIBROS EN PRÉSTAMO', font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"), command=self.mostrarDatosLibros)
         actualizar_librosPrestamo_button.grid(columnspan=1, row=2, pady=5)
 
         # Estilo de la tabla para mostrar los datos
         estilo_tabla = ttk.Style()
-        estilo_tabla.configure("Treeview", font=('Helvetica', 10, 'bold'), foreground='black', background='white')
+        estilo_tabla.configure("Treeview", font=('Calibri (body)', 10, 'bold'), foreground='black', background='white')
         estilo_tabla.map('Treeview', background=[('selected', 'green')], foreground=[('selected', 'black')])
         estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=('Calibri (body)', 10, 'bold'))
         estilo_tabla.configure('Item', foreground='transparent', focuscolor='DarkOrchid1')
@@ -514,7 +522,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.tabla_dos.heading('Titulo', text='Titulo', anchor='center')
         self.tabla_dos.heading('Estado', text='Estado', anchor='center')
 
-        self.tabla_dos.bind("<<TreeviewSelect>>", self.obtener_fila) #AUN NO USARRRRRRR
+        self.tabla_dos.bind("<<TreeviewSelect>>", self.obtener_filaLibros)
 
         # Ajustar expansión del marco principal
         self.main_frame.grid_rowconfigure(0, weight=1)
@@ -627,19 +635,37 @@ class VentanaPrincipal(ck.CTkToplevel):
     def mostrarDatosUsuario(self):
         datos = self.bd.mostrarUsuarios()
         self.tabla_uno.delete(*self.tabla_uno.get_children())
-        i = -1
+        i = - 1
         for dato in datos:
-            i = i + 1
+            i += 1
             self.tabla_uno.insert('', i, text=datos[i][0], values=datos[i][1:8])
-
         messagebox.showinfo("Usuarios registrados", "La tabla ha sido actualizada.")
 
     # Método para poder seleccionar la fila en la tabla de usuarios
-    def obtener_fila(self, event):
+    def obtener_filaUsuario(self, event):
         current_item = self.tabla_uno.focus()
         if not current_item:
             return
         data = self.tabla_uno.item(current_item)
+        self.nombre_borrar = data['values'][0]
+
+    # MÉTODOS PARA EL FRAME LIBROS EN PRESTAMO
+    # Método para mostrar los datos en la tabla libros en préstamo
+    def mostrarDatosLibros(self):
+        datos = self.bd.mostrarLibrosPrestamo()
+        self.tabla_dos.delete(*self.tabla_dos.get_children())
+        i = - 1
+        for dato in datos:
+            i += 1
+            self.tabla_dos.insert('', i, text=datos[i][0], values=datos[i][1:3])
+        messagebox.showinfo("Libros en préstamo", "La tabla ha sido actualizada.")
+
+    # Método para poder seleccionar la fila en la tabla de libros en préstamo
+    def obtener_filaLibros(self, event):
+        current_item = self.tabla_dos.focus()
+        if not current_item:
+            return
+        data = self.tabla_dos.item(current_item)
         self.nombre_borrar = data['values'][0]
 
     # Método para limpiar los valores en los entry's
