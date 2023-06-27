@@ -364,7 +364,7 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         self.buscar_libro_isbn_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.buscar_actualiza, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.buscar_libro_isbn_entry.grid(row=10, column=1, padx=10)
-        self.buscar_libro_isbn_entry.bind("<Return>", self.buscarLibroStock)
+        self.buscar_libro_isbn_entry.bind("<Return>", self.buscarLibroStock) # Al presionar enter, me devuelve el dato solicitado
 
         # Botón para buscar el libro
         self.buscar_libro_isbn_button = ck.CTkButton(self.stock, command=self.buscarLibroStock, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
@@ -487,6 +487,7 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         self.rut_usuario_entry = ck.CTkEntry(self.frame_realizar_prestamo, textvariable=self.rut_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.rut_usuario_entry.grid(row=10, column=1, pady=5)
+        self.rut_usuario_entry.bind("<Return>", self.obtenerTipoUsuario) # Al presionar enter, me devuelve el dato solicitado
         
         # Botón para buscar al usuario por el rut
         self.buscar_usuario_rut = ck.CTkButton(self.frame_realizar_prestamo, command=self.obtenerTipoUsuario, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
@@ -732,6 +733,22 @@ class VentanaPrincipal(ck.CTkToplevel):
         tipo_usuario = self.bd.obtenerTipoUsuario(rut)
         if tipo_usuario:
             self.tipo_usuario.set(tipo_usuario)
+            if tipo_usuario == "Alumno":
+                fecha_devolucion = self.calcularFechaDevolucion()
+                messagebox.showinfo("Realizar Préstamo", f"Se han sumado 7 días por ser {tipo_usuario}")
+                if fecha_devolucion:
+                    self.fecha_devolucion.set_date(fecha_devolucion)
+            elif tipo_usuario == "Docente":
+                self.fecha_devolucion.configure(state="normal")
+                messagebox.showinfo("Realizar Préstamo", f"No tiene limite de ")
+            else:
+                self.fecha_devolucion.configure(state="disabled")
+                
+
+    def calcularFechaDevolucion(self):
+        fecha_actual = datetime.now().date()
+        fecha_devolucion = fecha_actual + timedelta(days=7)
+        return fecha_devolucion
 
     # Método para limpiar los valores en los entry's
     def limpiarCampos(self):
