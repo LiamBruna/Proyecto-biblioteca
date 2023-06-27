@@ -14,7 +14,7 @@ class VentanaRegistro(ck.CTkToplevel):
         super().__init__(parent)
         self.parent = parent
         self.title("Registro")
-        self.parent.iconbitmap('img\libros.ico')
+        self.iconbitmap('img\\libros.ico')
         self.geometry("700x600")
         self.resizable(0, 0)
 
@@ -43,23 +43,23 @@ class VentanaRegistro(ck.CTkToplevel):
         self.apellido_entry = ck.CTkEntry(frame_registro, placeholder_text='Apellido (*)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
         self.apellido_entry.place(x=90, y=150)
 
+        self.rut_entry = ck.CTkEntry(frame_registro, placeholder_text='RUT (con puntos y guión)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.rut_entry.place(x=90, y=200)
+
         self.correo_entry = ck.CTkEntry(frame_registro, placeholder_text='Correo electrónico (*)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
-        self.correo_entry.place(x=90, y=200)
+        self.correo_entry.place(x=90, y=250)
 
         self.contraseña_entry = ck.CTkEntry(frame_registro, placeholder_text='Contraseña', width=220, height=40, show="*",font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
-        self.contraseña_entry.place(x=90, y=250)
+        self.contraseña_entry.place(x=90, y=300)
 
         self.contraseña_entry_confirmar = ck.CTkEntry(frame_registro, placeholder_text='Confirmar Contraseña', width=220, height=40, show="*", font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
-        self.contraseña_entry_confirmar.place(x=90, y=300)
+        self.contraseña_entry_confirmar.place(x=90, y=350)
+        self.contraseña_entry_confirmar.bind("<Return>", self.registrar)
 
         # Este es un checkbox para mostrar la contraseña que estamos ingresando
         self.mostrarContraseña_Registro = tk.BooleanVar()
         mostrar_contraseña_checkbox = ck.CTkCheckBox(frame_registro, text="Mostrar contraseña", variable=self.mostrarContraseña_Registro, command=self.mostrarContraseñaRegistro, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
-        mostrar_contraseña_checkbox.place(x=320, y=308)
-
-        self.rut_entry = ck.CTkEntry(frame_registro, placeholder_text='RUT (con puntos y guión)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
-        self.rut_entry.place(x=90, y=350)
-        self.rut_entry.bind("<Return>", self.registrar)
+        mostrar_contraseña_checkbox.place(x=320, y=358)
 
         self.registro_photo = ck.CTkImage(Image.open("img\\registro.png"), size=(30,30))
 
@@ -114,11 +114,11 @@ class VentanaRegistro(ck.CTkToplevel):
         # Obtiene los datos ingresados por el usuario
         nombre = self.nombre_entry.get()
         apellido = self.apellido_entry.get()
+        rut = self.rut_entry.get()
         correo = self.correo_entry.get()
         contraseña = self.contraseña_entry.get()
         confirmarContraseña = self.contraseña_entry_confirmar.get()
-        rut = self.rut_entry.get()
-
+        
         if nombre == "": # Comprobar que haya un nombre en el campo
             messagebox.showerror("Error de registro", "El campo 'nombre' no puede estar vació.")
             return
@@ -263,51 +263,51 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         # Crear icono en frame lateral
         self.frameNavegacion_label = ck.CTkLabel(self.frameNavegacion, text="  Biblioteca Virtual", image=self.logo_imagen,
-                                                  compound="left", font=ck.CTkFont(size=15, weight="bold"))
+                                                  compound="left", font=ck.CTkFont(size=30, weight="bold", family="Calibri (body)"))
         self.frameNavegacion_label.grid(row=0, column=0, padx=20, pady=20)
 
         # Botón de Inicio en navegación
         self.inicio_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Inicio",
                                         fg_color="transparent", text_color=("gray10", "gray90"),
                                         hover_color=("gray70", "gray30"), image=self.home_image, anchor="w",
-                                        command=self.inicio_button_evento, font=('Calibri (body)', 20, 'bold'))
+                                        command=self.inicio_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.inicio_button.grid(row=1, column=0, sticky="ew")
 
         self.catalogo_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Catalogo",
                                         fg_color="transparent", text_color=("gray10", "gray90"),
                                         hover_color=("gray70", "gray30"), image=self.home_image, anchor="w",
-                                        command=self.catalogo_button_evento, font=('Calibri (body)', 20, 'bold'))
+                                        command=self.catalogo_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.catalogo_button.grid(row=2, column=0, sticky="ew")
 
         # Botón de Stock en navegación
         self.stock_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Actualizar Stock",
                                          fg_color="transparent", text_color=("gray10", "gray90"),
                                          hover_color=("gray70", "gray30"), image=self.stock_image, anchor="w",
-                                         command=self.stock_button_evento, font=('Calibri (body)', 20, 'bold'))
+                                         command=self.stock_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.stock_button.grid(row=3, column=0, sticky="ew")
 
         # Botón de Usuarios en navegación
         self.usuario_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Usuarios Registrados",
                                            fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                           image=self.usuario_image, anchor="w",command=self.usuario_button_evento, font=('Calibri (body)', 20, 'bold'))
+                                           image=self.usuario_image, anchor="w",command=self.usuario_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.usuario_button.grid(row=4, column=0, sticky="ew")
 
         # Botón de Realizar prestamos en navegación
         self.realizar_prestamo_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
                                            text="Realizar Prestamo", fg_color="transparent", text_color=("gray10", "gray90"),
                                            hover_color=("gray70", "gray30"), image=self.chat_image, anchor="w",
-                                           command=self.realizarPrestamo_button_evento, font=('Calibri (body)', 20, 'bold'))
+                                           command=self.realizarPrestamo_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.realizar_prestamo_button.grid(row=5, column=0, sticky="ew")
 
         # Otro botón
         self.frame_libros_en_prestamo_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
                                            text="Libros en Préstamo", fg_color="transparent", text_color=("gray10", "gray90"),
                                            hover_color=("gray70", "gray30"), image=self.add_user_image, anchor="w",
-                                           command=self.frame_libros_en_prestamo_button_evento, font=('Calibri (body)', 20, 'bold'))
+                                           command=self.frame_libros_en_prestamo_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.frame_libros_en_prestamo_button.grid(row=6, column=0, sticky="ew")
 
         # Menu de opciones para cambiar de apariencia la app
-        self.menu_apariencia = ck.CTkOptionMenu(self.frameNavegacion, font=('Calibri (body)', 15, 'bold'), values=["Dark", "Light"], command=self.evento_cambiar_apariencia)
+        self.menu_apariencia = ck.CTkOptionMenu(self.frameNavegacion, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"), values=["Dark", "Light"], command=self.evento_cambiar_apariencia)
         self.menu_apariencia.grid(row=7, column=0, padx=20, pady=20, sticky="s")
 
         # Botón para cerrar sesion
@@ -412,9 +412,9 @@ class VentanaPrincipal(ck.CTkToplevel):
         
         # Estilo de la tabla para mostrar los datos
         estilo_tabla = ttk.Style()
-        estilo_tabla.configure("Treeview", font=('Calibri (body)', 10, 'bold'), foreground='black', background='white')
+        estilo_tabla.configure("Treeview", font=ck.CTkFont(size=10, weight="bold", family="Calibri (body)"), foreground='black', background='white')
         estilo_tabla.map('Treeview', background=[('selected', 'green')], foreground=[('selected', 'black')])
-        estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=('Calibri (body)', 10, 'bold'))
+        estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         estilo_tabla.configure('Item', foreground='transparent', focuscolor='DarkOrchid1')
         estilo_tabla.configure('TScrollbar', arrowcolor='DarkOrchid1', bordercolor='black', troughcolor='DarkOrchid1', background='white')
 
@@ -484,9 +484,9 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         # Estilo de la tabla para mostrar los datos
         estilo_tabla = ttk.Style()
-        estilo_tabla.configure("Treeview", font=('Calibri (body)', 10, 'bold'), foreground='black', background='white')
+        estilo_tabla.configure("Treeview", font=ck.CTkFont(size=10, weight="bold", family="Calibri (body)"), foreground='black', background='white')
         estilo_tabla.map('Treeview', background=[('selected', 'green')], foreground=[('selected', 'black')])
-        estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=('Calibri (body)', 10, 'bold'))
+        estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         estilo_tabla.configure('Item', foreground='transparent', focuscolor='DarkOrchid1')
         estilo_tabla.configure('TScrollbar', arrowcolor='DarkOrchid1', bordercolor='black', troughcolor='DarkOrchid1', background='white')
 
