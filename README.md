@@ -8,3 +8,4 @@
 
 
 6. Cambios en la Base de Datos: Se elimino la columna CATALOGO de la tabla libro
+7. Nuevo modulo a instalar:  `tkcalendar`

@@ -1,9 +1,11 @@
-import tkinter as tk # Modulo para crear la interfaz gráfica
 import customtkinter as ck # Modulo para mejorar la interfaz gráfica
+import tkinter as tk # Modulo para crear la interfaz gráfica
 from tkinter import messagebox # Modulo para mostrar mensajes en ventanas emergentes
 from tkinter import ttk # Modulo para darle estilos a los widgets presentes en la app
+from tkcalendar import DateEntry # Modulo para seleccionar una fecha median un calendario
 from PIL import Image, ImageTk # Modulo para importar imágenes
 import re # Modulo para poder validar si el correo electrónico es un correo electrónico
+import datetime as d
 
 from model.conexion_db import *
 
@@ -254,6 +256,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.actualizar_stock_image = ck.CTkImage(Image.open("img\\actualizar_stock.png"), size=(450, 120))
         self.usuarios_registrados_image = ck.CTkImage(Image.open("img\\usuarios_registrados.png"), size=(450, 120))
         self.libros_prestamo_image = ck.CTkImage(Image.open("img\\libros_en_prestamo.png"), size=(450, 120))
+        self.realizar_prestamo_image = ck.CTkImage(Image.open("img\\realizar_prestamo.png"), size=(450, 120))
 
         # Crear Frame lateral de navegación
         self.frameNavegacion = ck.CTkFrame(self, corner_radius=0)
@@ -468,7 +471,54 @@ class VentanaPrincipal(ck.CTkToplevel):
 
 
         # FRAME REALIZAR PRESTAMO
-        self.realizar_prestamo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+        self.frame_realizar_prestamo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+        self.frame_realizar_prestamo.grid(row=0, column=0, sticky="nsew")
+
+        self.realizar_prestamo_label_image = ck.CTkLabel(self.frame_realizar_prestamo, text="", image=self.realizar_prestamo_image)
+        self.realizar_prestamo_label_image.grid(row=0, columnspan=3, padx=20)
+
+        self.rut_usuario_label = ck.CTkLabel(self.frame_realizar_prestamo, text="Ingrese el RUT del Usuario: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.rut_usuario_label.grid(row=10, column=0, pady=5)
+
+        self.rut_usuario_entry = ck.CTkEntry(self.frame_realizar_prestamo, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.rut_usuario_entry.grid(row=10, column=1, pady=5)
+
+        self.isbn_libro_label = ck.CTkLabel(self.frame_realizar_prestamo, text="Ingrese el ISBN del Libro: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.isbn_libro_label.grid(row=11, column=0, pady=5)
+
+        self.isbn_libro_entry = ck.CTkEntry(self.frame_realizar_prestamo, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.isbn_libro_entry.grid(row=11, column=1, padx=5)
+
+        self.fecha_inicio_label = ck.CTkLabel(self.frame_realizar_prestamo, text="Fecha Inicio de Préstamo: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.fecha_inicio_label.grid(row=12, column=0, pady=5)
+        
+        self.fecha_inicio = DateEntry(self.frame_realizar_prestamo, width=12,
+                          date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"),
+                          highlightbackground="deep sky blue", highlightthickness=1, corner_radius=10)
+        self.fecha_inicio.grid(row=12, column=1, pady=5)
+
+        self.fecha_devolucion_label = ck.CTkLabel(self.frame_realizar_prestamo, text="Fecha Devolución de Préstamo: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.fecha_devolucion_label.grid(row=13, column=0, pady=5)
+
+        self.fecha_devolucion = DateEntry(self.frame_realizar_prestamo, width=12,
+                          date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"),
+                          highlightbackground="deep sky blue", highlightthickness=1, corner_radius=10)
+        self.fecha_devolucion.grid(row=13, column=1, pady=5)
+
+        self.tipo_usuario_label = ck.CTkLabel(self.frame_realizar_prestamo, text="Tipo de Usuario: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.tipo_usuario_label.grid(row=14, column=0, pady=5)
+
+        self.tipo_usuario_entry = ck.CTkEntry(self.frame_realizar_prestamo, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.tipo_usuario_entry.grid(row=14, column=1, padx=5)
+
+        # Botón que realizara el prestamo
+        self.completar_prestamo_button = ck.CTkButton(self.frame_realizar_prestamo, text="REALIZAR PRÉSTAMO", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.completar_prestamo_button.place(x=200, y=400)
 
         # FRAME LIBROS EN PRÉSTAMO
         self.frame_libros_en_prestamo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
@@ -546,38 +596,38 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.catalogo.grid_forget()
             self.stock.grid_forget()
             self.usuario.grid_forget()
-            self.realizar_prestamo.grid_forget()
+            self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid_forget()
         elif name == "catalogo":
             self.inicio_frame.grid_forget()
             self.catalogo.grid(row=0, column=0, sticky="nsew")
             self.stock.grid_forget()
             self.usuario.grid_forget()
-            self.realizar_prestamo.grid_forget()
+            self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid_forget()
         elif name == "stock":
             self.inicio_frame.grid_forget()
             self.stock.grid(row=0, column=0, sticky="nsew")
             self.usuario.grid_forget()
-            self.realizar_prestamo.grid_forget()
+            self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid_forget()
         elif name == "usuarios":
             self.inicio_frame.grid_forget()
             self.stock.grid_forget()
             self.usuario.grid(row=0, column=0, sticky="nsew")
-            self.realizar_prestamo.grid_forget()
+            self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid_forget()
         elif name == "realizar_prestamo":
             self.inicio_frame.grid_forget()
             self.stock.grid_forget()
             self.usuario.grid_forget()
-            self.realizar_prestamo.grid(row=0, column=0, sticky="nsew")
+            self.frame_realizar_prestamo.grid(row=0, column=0, sticky="nsew")
             self.frame_libros_en_prestamo.grid_forget()
         elif name == "libros_prestamo":
             self.inicio_frame.grid_forget()
             self.stock.grid_forget()
             self.usuario.grid_forget()
-            self.realizar_prestamo.grid_forget()
+            self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid(row=0, column=0, sticky="nsew")
 
     # Métodos para que cuando se presione el botón con este método, muestre el frame relacionado
