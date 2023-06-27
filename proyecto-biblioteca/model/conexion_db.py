@@ -65,7 +65,7 @@ class BD:
         self.connect.commit()
         messagebox.showinfo(f"Registro exitoso", f"El usuario {nombre} ha sido registrado correctamente.")
 
-    # Método para registrar un préstamo de libro
+    # Método para registrar un préstamo de libro NECESITA ACTUALIZARSE
     def registrarPrestamo(self, usuario_actual):
         try:
             sql_bibliotecario = "SELECT ID_B FROM bibliotecario WHERE CORREO_B = ?"
@@ -106,7 +106,7 @@ class BD:
         results = self.cursor.fetchall()
         return results
 
-    # Método para mostrar los libros en el Catalogo
+    # Método para actualizar el stock del libro
     def actualizarStock(self, stock, isbn):
         sql = "UPDATE libro SET STOCK = ? WHERE ISBN = ?"
         try:
@@ -115,3 +115,13 @@ class BD:
             messagebox.showinfo("Stock", f"El stock del libro ha sido actualizado")
         except Exception as e:
             messagebox.showerror(f"Modificar stock", f"{str(e)}")
+
+    # Método para mostrar los libros en prestamo
+    def mostrarLibrosPrestamo(self):
+        sql = "SELECT l.ID_L, l.TITULO, e.ESTADO FROM libro l LEFT JOIN ejemplares e ON l.ID_L = e.ID_E"
+        try:
+            self.cursor.execute(sql)
+            results = self.cursor.fetchall()
+            return results
+        except Exception as e:
+            messagebox.showerror("Mostrar Libros en Préstamo", f"{str(e)}")

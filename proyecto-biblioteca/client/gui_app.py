@@ -6,7 +6,6 @@ from PIL import Image, ImageTk # Modulo para importar imágenes
 import re # Modulo para poder validar si el correo electrónico es un correo electrónico
 
 from model.conexion_db import *
-from model.classes import *
 
 
 # Ventana de registro
@@ -279,7 +278,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.catalogo_button.grid(row=2, column=0, sticky="ew")
 
         # Botón de Stock en navegación
-        self.stock_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Stock",
+        self.stock_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Actualizar Stock",
                                          fg_color="transparent", text_color=("gray10", "gray90"),
                                          hover_color=("gray70", "gray30"), image=self.stock_image, anchor="w",
                                          command=self.stock_button_evento, font=('Calibri (body)', 20, 'bold'))
@@ -299,25 +298,25 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.realizar_prestamo_button.grid(row=5, column=0, sticky="ew")
 
         # Otro botón
-        self.frame_3_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
-                                           text="Frame 3", fg_color="transparent", text_color=("gray10", "gray90"),
+        self.frame_libros_en_prestamo_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
+                                           text="Libros en Préstamo", fg_color="transparent", text_color=("gray10", "gray90"),
                                            hover_color=("gray70", "gray30"), image=self.add_user_image, anchor="w",
-                                           command=self.frame_3_button_event, font=('Calibri (body)', 20, 'bold'))
-        self.frame_3_button.grid(row=6, column=0, sticky="ew")
+                                           command=self.frame_libros_en_prestamo_button_evento, font=('Calibri (body)', 20, 'bold'))
+        self.frame_libros_en_prestamo_button.grid(row=6, column=0, sticky="ew")
 
         # Menu de opciones para cambiar de apariencia la app
         self.menu_apariencia = ck.CTkOptionMenu(self.frameNavegacion, font=('Calibri (body)', 15, 'bold'), values=["Dark", "Light"], command=self.evento_cambiar_apariencia)
         self.menu_apariencia.grid(row=7, column=0, padx=20, pady=20, sticky="s")
 
         # Botón para cerrar sesion
-        self.button_cerrarSesion = ck.CTkButton(self.frameNavegacion, font=('Calibri (body)', 15, 'bold'), text="Cerrar sesión", image=self.cerrar_sesion_imagen, command=self.cerrar_sesion)
+        self.button_cerrarSesion = ck.CTkButton(self.frameNavegacion, font=ck.CTkFont(size=18, weight="bold", family="Calibri (body)"), text="Cerrar sesión", image=self.cerrar_sesion_imagen, command=self.cerrar_sesion)
         self.button_cerrarSesion.grid(row=8, column=0, padx=20, pady=20, sticky="s")
 
-        # Crear contenedor main
+        # CONTENEDOR MAINS
         self.main_frame = ck.CTkFrame(self, corner_radius=0, fg_color="transparent")
         self.main_frame.grid(row=0, column=1, sticky="nsew")
 
-        # Crear frame inicio
+        # FRAME INICIO DE APP
         self.inicio_frame = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.inicio_frame.grid(row=0, column=0, sticky="nsew")
         self.inicio_frame.grid_columnconfigure(0, weight=1)
@@ -337,13 +336,13 @@ class VentanaPrincipal(ck.CTkToplevel):
                                                 compound="bottom", anchor="w")
         self.inicio_frame_button_4.grid(row=4, column=0, padx=20, pady=10)
 
-        # Crear frame para el catalogo
+        # FRAME MODIFICAR CATALOGO
         self.catalogo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.catalogo.grid(row=0, column=0, sticky="nsew")
         self.catalogo.grid_columnconfigure(0, weight=1)  # Expansión horizontal
         self.catalogo.grid_rowconfigure(1, weight=1)  # Expansión vertical
 
-        # Crear frame para el stock
+        # FRAME ACTUALIZAR STOCK
         self.stock = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.stock.grid(row=0, column=0, sticky="nsew")
 
@@ -397,14 +396,13 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.actualizar_stock_button = ck.CTkButton(self.stock, command=self.actualizarStock, text="ACTUALIZAR", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.actualizar_stock_button.place(x=600, y=400)
         
-
-        # Crear frame para mostrar a los usuarios
+        # FRAME MOSTRAR USUARIOS REGISTRADOS
         self.usuario = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent", bg_color="gray90")
         self.usuario.grid(row=0, column=0, sticky="nsew")
         self.usuario.grid_columnconfigure(0, weight=1)  # Expansión horizontal
         self.usuario.grid_rowconfigure(1, weight=1)  # Expansión vertical
 
-        actualizar_button = ck.CTkButton(self.usuario, text='ACTUALIZAR TABLA', font=('Arial', 11, 'bold'), command=self.mostrarDatos)
+        actualizar_button = ck.CTkButton(self.usuario, text='ACTUALIZAR TABLA', font=('Arial', 11, 'bold'), command=self.mostrarDatosUsuario)
         actualizar_button.grid(columnspan=1, row=2, pady=5)
         
         # Estilo de la tabla para mostrar los datos
@@ -464,15 +462,66 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.main_frame.grid_columnconfigure(0, weight=1)
 
 
-        # Crear frame realizar préstamos
+        # FRAME REALIZAR PRESTAMO
         self.realizar_prestamo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
 
-        # create third frame
-        self.third_frame = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+        # FRAME LIBROS EN PRÉSTAMO
+        self.frame_libros_en_prestamo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+        self.frame_libros_en_prestamo.grid(row=0, column=0, sticky="nsew")
+        self.frame_libros_en_prestamo.grid_columnconfigure(0, weight=1) # Expansión horizontal
+        self.frame_libros_en_prestamo.grid_rowconfigure(1, weight=1) # Expansión vertical
 
-        # select default frame
+        actualizar_librosPrestamo_button = ck.CTkButton(self.usuario, text='ACTUALIZAR TABLA PRESTAMOS', font=('Arial', 11, 'bold')) # FALTA EL COMMAND
+        actualizar_librosPrestamo_button.grid(columnspan=1, row=2, pady=5)
+
+        # Estilo de la tabla para mostrar los datos
+        estilo_tabla = ttk.Style()
+        estilo_tabla.configure("Treeview", font=('Helvetica', 10, 'bold'), foreground='black', background='white')
+        estilo_tabla.map('Treeview', background=[('selected', 'green')], foreground=[('selected', 'black')])
+        estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=('Calibri (body)', 10, 'bold'))
+        estilo_tabla.configure('Item', foreground='transparent', focuscolor='DarkOrchid1')
+        estilo_tabla.configure('TScrollbar', arrowcolor='DarkOrchid1', bordercolor='black', troughcolor='DarkOrchid1', background='white')
+
+        # Mostrar la tabla en el frame libros en prestamo
+        self.frame_tabla_uno = ck.CTkFrame(self.frame_libros_en_prestamo)
+        self.frame_tabla_uno.grid(column=0, row=1, sticky='nsew')
+
+        self.tabla_uno = ttk.Treeview(self.frame_tabla_uno)
+        self.tabla_uno.grid(column=0, row=0, sticky='nsew')
+
+        ladox = ttk.Scrollbar(self.frame_tabla_uno, orient='horizontal', command=self.tabla_uno.xview)
+        ladox.grid(column=0, row=1, sticky='ew')
+
+        ladoy = ttk.Scrollbar(self.frame_tabla_uno, orient='vertical', command=self.tabla_uno.yview)
+        ladoy.grid(column=1, row=0, sticky='ns')
+
+        # Configurar expansión en todas las direcciones para el frame y la tabla
+        self.frame_tabla_uno.grid_rowconfigure(0, weight=1)
+        self.frame_tabla_uno.grid_columnconfigure(0, weight=1)
+        self.tabla_uno.grid(sticky='nsew')
+
+        # Columnas que se mostrarán en la tabla
+        self.tabla_uno.configure(xscrollcommand=ladox.set, yscrollcommand=ladoy.set)
+        self.tabla_uno['columns'] = ('Titulo', 'Estado')
+
+        # Ajustar ancho mínimo y ancho de cada columna de encabezado
+        self.tabla_uno.column('#0', minwidth=60, width=70, anchor='center')
+        self.tabla_uno.column('Titulo', minwidth=100, width=130, anchor='center')
+        self.tabla_uno.column('Estado', minwidth=100, width=120, anchor='center')
+
+        # Configurar el texto de encabezado para que se muestre completo
+        self.tabla_uno.heading('#0', text='Id', anchor='center')
+        self.tabla_uno.heading('Titulo', text='Titulo', anchor='center')
+        self.tabla_uno.heading('Estado', text='Estado', anchor='center')
+
+        self.tabla_uno.bind("<<TreeviewSelect>>", self.obtener_fila) #AUN NO USARRRRRRR
+
+        # Ajustar expansión del marco principal
+        self.main_frame.grid_rowconfigure(0, weight=1)
+        self.main_frame.grid_columnconfigure(0, weight=1)
+
+        # FRAME SELECCIONADO POR DEFECTO
         self.seleccion_frame_nombre("home")
-
 
     # Método para buscar el frame por el nombre del frame
     def seleccion_frame_nombre(self, name):
@@ -481,7 +530,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.usuario_button.configure(fg_color=("gray75", "gray25") if name == "usuarios" else "transparent")
         self.stock_button.configure(fg_color=("gray75", "gray25") if name == "stock" else "transparent")
         self.realizar_prestamo_button.configure(fg_color=("gray75", "gray25") if name == "realizar_prestamo" else "transparent")
-        self.frame_3_button.configure(fg_color=("gray75", "gray25") if name == "frame_3" else "transparent")
+        self.frame_libros_en_prestamo.configure(fg_color=("gray75", "gray25") if name == "libros_prestamo" else "transparent")
 
         # Mostrar frame seleccionado
         if name == "home":
@@ -490,38 +539,38 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.stock.grid_forget()
             self.usuario.grid_forget()
             self.realizar_prestamo.grid_forget()
-            self.third_frame.grid_forget()
+            self.frame_libros_en_prestamo.grid_forget()
         elif name == "catalogo":
             self.inicio_frame.grid_forget()
             self.catalogo.grid(row=0, column=0, sticky="nsew")
             self.stock.grid_forget()
             self.usuario.grid_forget()
             self.realizar_prestamo.grid_forget()
-            self.third_frame.grid_forget()
+            self.frame_libros_en_prestamo.grid_forget()
         elif name == "stock":
             self.inicio_frame.grid_forget()
             self.stock.grid(row=0, column=0, sticky="nsew")
             self.usuario.grid_forget()
             self.realizar_prestamo.grid_forget()
-            self.third_frame.grid_forget()
+            self.frame_libros_en_prestamo.grid_forget()
         elif name == "usuarios":
             self.inicio_frame.grid_forget()
             self.stock.grid_forget()
             self.usuario.grid(row=0, column=0, sticky="nsew")
             self.realizar_prestamo.grid_forget()
-            self.third_frame.grid_forget()
+            self.frame_libros_en_prestamo.grid_forget()
         elif name == "realizar_prestamo":
             self.inicio_frame.grid_forget()
             self.stock.grid_forget()
             self.usuario.grid_forget()
             self.realizar_prestamo.grid(row=0, column=0, sticky="nsew")
-            self.third_frame.grid_forget()
-        elif name == "frame_3":
+            self.frame_libros_en_prestamo.grid_forget()
+        elif name == "libros_prestamo":
             self.inicio_frame.grid_forget()
             self.stock.grid_forget()
             self.usuario.grid_forget()
             self.realizar_prestamo.grid_forget()
-            self.third_frame.grid(row=0, column=0, sticky="nsew")
+            self.frame_libros_en_prestamo.grid(row=0, column=0, sticky="nsew")
 
     # Métodos para que cuando se presione el botón con este método, muestre el frame relacionado
     def inicio_button_evento(self):
@@ -539,8 +588,8 @@ class VentanaPrincipal(ck.CTkToplevel):
     def realizarPrestamo_button_evento(self):
         self.seleccion_frame_nombre("realizar_prestamo")
 
-    def frame_3_button_event(self):
-        self.seleccion_frame_nombre("frame_3")
+    def frame_libros_en_prestamo_button_evento(self):
+        self.seleccion_frame_nombre("libros_prestamo")
 
     # Método para cambiar la apariencia de la app
     def evento_cambiar_apariencia(self, new_appearance_mode):
@@ -575,7 +624,7 @@ class VentanaPrincipal(ck.CTkToplevel):
 
     # MÉTODOS PARA EL FRAME USUARIOS REGISTRADOS
     # Método para mostrar los datos en la tabla de usuarios
-    def mostrarDatos(self):
+    def mostrarDatosUsuario(self):
         datos = self.bd.mostrarUsuarios()
         self.tabla_uno.delete(*self.tabla_uno.get_children())
         i = -1
