@@ -5,7 +5,11 @@ from tkinter import ttk # Modulo para darle estilos a los widgets presentes en l
 from tkcalendar import DateEntry # Modulo para seleccionar una fecha median un calendario
 from PIL import Image, ImageTk # Modulo para importar imágenes
 import re # Modulo para poder validar si el correo electrónico es un correo electrónico
-import datetime as d
+
+import smtplib
+import random
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 from model.conexion_db import *
 
@@ -220,7 +224,7 @@ class Frame(ck.CTkFrame):
         self.root.wait_window(ventana_registro)
 
     def abrir_ventana_recuperar_contraseña(self):
-        self.root.withdraw()
+        
         ventana_recuperar_contraseña = VentanaRecuperarContraseña(self.root)
         self.root.wait_window(ventana_recuperar_contraseña)
 
@@ -239,6 +243,9 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         self.geometry("700x600")
         self.resizable(0, 0)
 
+        # Variables para obtener los datos de los entry´s
+        self.correo_bibliotecario = ck.StringVar()
+
         # Crear imagen de fondo como PhotoImage
         imagen_fondo = ImageTk.PhotoImage(Image.open("img\\pattern.png"))
 
@@ -250,16 +257,33 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         frame_recuperar_contraseña.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
         frame_recuperar_contraseña.configure(width=500, height=500)
 
-        self.button_correo = ck.CTkButton(master = frame_recuperar_contraseña, text="Enviar código al correo electrónico", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.button_correo = ck.CTkButton(master = frame_recuperar_contraseña, command=self.abrir_recuperar_contraseña, text="Enviar código al correo electrónico", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.button_correo.place(x=80, y=100)
 
         self.button_celular = ck.CTkButton(master = frame_recuperar_contraseña, text="Enviar código al numero de celular", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.button_celular.place(x=80, y=300)
 
+    def generar_codigo_unico(self):
+        codigo = random.randint(100000, 9999999) # Generar un código de 6 dígitos
+        return str(codigo)
+    
+    def enviar_codigo_correo(self, correo):
+        pass
+
+
     def abrir_recuperar_contraseña(self):
-        self.parent.withdraw()
+        #self.parent.withdraw()
         ventana_recuperar_contraseña = RecuperarContraseña(self.parent)
         self.parent.wait_window(ventana_recuperar_contraseña)
+
+    # Método para validar el correo electrónico
+    def validarCorreo(self, correo):
+        patron = r'^[\w\.-]+@\w+\.\w+$'
+
+        if re.match(patron, correo):
+            return True
+        else:
+            return False
 
 class RecuperarContraseña(ck.CTkToplevel):
     def __init__(self, parent):
