@@ -247,6 +247,13 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.rut_usuario = ck.StringVar()
         self.tipo_usuario = ck.StringVar()
 
+        # Variables de texto para el Frame Registrar Usuario
+        self.nombre_usuario = ck.StringVar()
+        self.apellido_ususario = ck.StringVar()
+        self.direccion_usuario = ck.StringVar()
+        self.celular_usuario = ck.StringVar()
+        self.correo_usuario = ck.StringVar()
+        
         # Cargar imágenes para Menu
         self.logo_imagen = ck.CTkImage(Image.open("img\\libros.ico"), size=(30, 30))
         self.large_test_image = ck.CTkImage(Image.open("img\\large_test_image.png"), size=(500, 150))
@@ -306,12 +313,19 @@ class VentanaPrincipal(ck.CTkToplevel):
                                            command=self.realizarPrestamo_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.realizar_prestamo_button.grid(row=5, column=0, sticky="ew")
 
-        # Otro botón
+        # Botón de Frame Libros en Préstamo
         self.frame_libros_en_prestamo_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
                                            text="Libros en Préstamo", fg_color="transparent", text_color=("gray10", "gray90"),
                                            hover_color=("gray70", "gray30"), image=self.add_user_image, anchor="w",
                                            command=self.frame_libros_en_prestamo_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.frame_libros_en_prestamo_button.grid(row=6, column=0, sticky="ew")
+        
+        # Botón de Frame Registrar Usuario
+        self.frame_registrar_usuario_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
+                                           text="Registrar Usuario", fg_color="transparent", text_color=("gray10", "gray90"),
+                                           hover_color=("gray70", "gray30"), image=self.add_user_image, anchor="w",
+                                           command=self.frame_registrar_usuario_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.frame_registrar_usuario_button.grid(row=6, column=0, sticky="ew")
 
         # Menu de opciones para cambiar de apariencia la app
         self.menu_apariencia = ck.CTkOptionMenu(self.frameNavegacion, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"), values=["Dark", "Light"], command=self.evento_cambiar_apariencia)
@@ -591,6 +605,69 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.main_frame.grid_rowconfigure(0, weight=1)
         self.main_frame.grid_columnconfigure(0, weight=1)
 
+        # FRAME REGISTRAR USUARIO
+        self.frame_registrar_usuario = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+        self.frame_registrar_usuario.grid(row=0, column=0, sticky="nsew")
+
+        self.registrar_usuario_image = ck.CTkLabel(self.frame_registrar_usuario, text="", image=self.libros_prestamo_image)
+        self.registrar_usuario_image.grid(row=0, columnspan=2, padx=20)
+
+        self.nombre_usuario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese el nombre del usuario: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.nombre_usuario_label.grid(row=10, column=0, pady=5, padx=5)
+
+        self.nombre_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.nombre_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.nombre_usuario_entry.grid(row=10, column=1, pady=10, padx=5)
+
+        self.apellido_ususario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese el apellido del usuario: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.apellido_ususario_label.grid(row=11, column=0, pady=5, padx=5)
+
+        self.apellido_ususario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.apellido_ususario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.apellido_ususario_entry.grid(row=11, column=1, pady=10, padx=5)
+
+        self.direccion_usuario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese la dirección del usuario: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.direccion_usuario_label.grid(row=12, column=0, pady=5, padx=5)
+
+        self.direccion_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.direccion_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.direccion_usuario_entry.grid(row=12, column=1, pady=10, padx=5)
+
+        self.rut_usuario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese el RUT del usuario: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.rut_usuario_label.grid(row=13, column=0, pady=5, padx=5)
+
+        self.rut_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.rut_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.rut_usuario_entry.grid(row=13, column=1, pady=10, padx=5)
+
+        self.celular_usuario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese el celular del usuario: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.celular_usuario_label.grid(row=14, column=0, pady=5, padx=5)
+
+        self.celular_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.celular_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.celular_usuario_entry.grid(row=14, column=1, pady=10, padx=5)
+
+        self.correo_usuario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese el correo electrónico del usuario: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.correo_usuario_label.grid(row=15, column=0, pady=5, padx=5)
+
+        self.correo_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.correo_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.correo_usuario_entry.grid(row=15, column=1, pady=10, padx=5)
+
+        self.tipo_usuario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese el tipo de usuario: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.tipo_usuario_label.grid(row=16, column=0, pady=5, padx=5)
+
+        self.tipo_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.tipo_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.tipo_usuario_entry.grid(row=16, column=1, pady=10, padx=5)
+
+        self.espacio = ck.CTkLabel(self.frame_registrar_usuario, text="",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.espacio.grid(row=17, column=0, pady=5, padx=5)
+
+        self.registrar_usuario_button = ck.CTkButton(self.frame_registrar_usuario, text="REGISTRAR USUARIO", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"), command=self.registrarUsuario)
+        self.registrar_usuario_button.place(x=288, y=480)
+
         # FRAME SELECCIONADO POR DEFECTO
         self.seleccion_frame_nombre("home")
 
@@ -602,6 +679,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.stock_button.configure(fg_color=("gray75", "gray25") if name == "stock" else "transparent")
         self.realizar_prestamo_button.configure(fg_color=("gray75", "gray25") if name == "realizar_prestamo" else "transparent")
         self.frame_libros_en_prestamo.configure(fg_color=("gray75", "gray25") if name == "libros_prestamo" else "transparent")
+        self.frame_registrar_usuario.configure(fg_color=("gray75", "gray25") if name == "registrar_usuario" else "transparent")
 
         # Mostrar frame seleccionado
         if name == "home":
@@ -611,6 +689,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.usuario.grid_forget()
             self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid_forget()
+            self.frame_registrar_usuario.grid_forget()
         elif name == "catalogo":
             self.inicio_frame.grid_forget()
             self.catalogo.grid(row=0, column=0, sticky="nsew")
@@ -618,30 +697,42 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.usuario.grid_forget()
             self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid_forget()
+            self.frame_registrar_usuario.grid_forget()
         elif name == "stock":
             self.inicio_frame.grid_forget()
             self.stock.grid(row=0, column=0, sticky="nsew")
             self.usuario.grid_forget()
             self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid_forget()
+            self.frame_registrar_usuario.grid_forget()
         elif name == "usuarios":
             self.inicio_frame.grid_forget()
             self.stock.grid_forget()
             self.usuario.grid(row=0, column=0, sticky="nsew")
             self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid_forget()
+            self.frame_registrar_usuario.grid_forget()
         elif name == "realizar_prestamo":
             self.inicio_frame.grid_forget()
             self.stock.grid_forget()
             self.usuario.grid_forget()
             self.frame_realizar_prestamo.grid(row=0, column=0, sticky="nsew")
             self.frame_libros_en_prestamo.grid_forget()
+            self.frame_registrar_usuario.grid_forget()
         elif name == "libros_prestamo":
             self.inicio_frame.grid_forget()
             self.stock.grid_forget()
             self.usuario.grid_forget()
             self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid(row=0, column=0, sticky="nsew")
+            self.frame_registrar_usuario.grid_forget()
+        elif name == "registrar_usuario":
+            self.inicio_frame.grid_forget()
+            self.stock.grid_forget()
+            self.usuario.grid_forget()
+            self.frame_realizar_prestamo.grid_forget()
+            self.frame_libros_en_prestamo.grid_forget()
+            self.frame_registrar_usuario.grid(row=0, column=0, sticky="nsew")
 
     # Metodos para que cuando se presione el botón con este método, muestre el frame relacionado
     def inicio_button_evento(self):
@@ -661,6 +752,9 @@ class VentanaPrincipal(ck.CTkToplevel):
 
     def frame_libros_en_prestamo_button_evento(self):
         self.seleccion_frame_nombre("libros_prestamo")
+
+    def frame_registrar_usuario_button_evento(self):
+        self.seleccion_frame_nombre("registrar_usuario")
 
     # Método para cambiar la apariencia de la app
     def evento_cambiar_apariencia(self, new_appearance_mode):
@@ -754,6 +848,66 @@ class VentanaPrincipal(ck.CTkToplevel):
         fecha_actual = datetime.now().date()
         fecha_devolucion = fecha_actual + timedelta(days=dias)
         return fecha_devolucion
+    
+    # MÉTODOs PARA EL FRAME REGISTRAR USUARIO
+    # Método para registrar usuario
+    def registrarUsuario(self):
+        nombre = self.nombre_usuario.get()
+        apellido = self.apellido_ususario.get()
+        direccion = self.direccion_usuario.get()
+        rut = self.rut_usuario.get()
+        celular = self.celular_usuario.get()
+        correo = self.correo_usuario.get()
+        tipo = self.tipo_usuario.get()
+        if self.validarRut(rut):
+            if self.validarCorreo(correo):
+                self.bd.registrarUsuario(nombre, apellido, direccion, rut, celular, correo, tipo)
+                self.limpiarCamposUsuario()
+            else:
+                messagebox.showerror("Registrar Usuario", f"El correo {correo} no es valido.")
+        else:
+            messagebox.showerror("Registrar Usuario", f"El RUT {rut} ingresado no es valido.")
+
+    # Método para validar el correo electrónico
+    def validarCorreo(self, correo):
+        patron = r'^[\w\.-]+@\w+\.\w+$'
+
+        if re.match(patron, correo):
+            return True
+        else:
+            return False
+
+    # Método para validar el RUT ingresado
+    def validarRut(self, rut):
+        rut = rut.replace(".", "").replace("-", "") #Remover puntos y guiones
+        rutSinDv = rut[:-1] #Obtener el rut sin dígito verificador
+        dv = rut[-1] #Obtener el dígito verificador
+
+        #Calcular el dígito verificador
+        suma = 0
+        multiplo = 2
+        for i in reversed(rutSinDv):
+            suma += int(i) * multiplo
+            multiplo +=1
+            if multiplo == 8:
+                multiplo = 2
+
+        resto = suma % 11
+        dvEsperado = str(11 - resto) if resto > 1 else "0"
+
+        if dv == dvEsperado:
+            return True
+        else:
+            return False
+        
+    def limpiarCamposUsuario(self):
+        self.nombre_usuario.set('')
+        self.apellido_ususario.set('')
+        self.direccion_usuario.set('')
+        self.rut_usuario.set('')
+        self.celular_usuario('')
+        self.correo_usuario.set('')
+        self.tipo_usuario.set('')
     
     def limpiarCamposPrestamo(self):
         self.rut_usuario.set('')

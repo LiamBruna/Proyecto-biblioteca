@@ -140,3 +140,22 @@ class BD:
                 messagebox.showerror("Realizar Préstamo", f"El RUT {rut} no esta registrado en la base de datos.")
         except Exception as e:
             messagebox.showerror("Realizar Préstamo", f"{str(e)}")
+
+    # MÉTODO PARA FRAME REGISTRAR USUARIO
+    # Método para registrar un usuario
+    def registrarUsuario(self, nombre, apellido, direccion, rut, celular, correo, tipo):
+        sql = "SELECT * FROM usuario WHERE CORREO_U = ?"
+        self.cursor.execute(sql, (correo,))
+        result = self.cursor.fetchone()
+
+        if result is not None:
+            messagebox.showerror("Error de registro", f"El correo {correo} ingresado ya existe, ingrese otro correo.")
+            return
+
+        sql = "INSERT INTO usuario (NOMBRE_U, APELLIDO_U, DIRECCION_U, RUT_U, CELULAR_U, CORREO_U, TIPO_U) VALUES (?, ?, ?, ?, ?, ?, ?)"
+        try:
+            self.cursor.execute(sql, (nombre, apellido, direccion, rut, celular, correo, tipo))
+            self.connect.commit()
+            messagebox.showinfo("Registrar Usuario", f"El usuario {nombre} ha sido registrado correctamente.")
+        except Exception as e:
+            messagebox.showerror("Registrar Usuario", f"{str(e)}")
