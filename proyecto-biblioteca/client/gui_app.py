@@ -527,7 +527,11 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         # Botón que realizara el prestamo
         self.completar_prestamo_button = ck.CTkButton(self.frame_realizar_prestamo, text="REALIZAR PRÉSTAMO", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
-        self.completar_prestamo_button.place(x=200, y=400)
+        self.completar_prestamo_button.place(x=280, y=400)
+
+        # Botón para borrar el contenido de todos los campos
+        self.borrar_campos_prestamo = ck.CTkButton(self.frame_realizar_prestamo, text="BORRAR TODO", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"), command=self.limpiarCamposPrestamo)
+        self.borrar_campos_prestamo.place(x=65, y=400)
 
         # FRAME LIBROS EN PRÉSTAMO
         self.frame_libros_en_prestamo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
@@ -668,7 +672,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         isbn = self.buscar_actualiza.get()  # Obtener el ISBN ingresado
         if isbn == "":
             messagebox.showerror("Stock", "Debe de ingresar un ISBN para realizar la busqueda.")
-            self.limpiarCampos()
+            self.limpiarCamposStock()
         libros = self.bd.buscarLibro(isbn)  # Buscar el libro en la base de datos
         if libros:
             isbn, titulo, num_paginas, stock = libros[0][1:5]  # Tomar los elementos del índice 1 al 4
@@ -678,7 +682,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.stockLibro.set(int(stock))  # Actualizar el valor del campo Stock
         else:
             messagebox.showerror("Stock", f"El libro con el ISBN {isbn} no existe.")
-            self.limpiarCampos()
+            self.limpiarCamposStock()
 
     # Método para actualizar el stock de un libro
     def actualizarStock(self, event = None):
@@ -686,7 +690,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         stock = self.stockLibro.get()
         titulo = self.titulo.get()
         self.bd.actualizarStock(stock, isbn)  
-        self.limpiarCampos()
+        self.limpiarCamposStock()
 
     # METODOS PARA EL FRAME USUARIOS REGISTRADOS
     # Método para mostrar los datos en la tabla de usuarios
@@ -734,24 +738,32 @@ class VentanaPrincipal(ck.CTkToplevel):
         if tipo_usuario:
             self.tipo_usuario.set(tipo_usuario)
             if tipo_usuario == "Alumno":
-                fecha_devolucion = self.calcularFechaDevolucion()
+                fecha_devolucion = self.calcularFechaDevolucion(7)
                 messagebox.showinfo("Realizar Préstamo", f"Se han sumado 7 días por ser {tipo_usuario}")
                 if fecha_devolucion:
                     self.fecha_devolucion.set_date(fecha_devolucion)
             elif tipo_usuario == "Docente":
-                self.fecha_devolucion.configure(state="normal")
-                messagebox.showinfo("Realizar Préstamo", f"No tiene limite de ")
+                fecha_devolucion = self.calcularFechaDevolucion(20)
+                messagebox.showinfo("Realizar Préstamo", f"Se han sumado 20 días por ser {tipo_usuario}")
+                if fecha_devolucion:
+                    self.fecha_devolucion.set_date(fecha_devolucion)
             else:
                 self.fecha_devolucion.configure(state="disabled")
                 
-
-    def calcularFechaDevolucion(self):
+    def calcularFechaDevolucion(self, dias):
         fecha_actual = datetime.now().date()
-        fecha_devolucion = fecha_actual + timedelta(days=7)
+        fecha_devolucion = fecha_actual + timedelta(days=dias)
         return fecha_devolucion
+    
+    def limpiarCamposPrestamo(self):
+        self.rut_usuario.set('')
+        self.isbn.set('')
+        self.fecha_inicio.set_date(datetime.now().date())
+        self.fecha_devolucion.set_date(datetime.now().date())
+        self.tipo_usuario.set('')
 
     # Método para limpiar los valores en los entry's
-    def limpiarCampos(self):
+    def limpiarCamposStock(self):
         self.buscar_actualiza.set('')
         self.isbn.set('')
         self.titulo.set('')
