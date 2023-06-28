@@ -80,26 +80,24 @@ class VentanaRegistro(ck.CTkToplevel):
 
 # Método para validar el RUT ingresado
     def validarRut(self, rut):
-        rut = rut.replace(".", "").replace("-", "") #Remover puntos y guiones
-        rutSinDv = rut[:-1] #Obtener el rut sin dígito verificador
-        dv = rut[-1] #Obtener el dígito verificador
+        rut = rut.replace(".", "").replace("-", "")  # Remover puntos y guiones
+        rut = rut.replace("k", "0")  # Reemplazar "k" por "0"
+        rutSinDv = rut[:-1]  # Obtener el rut sin dígito verificador
+        dv = rut[-1]  # Obtener el dígito verificador
 
-        #Calcular el dígito verificador
+        # Calcular el dígito verificador
         suma = 0
         multiplo = 2
         for i in reversed(rutSinDv):
             suma += int(i) * multiplo
-            multiplo +=1
-            if multiplo == 8:
+            multiplo += 1
+            if multiplo > 7:
                 multiplo = 2
 
         resto = suma % 11
         dvEsperado = str(11 - resto) if resto > 1 else "0"
 
-        if dv == dvEsperado:
-            return True
-        else:
-            return False
+        return dv == dvEsperado
         
 # Método para mostrar la contraseña al presionar el Checkbox
     def mostrarContraseñaRegistro(self):
@@ -829,20 +827,23 @@ class VentanaPrincipal(ck.CTkToplevel):
     def obtenerTipoUsuario(self, event=None):
         rut = self.rut_usuario.get()
         tipo_usuario = self.bd.obtenerTipoUsuario(rut)
-        if tipo_usuario:
-            self.tipo_usuario.set(tipo_usuario)
-            if tipo_usuario == "Alumno":
-                fecha_devolucion = self.calcularFechaDevolucion(7)
-                messagebox.showinfo("Realizar Préstamo", f"Se han sumado 7 días por ser {tipo_usuario}")
-                if fecha_devolucion:
-                    self.fecha_devolucion.set_date(fecha_devolucion)
-            elif tipo_usuario == "Docente":
-                fecha_devolucion = self.calcularFechaDevolucion(20)
-                messagebox.showinfo("Realizar Préstamo", f"Se han sumado 20 días por ser {tipo_usuario}")
-                if fecha_devolucion:
-                    self.fecha_devolucion.set_date(fecha_devolucion)
-            else:
-                self.fecha_devolucion.configure(state="disabled")
+        if self.validarRut(rut):
+            if tipo_usuario:
+                self.tipo_usuario.set(tipo_usuario)
+                if tipo_usuario == "Alumno":
+                    fecha_devolucion = self.calcularFechaDevolucion(7)
+                    messagebox.showinfo("Realizar Préstamo", f"Se han sumado 7 días por ser {tipo_usuario}")
+                    if fecha_devolucion:
+                        self.fecha_devolucion.set_date(fecha_devolucion)
+                elif tipo_usuario == "Docente":
+                    fecha_devolucion = self.calcularFechaDevolucion(20)
+                    messagebox.showinfo("Realizar Préstamo", f"Se han sumado 20 días por ser {tipo_usuario}")
+                    if fecha_devolucion:
+                        self.fecha_devolucion.set_date(fecha_devolucion)
+                else:
+                    self.fecha_devolucion.configure(state="disabled")
+        else:
+            messagebox.showerror("Realizar Prestamo", f"El RUT {rut} no es valido.")
                 
     def calcularFechaDevolucion(self, dias):
         fecha_actual = datetime.now().date()
@@ -879,33 +880,32 @@ class VentanaPrincipal(ck.CTkToplevel):
 
     # Método para validar el RUT ingresado
     def validarRut(self, rut):
-        rut = rut.replace(".", "").replace("-", "") #Remover puntos y guiones
-        rutSinDv = rut[:-1] #Obtener el rut sin dígito verificador
-        dv = rut[-1] #Obtener el dígito verificador
+        rut = rut.replace(".", "").replace("-", "")  # Remover puntos y guiones
+        rut = rut.replace("k", "0")  # Reemplazar "k" por "0"
+        rutSinDv = rut[:-1]  # Obtener el rut sin dígito verificador
+        dv = rut[-1]  # Obtener el dígito verificador
 
-        #Calcular el dígito verificador
+        # Calcular el dígito verificador
         suma = 0
         multiplo = 2
         for i in reversed(rutSinDv):
             suma += int(i) * multiplo
-            multiplo +=1
-            if multiplo == 8:
+            multiplo += 1
+            if multiplo > 7:
                 multiplo = 2
 
         resto = suma % 11
         dvEsperado = str(11 - resto) if resto > 1 else "0"
 
-        if dv == dvEsperado:
-            return True
-        else:
-            return False
+        return dv == dvEsperado
+
         
     def limpiarCamposUsuario(self):
         self.nombre_usuario.set('')
         self.apellido_ususario.set('')
         self.direccion_usuario.set('')
         self.rut_usuario.set('')
-        self.celular_usuario('')
+        self.celular_usuario.set('')
         self.correo_usuario.set('')
         self.tipo_usuario.set('')
     
