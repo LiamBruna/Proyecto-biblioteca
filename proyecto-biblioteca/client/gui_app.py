@@ -190,6 +190,9 @@ class Frame(ck.CTkFrame):
         self.button_registrar = ck.CTkButton(master=frame, text="Registrarse", command=self.abrir_ventana_registro, image=registrarse_photo, font=ck.CTkFont(size=18, weight="bold", family="Calibri (body)"))
         self.button_registrar.place(x=86, y=300)
 
+        self.button_olvido_contraseña = ck.CTkButton(master=frame, text="¿Olvidó su contraseña?", font=ck.CTkFont(size=18, weight="bold", family="Calibri (body)"), command=self.abrir_ventana_recuperar_contraseña)
+        self.button_olvido_contraseña.place(x=42, y=347)
+
     def login(self, event=None):
         correo = self.correo.get()
         contraseña = self.contraseña_entry.get()
@@ -216,10 +219,69 @@ class Frame(ck.CTkFrame):
         ventana_registro = VentanaRegistro(self.root)
         self.root.wait_window(ventana_registro)
 
+    def abrir_ventana_recuperar_contraseña(self):
+        self.root.withdraw()
+        ventana_recuperar_contraseña = VentanaRecuperarContraseña(self.root)
+        self.root.wait_window(ventana_recuperar_contraseña)
+
     def limparCampos(self):
         self.correo.delete(0, 'end')
         self.contraseña_entry.delete(0, 'end')
         
+# Ventana recuperar contraseña
+class VentanaRecuperarContraseña(ck.CTkToplevel):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.parent = parent
+        self.bd = BD()
+        self.iconbitmap('img\\libros.ico')
+        self.title("Ventana Recuperar Contraseña")
+        self.geometry("700x600")
+        self.resizable(0, 0)
+
+        # Crear imagen de fondo como PhotoImage
+        imagen_fondo = ImageTk.PhotoImage(Image.open("img\\pattern.png"))
+
+        # Crear etiqueta para la imagen de fondo
+        fondo = ck.CTkLabel(master=self, image=imagen_fondo, text="")
+        fondo.pack()
+
+        frame_recuperar_contraseña = ck.CTkFrame(master=fondo, corner_radius=15)
+        frame_recuperar_contraseña.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        frame_recuperar_contraseña.configure(width=500, height=500)
+
+        self.button_correo = ck.CTkButton(master = frame_recuperar_contraseña, text="Enviar código al correo electrónico", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.button_correo.place(x=80, y=100)
+
+        self.button_celular = ck.CTkButton(master = frame_recuperar_contraseña, text="Enviar código al numero de celular", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.button_celular.place(x=80, y=300)
+
+    def abrir_recuperar_contraseña(self):
+        self.parent.withdraw()
+        ventana_recuperar_contraseña = RecuperarContraseña(self.parent)
+        self.parent.wait_window(ventana_recuperar_contraseña)
+
+class RecuperarContraseña(ck.CTkToplevel):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.parent = parent
+        self.bd = BD()
+        self.iconbitmap('img\\libros.ico')
+        self.title("Recuperación de Contraseña")
+        self.geometry("700x600")
+        self.resizable(0, 0)
+
+        # Crear imagen de fondo como PhotoImage
+        imagen_fondo = ImageTk.PhotoImage(Image.open("img\\pattern.png"))
+
+        # Crear etiqueta para la imagen de fondo
+        fondo = ck.CTkLabel(master=self, image=imagen_fondo, text="")
+        fondo.pack()
+
+        frame_recuperar_contraseña = ck.CTkFrame(master=fondo, corner_radius=15)
+        frame_recuperar_contraseña.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        frame_recuperar_contraseña.configure(width=500, height=500)
+
 
 # Ventana principal de la aplicación
 class VentanaPrincipal(ck.CTkToplevel):
