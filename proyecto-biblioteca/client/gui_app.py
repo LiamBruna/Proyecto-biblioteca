@@ -7,10 +7,6 @@ from PIL import Image, ImageTk # Modulo para importar imágenes
 import re # Modulo para poder validar si el correo electrónico es un correo electrónico
 import random
 
-import base64
-from googleapiclient.discovery import build
-from google.oauth2.credentials import Credentials
-
 from model.conexion_db import *
 
 
@@ -184,7 +180,7 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         self.resizable(0, 0)
 
         # Variables para obtener los datos de los entry´s
-        self.correo_bibliotecario = ck.StringVar(value="venom_side1@hotmail.com")
+        self.correo_bibliotecario = ck.StringVar()
         self.codigo_ingresado = ck.StringVar(value='Ingrese el código enviado aquí')
 
         # Crear imagen de fondo como PhotoImage
@@ -201,7 +197,7 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         self.correo_bibliotecario_entry = ck.CTkEntry(master=frame_recuperar_contraseña, textvariable=self.correo_bibliotecario, width=300, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
         self.correo_bibliotecario_entry.place(x=100, y=50)
 
-        self.button_correo = ck.CTkButton(master = frame_recuperar_contraseña, command=self.enviar_codigo_correo(self.correo_bibliotecario_entry), text="Enviar código al correo electrónico", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.button_correo = ck.CTkButton(master = frame_recuperar_contraseña, command=self.enviar_codigo_correo, text="Enviar código al correo electrónico", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.button_correo.place(x=80, y=100)
 
         self.codigo_correo_entry = ck.CTkEntry(master=frame_recuperar_contraseña, textvariable=self.codigo_ingresado, width=300, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
@@ -215,30 +211,7 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         codigo = random.randint(100000, 9999999) # Generar un código de 6 dígitos
         return str(codigo)
     
-    # Método para enviar el código por correo electrónico
-    def enviar_codigo_correo(self):
-        correo = self.correo_bibliotecario.get()
-        codigo = self.generar_codigo_unico() # Generar el código único
-        contenido = f"Su código de recuperación de contraseña es: {codigo}"
-
-        try:
-            # Cargar las credenciales desde el archivo JSON
-            credentials = Credentials.from_authorized_user_file("credentials.json")
-
-            # Construir el servicio de la API de Gmail
-            service = build("gmail", "v1", credentials=credentials)
-
-            # Crear el mensaje de correo
-            message = self.create_message("tu_correo@gmail.com", correo, "Recuperación de contraseña", contenido)
-
-            # Enviar el mensaje utilizando la API de Gmail
-            self.send_message(service, "me", message)
-
-            messagebox.showinfo("Recuperación de Contraseña", "Correo enviado correctamente.")
-            return codigo
-        except Exception as e:
-            messagebox.showerror("Recuperación de Contraseña", f"Error al enviar el correo {str(e)}")
-            return None
+    # Método para enviar el código SMS
         
     # Método para verificar el codigo ingresado por el bibliotecario
     def verificar_codigo(self, codigo_enviado):
