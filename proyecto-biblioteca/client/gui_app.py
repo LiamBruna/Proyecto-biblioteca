@@ -5,7 +5,7 @@ from tkinter import ttk # Modulo para darle estilos a los widgets presentes en l
 from tkcalendar import DateEntry # Modulo para seleccionar una fecha median un calendario
 from PIL import Image, ImageTk # Modulo para importar imágenes
 import re # Modulo para poder validar si el correo electrónico es un correo electrónico
-import random
+import datetime as d
 
 from model.conexion_db import *
 
@@ -310,6 +310,7 @@ class Frame(ck.CTkFrame):
     def limparCampos(self):
         self.correo.delete(0, 'end')
         self.contraseña_entry.delete(0, 'end')
+        
 
 # Ventana principal de la aplicación
 class VentanaPrincipal(ck.CTkToplevel):
@@ -334,7 +335,6 @@ class VentanaPrincipal(ck.CTkToplevel):
         # Variables de texto para el Frame Realizar Préstamo
         self.rut_usuario = ck.StringVar()
         self.tipo_usuario = ck.StringVar()
-
         # Variables de texto para el Frame Registrar Usuario
         self.nombre_usuario = ck.StringVar()
         self.apellido_ususario = ck.StringVar()
