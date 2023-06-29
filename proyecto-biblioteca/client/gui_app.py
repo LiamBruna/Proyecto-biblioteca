@@ -5,7 +5,10 @@ from tkinter import ttk # Modulo para darle estilos a los widgets presentes en l
 from tkcalendar import DateEntry # Modulo para seleccionar una fecha median un calendario
 from PIL import Image, ImageTk # Modulo para importar imágenes
 import re # Modulo para poder validar si el correo electrónico es un correo electrónico
-import datetime as d
+import random # Modulo para crear un código random
+from twilio.rest import Client
+from dotenv import load_dotenv
+import os
 
 from model.conexion_db import *
 
@@ -175,13 +178,13 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         self.parent = parent
         self.bd = BD()
         self.iconbitmap('img\\libros.ico')
-        self.title("Ventana Recuperar Contraseña")
+        self.title("Recuperar Contraseña")
         self.geometry("700x600")
         self.resizable(0, 0)
 
         # Variables para obtener los datos de los entry´s
-        self.correo_bibliotecario = ck.StringVar()
-        self.codigo_ingresado = ck.StringVar(value='Ingrese el código enviado aquí')
+        self.celular_bibliotecario = ck.StringVar()
+        self.codigo_ingresado = ck.StringVar()
 
         # Crear imagen de fondo como PhotoImage
         imagen_fondo = ImageTk.PhotoImage(Image.open("img\\pattern.png"))
@@ -194,14 +197,14 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         frame_recuperar_contraseña.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
         frame_recuperar_contraseña.configure(width=500, height=500)
 
-        self.correo_bibliotecario_entry = ck.CTkEntry(master=frame_recuperar_contraseña, textvariable=self.correo_bibliotecario, width=300, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.correo_bibliotecario_entry = ck.CTkEntry(master=frame_recuperar_contraseña, width=300, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
         self.correo_bibliotecario_entry.place(x=100, y=50)
 
-        self.button_correo = ck.CTkButton(master = frame_recuperar_contraseña, command=self.enviar_codigo_correo, text="Enviar código al correo electrónico", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.button_correo = ck.CTkButton(master = frame_recuperar_contraseña, text="Enviar código al correo electrónico", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.button_correo.place(x=80, y=100)
 
-        self.codigo_correo_entry = ck.CTkEntry(master=frame_recuperar_contraseña, textvariable=self.codigo_ingresado, width=300, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
-        self.codigo_correo_entry.place(x=100, y=200)
+        self.codigo_celular_entry = ck.CTkEntry(master=frame_recuperar_contraseña, placeholder_text='Ingrese el código aquí', textvariable=self.codigo_ingresado, width=300, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.codigo_celular_entry.place(x=100, y=200)
 
         self.button_celular = ck.CTkButton(master = frame_recuperar_contraseña, text="Enviar código al numero de celular", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.button_celular.place(x=80, y=300)
@@ -212,6 +215,33 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         return str(codigo)
     
     # Método para enviar el código SMS
+    def enviar_codigo_celular(self):
+        celular = int(self.celular_bibliotecario.get())# Número de celular de destino
+        codigo = self.generar_codigo_unico() # Generar el código único
+        mensaje = f"Su código de recuperación de contraseña es: {codigo}"
+
+        # Cargar las variables de entorno desde el archivo "variables.env"
+        dotenv_path = os.path.join(os.path.dirname(__file__), 'env/twilio.env')
+        load_dotenv(dotenv_path)
+
+        # Configurar las credenciales de Twilio
+        account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
+        auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
+        client = Client(account_sid, auth_token)
+
+        try:
+            # Enviar el mensaje de texto
+            message = client.messages.create(
+                body=mensaje,
+                from_='+14178554277',
+                to=celular
+            )
+
+            messagebox.showinfo("Recuperación de Contraseña", "Mensaje enviado correctamente.")
+            return codigo
+        except Exception as e:
+            messagebox.showerror("Recuperación de Contraseña", f"Error al enviar el mensaje: {str(e)}")
+            return None
         
     # Método para verificar el codigo ingresado por el bibliotecario
     def verificar_codigo(self, codigo_enviado):
