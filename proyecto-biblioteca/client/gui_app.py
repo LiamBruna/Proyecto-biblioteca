@@ -678,7 +678,7 @@ class VentanaPrincipal(ck.CTkToplevel):
                                                 font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.isbn_libro_label.grid(row=11, column=0, pady=5)
 
-        self.isbn_libro_entry = ck.CTkEntry(self.frame_realizar_prestamo, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.isbn_libro_entry = ck.CTkEntry(self.frame_realizar_prestamo, textvariable=self.isbn, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.isbn_libro_entry.grid(row=11, column=1, padx=5)
 
         self.fecha_inicio_label = ck.CTkLabel(self.frame_realizar_prestamo, text="Fecha Inicio de Préstamo: ",
