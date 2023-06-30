@@ -154,9 +154,8 @@ class VentanaRegistro(ck.CTkToplevel):
         self.destroy()
 
     def volverLogin(self):
-        self.withdraw()  # Oculta la ventana de registro 
-        self.parent.deiconify()  # Muestra la ventana de login
         self.destroy()
+        self.parent.deiconify()
 
 # Ventana recuperar contraseña
 class VentanaRecuperarContraseña(ck.CTkToplevel):
@@ -284,9 +283,8 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         self.destroy()
 
     def volverLogin(self):
-        self.withdraw()  # Oculta la ventana de registro 
-        self.parent.deiconify()  # Muestra la ventana de login
         self.destroy()
+        self.parent.deiconify()
 
     # Método para mostrar la contraseña al presionar el Checkbox
     def mostrarContraseñaRegistro(self):
