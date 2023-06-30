@@ -179,11 +179,11 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         self.bd = BD()
         self.iconbitmap('img\\libros.ico')
         self.title("Recuperar Contraseña")
-        self.geometry("700x600")
+        self.geometry("600x600")
         self.resizable(0, 0)
 
         # Variables para obtener los datos de los entry´s
-        self.celular_bibliotecario = ck.StringVar()
+        self.celular_bibliotecario = ck.StringVar(value="+56 9")
         self.codigo_ingresado = ck.StringVar()
 
         # Crear imagen de fondo como PhotoImage
@@ -193,40 +193,45 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         fondo = ck.CTkLabel(master=self, image=imagen_fondo, text="")
         fondo.pack()
 
-        frame_recuperar_contraseña = ck.CTkFrame(master=fondo, corner_radius=15)
-        frame_recuperar_contraseña.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
-        frame_recuperar_contraseña.configure(width=500, height=500)
+        self.frame_recuperar_contraseña = ck.CTkFrame(master=fondo, corner_radius=15)
+        self.frame_recuperar_contraseña.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        self.frame_recuperar_contraseña.configure(width=320, height=500)
 
-        self.correo_bibliotecario_entry = ck.CTkEntry(master=frame_recuperar_contraseña, width=300, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
-        self.correo_bibliotecario_entry.place(x=100, y=50)
+        self.numero_celular_label = ck.CTkLabel(master=self.frame_recuperar_contraseña, text="Ingrese su numero de celular: ", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.numero_celular_label.place(x=25, y=0)
 
-        self.button_correo = ck.CTkButton(master = frame_recuperar_contraseña, text="Enviar código al correo electrónico", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
-        self.button_correo.place(x=80, y=100)
+        self.numero_celular = ck.CTkEntry(master=self.frame_recuperar_contraseña, textvariable=self.celular_bibliotecario, width=250, height=30, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.numero_celular.place(x=35, y=40)
 
-        self.codigo_celular_entry = ck.CTkEntry(master=frame_recuperar_contraseña, placeholder_text='Ingrese el código aquí', textvariable=self.codigo_ingresado, width=300, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
-        self.codigo_celular_entry.place(x=100, y=200)
+        self.button_celular = ck.CTkButton(master = self.frame_recuperar_contraseña, command=self.enviar_codigo_celular, text="Enviar código", font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.button_celular.place(x=90, y=80)
 
-        self.button_celular = ck.CTkButton(master = frame_recuperar_contraseña, text="Enviar código al numero de celular", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
-        self.button_celular.place(x=80, y=300)
+        self.codigo_celular_label = ck.CTkLabel(master=self.frame_recuperar_contraseña, text="Ingrese el código recibido: ", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.codigo_celular_label.place(x=40, y=120)
 
-    # Método para generar un código único
+        self.codigo_celular_entry = ck.CTkEntry(master=self.frame_recuperar_contraseña, placeholder_text='Ingrese el código aquí ', textvariable=self.codigo_ingresado, width=250, height=30, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.codigo_celular_entry.place(x=35, y=160)
+
+        self.codigo_celular_button = ck.CTkButton(master = self.frame_recuperar_contraseña, command=self.verificar_codigo_ingresado, text="Verificar codigo", font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.codigo_celular_button.place(x=90, y=200) 
+
+    # Método para generar un código único de 7 dígitos
     def generar_codigo_unico(self):
-        codigo = random.randint(100000, 9999999) # Generar un código de 6 dígitos
+        codigo = random.randint(1000000, 9999999)  # Generar un código de 7 dígitos
         return str(codigo)
     
     # Método para enviar el código SMS
     def enviar_codigo_celular(self):
-        celular = int(self.celular_bibliotecario.get())# Número de celular de destino
+        celular = self.celular_bibliotecario.get()# Número de celular de destino
+        if celular == "":
+            messagebox.showerror("Recuperación de Contraseña", "Debe ingresar un numero de celular.")
+            return
         codigo = self.generar_codigo_unico() # Generar el código único
         mensaje = f"Su código de recuperación de contraseña es: {codigo}"
 
-        # Cargar las variables de entorno desde el archivo "variables.env"
-        dotenv_path = os.path.join(os.path.dirname(__file__), 'env/twilio.env')
-        load_dotenv(dotenv_path)
-
         # Configurar las credenciales de Twilio
-        account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
-        auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
+        account_sid = 'ACc5fcca03bf8e78a8d943d1e71c0099ed'
+        auth_token = '8e549a03d607cdd90de517a898026b20'
         client = Client(account_sid, auth_token)
 
         try:
@@ -237,6 +242,9 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
                 to=celular
             )
 
+            # Almacenar el código enviado por Twilio en una variable de instancia
+            self.codigo_enviado_por_twilio = codigo
+
             messagebox.showinfo("Recuperación de Contraseña", "Mensaje enviado correctamente.")
             return codigo
         except Exception as e:
@@ -244,8 +252,48 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
             return None
         
     # Método para verificar el codigo ingresado por el bibliotecario
-    def verificar_codigo(self, codigo_enviado):
-        return self.codigo_ingresado.get() == codigo_enviado
+    def verificar_codigo_ingresado(self):
+        codigo_enviado = self.codigo_enviado_por_twilio
+        codigo_ingresado = self.codigo_ingresado.get()
+        if codigo_ingresado == codigo_enviado:
+            messagebox.showinfo("Recuperación de Contraseña", "Los códigos coinciden")
+            self.mostrar_actualizar_contraseña()
+        else:
+            messagebox.showerror("Recuperación de Contraseña", "Los códigos no coinciden")
+    
+    def mostrar_actualizar_contraseña(self):
+        self.contraseña_label = ck.CTkLabel(master=self.frame_recuperar_contraseña, text="Ingrese su nueva contraseña: ", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.contraseña_label.place(x=25, y=240)
+
+        self.contraseña_entry = ck.CTkEntry(master=self.frame_recuperar_contraseña, width=250, height=30, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.contraseña_entry.place(x=35, y=280)
+
+        self.confirmar_contraseña_label = ck.CTkLabel(master=self.frame_recuperar_contraseña, text="Confirme su contraseña: ", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.confirmar_contraseña_label.place(x=40, y=320)
+
+        self.confirmar_contraseña_entry = ck.CTkEntry(master=self.frame_recuperar_contraseña, width=250, height=30, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.confirmar_contraseña_entry.place(x=35, y=360)
+
+        # Este es un checkbox para mostrar la contraseña que estamos ingresando
+        self.mostrarContraseña_Registro = tk.BooleanVar()
+        self.mostrar_contraseña_checkbox = ck.CTkCheckBox(master=self.frame_recuperar_contraseña, text="Mostrar contraseña", variable=self.mostrarContraseña_Registro, command=self.mostrarContraseñaRegistro, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.mostrar_contraseña_checkbox.place(x=75, y=400)
+
+        self.actualizar_contraseña_button = ck.CTkButton(master = self.frame_recuperar_contraseña, text="Actualizar contraseña", font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.actualizar_contraseña_button.place(x=75, y=440)
+        
+    def actualizar_contraseña(self):
+        pass
+
+    # Método para mostrar la contraseña al presionar el Checkbox
+    def mostrarContraseñaRegistro(self):
+        # Cambia la visibilidad de la contraseña basado en el estado del checkbox
+        if self.mostrarContraseña_Registro.get():
+            self.contraseña_entry.configure(show="")
+            self.confirmar_contraseña_entry.configure(show="")
+        else:
+            self.contraseña_entry.configure(show="*")
+            self.confirmar_contraseña_entry.configure(show="*")
 
     def abrir_recuperar_contraseña(self):
         #self.parent.withdraw()
