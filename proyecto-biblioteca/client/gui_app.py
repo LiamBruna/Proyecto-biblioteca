@@ -492,15 +492,15 @@ class VentanaPrincipal(ck.CTkToplevel):
                                            text="Registrar Usuario", fg_color="transparent", text_color=("gray10", "gray90"),
                                            hover_color=("gray70", "gray30"), image=self.add_user_image, anchor="w",
                                            command=self.frame_registrar_usuario_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
-        self.frame_registrar_usuario_button.grid(row=6, column=0, sticky="ew")
+        self.frame_registrar_usuario_button.grid(row=7, column=0, sticky="ew")
 
         # Menu de opciones para cambiar de apariencia la app
         self.menu_apariencia = ck.CTkOptionMenu(self.frameNavegacion, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"), values=["Dark", "Light"], command=self.evento_cambiar_apariencia)
-        self.menu_apariencia.grid(row=7, column=0, padx=20, pady=20, sticky="s")
+        self.menu_apariencia.grid(row=8, column=0, padx=20, pady=20, sticky="s")
 
         # Botón para cerrar sesion
         self.button_cerrarSesion = ck.CTkButton(self.frameNavegacion, font=ck.CTkFont(size=18, weight="bold", family="Calibri (body)"), text="Cerrar sesión", image=self.cerrar_sesion_imagen, command=self.cerrar_sesion)
-        self.button_cerrarSesion.grid(row=8, column=0, padx=20, pady=20, sticky="s")
+        self.button_cerrarSesion.grid(row=9, column=0, padx=20, pady=20, sticky="s")
 
         # CONTENEDOR MAINS
         self.main_frame = ck.CTkFrame(self, corner_radius=0, fg_color="transparent")
