@@ -13,3 +13,4 @@
 9. credenciales dentro: TWILIO_ACCOUNT_SID=ACc5fcca03bf8e78a8d943d1e71c0099ed, 
 TWILIO_AUTH_TOKEN=8e549a03d607cdd90de517a898026b20
 10. Cambios en la Base de Datos: Tabla bibliotecario se añadio CELULAR_B
+11. Cambios en la Base de Datos: Tabla prestamo se añadio RUT_U, ISBN, TIPO_U, ID_B

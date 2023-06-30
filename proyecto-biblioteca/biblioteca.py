@@ -3,7 +3,7 @@ from client.gui_app import Frame
 
 def main():
     root = CTk()
-    root.title('Biblioteca')
+    root.title('Biblioteca Virtual')
     root.iconbitmap('img\libros.ico')
     root.resizable(0,0)
     root.geometry("600x440")

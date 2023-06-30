@@ -9,8 +9,9 @@ import random # Modulo para crear un código random
 from twilio.rest import Client
 from dotenv import load_dotenv
 import os
+from datetime import datetime, timedelta
 
-from model.conexion_db import *
+from model.conexion_db import BD
 
 
 # Ventana de registro
@@ -18,14 +19,19 @@ class VentanaRegistro(ck.CTkToplevel):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.parent = parent
-        self.title("Registro")
-        self.iconbitmap('img\\libros.ico')
+        self.title("Biblioteca Virtual")
+        #self.iconbitmap('img\\libros.ico')
         self.geometry("700x600")
         self.resizable(0, 0)
 
         self.bd = BD()
 
+        icono = ImageTk.PhotoImage(Image.open("img\libros.ico"))
+
+        self.iconphoto(True, icono)
+
         self.mostrar_contraseña = tk.BooleanVar(value=False)  # Variable para controlar la visibilidad de la contraseña
+        self.celular = ck.StringVar(value="+56 9")
 
         # Crear imagen de fondo como PhotoImage
         imagen_fondo = ImageTk.PhotoImage(Image.open("img\\pattern.png"))
@@ -39,38 +45,41 @@ class VentanaRegistro(ck.CTkToplevel):
         frame_registro.configure(width=500, height=500)
 
         label_log = ck.CTkLabel(master=frame_registro, text="Registrarse", font=ck.CTkFont(size=30, weight="bold", family="Calibri (body)"))
-        label_log.place(x=170, y=45)
+        label_log.place(x=170, y=30)
 
         # Crea los campos de entrada de datos para el registro
         self.nombre_entry = ck.CTkEntry(frame_registro, placeholder_text='Nombre (*)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
-        self.nombre_entry.place(x=90, y=100)
+        self.nombre_entry.place(x=90, y=80)
 
         self.apellido_entry = ck.CTkEntry(frame_registro, placeholder_text='Apellido (*)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
-        self.apellido_entry.place(x=90, y=150)
+        self.apellido_entry.place(x=90, y=130)
 
         self.rut_entry = ck.CTkEntry(frame_registro, placeholder_text='RUT (con puntos y guión)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
-        self.rut_entry.place(x=90, y=200)
+        self.rut_entry.place(x=90, y=180)
 
         self.correo_entry = ck.CTkEntry(frame_registro, placeholder_text='Correo electrónico (*)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
-        self.correo_entry.place(x=90, y=250)
+        self.correo_entry.place(x=90, y=230)
+
+        self.celular_entry = ck.CTkEntry(frame_registro, placeholder_text='N° de Celular (*)', textvariable=self.celular, width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.celular_entry.place(x=90, y=280)
 
         self.contraseña_entry = ck.CTkEntry(frame_registro, placeholder_text='Contraseña', width=220, height=40, show="*",font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
-        self.contraseña_entry.place(x=90, y=300)
+        self.contraseña_entry.place(x=90, y=330)
 
         self.contraseña_entry_confirmar = ck.CTkEntry(frame_registro, placeholder_text='Confirmar Contraseña', width=220, height=40, show="*", font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
-        self.contraseña_entry_confirmar.place(x=90, y=350)
+        self.contraseña_entry_confirmar.place(x=90, y=380)
         self.contraseña_entry_confirmar.bind("<Return>", self.registrar)
 
         # Este es un checkbox para mostrar la contraseña que estamos ingresando
         self.mostrarContraseña_Registro = tk.BooleanVar()
         mostrar_contraseña_checkbox = ck.CTkCheckBox(frame_registro, text="Mostrar contraseña", variable=self.mostrarContraseña_Registro, command=self.mostrarContraseñaRegistro, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
-        mostrar_contraseña_checkbox.place(x=320, y=358)
+        mostrar_contraseña_checkbox.place(x=320, y=388)
 
         self.registro_photo = ck.CTkImage(Image.open("img\\registro.png"), size=(30,30))
 
         # Botón para registrarse
         button_registrar = ck.CTkButton(frame_registro, width=200, text="Registrarse", command=self.registrar, image=self.registro_photo, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
-        button_registrar.place(x=120, y=420)
+        button_registrar.place(x=100, y=430)
 
         self.volver_button = ck.CTkButton(master = frame_registro, command=self.volverLogin, text="Volver", font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
         self.volver_button.place(x=338, y=460)
@@ -122,6 +131,7 @@ class VentanaRegistro(ck.CTkToplevel):
         apellido = self.apellido_entry.get()
         rut = self.rut_entry.get()
         correo = self.correo_entry.get()
+        celular = self.celular_entry.get()
         contraseña = self.contraseña_entry.get()
         confirmarContraseña = self.contraseña_entry_confirmar.get()
         
@@ -148,7 +158,7 @@ class VentanaRegistro(ck.CTkToplevel):
             messagebox.showerror("Error de registro", f"Rut {rut} no válido.")
             return
 
-        if self.bd.registro(nombre, apellido, correo, contraseña, rut):
+        if self.bd.registro(nombre, apellido, correo, contraseña, rut, celular):
             self.withdraw()  # Oculta la ventana de registro
         self.parent.deiconify()  # Muestra la ventana de login
         self.destroy()
@@ -164,7 +174,7 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         self.parent = parent
         self.bd = BD()
         self.iconbitmap('img\\libros.ico')
-        self.title("Recuperar Contraseña")
+        self.title("Biblioteca Virtual")
         self.geometry("600x700")
         self.resizable(0, 0)
 
@@ -304,6 +314,8 @@ class Frame(ck.CTkFrame):
         self.bd = BD()
         self.bd.conectar()
 
+        self.correo_actual = None
+
         # Crear imagen de fondo como PhotoImage
         imagen_fondo = ImageTk.PhotoImage(Image.open("img\\pattern.png"))
 
@@ -352,7 +364,7 @@ class Frame(ck.CTkFrame):
         # Verifica si el correo existe en la base de datos
         if self.bd.login(correo, contraseña):
             self.root.withdraw()
-            ventana_principal = VentanaPrincipal(self.root)
+            ventana_principal = VentanaPrincipal(self.root, correo)
             self.root.wait_window(ventana_principal)
             self.limparCampos()
 
@@ -376,15 +388,15 @@ class Frame(ck.CTkFrame):
         self.correo.delete(0, 'end')
         self.contraseña_entry.delete(0, 'end')
         
-
 # Ventana principal de la aplicación
 class VentanaPrincipal(ck.CTkToplevel):
-    def __init__(self, parent):
+    def __init__(self, parent, correo_actual = None):
         super().__init__(parent)
         self.parent = parent
-        self.bd = BD()
+        self.bd = BD() # Guardar el objeto de la clase BD
+        self.correo_actual = correo_actual
         self.iconbitmap('img\\libros.ico')
-        self.title("Ventana Principal")
+        self.title("Biblioteca Virtual")
         self.resizable(0, 0)
 
         self.grid_rowconfigure(0, weight=1)
@@ -400,6 +412,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         # Variables de texto para el Frame Realizar Préstamo
         self.rut_usuario = ck.StringVar()
         self.tipo_usuario = ck.StringVar()
+
         # Variables de texto para el Frame Registrar Usuario
         self.nombre_usuario = ck.StringVar()
         self.apellido_ususario = ck.StringVar()
@@ -694,7 +707,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.tipo_usuario_entry.grid(row=14, column=1, padx=5)
 
         # Botón que realizara el prestamo
-        self.completar_prestamo_button = ck.CTkButton(self.frame_realizar_prestamo, text="REALIZAR PRÉSTAMO", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.completar_prestamo_button = ck.CTkButton(self.frame_realizar_prestamo, command=self.registrarPrestamo, text="REALIZAR PRÉSTAMO", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.completar_prestamo_button.place(x=280, y=400)
 
         # Botón para borrar el contenido de todos los campos
@@ -982,6 +995,7 @@ class VentanaPrincipal(ck.CTkToplevel):
     # Método para obtener el tipo de usuario mediante su RUT
     def obtenerTipoUsuario(self, event=None):
         rut = self.rut_usuario.get()
+        isbn = self.isbn.get()
         tipo_usuario = self.bd.obtenerTipoUsuario(rut)
         if self.validarRut(rut):
             if tipo_usuario:
@@ -1000,6 +1014,18 @@ class VentanaPrincipal(ck.CTkToplevel):
                     self.fecha_devolucion.configure(state="disabled")
         else:
             messagebox.showerror("Realizar Prestamo", f"El RUT {rut} no es valido.")
+
+    def registrarPrestamo(self):
+        rut = self.rut_usuario.get()
+        isbn = self.isbn_libro_entry.get()
+        f_prestamo = self.fecha_inicio.get_date()
+        f_devolucion = self.fecha_devolucion.get_date()
+        tipo_usuario = self.bd.obtenerTipoUsuario(rut)
+        id_bibliotecario = self.bd.obtenerUsuarioLog(self.correo_actual)
+
+        # Registrar el prestamo en la base de datos
+        self.bd.registrarPrestamo(self.correo_actual, rut, isbn, f_prestamo, f_devolucion, tipo_usuario)
+
                 
     def calcularFechaDevolucion(self, dias):
         fecha_actual = datetime.now().date()

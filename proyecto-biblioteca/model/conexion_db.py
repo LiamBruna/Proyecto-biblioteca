@@ -49,7 +49,7 @@ class BD:
         return False
 
     # Método para registrarse en la app
-    def registro(self, nombre, apellido, correo, contraseña, rut):
+    def registro(self, nombre, apellido, correo, contraseña, rut, celular):
         sql = "SELECT * FROM bibliotecario WHERE CORREO_B = ?"
         self.cursor.execute(sql, (correo,))
         result = self.cursor.fetchone()
@@ -59,35 +59,38 @@ class BD:
             return
 
         contraHash = hashlib.sha256(contraseña.encode()).hexdigest()
-        sql = "INSERT INTO bibliotecario (NOMBRE_B, APELLIDO_B, CORREO_B, CONTRASENA, RUT_B) VALUES (?, ?, ?, ?, ?)"
-        vals = (nombre, apellido, correo, contraHash, rut)
+        sql = "INSERT INTO bibliotecario (NOMBRE_B, APELLIDO_B, CORREO_B, CONTRASENA, RUT_B, CELULAR_B) VALUES (?, ?, ?, ?, ?, ?)"
+        vals = (nombre, apellido, correo, contraHash, rut, celular)
         self.cursor.execute(sql, vals)
         self.connect.commit()
         messagebox.showinfo(f"Registro exitoso", f"El usuario {nombre} ha sido registrado correctamente.")
 
-    # Método para registrar un préstamo de libro NECESITA ACTUALIZARSE
-    def registrarPrestamo(self, usuario_actual):
+    # Método para registrar un préstamo de libro
+    def registrarPrestamo(self, correo, rut_u, isbn, f_prestamo, f_devolucion, tipo_u):
         try:
-            sql_bibliotecario = "SELECT ID_B FROM bibliotecario WHERE CORREO_B = ?"
-            self.cursor.execute(sql_bibliotecario, (usuario_actual,))
-            bibliotecario_result = self.cursor.fetchone()
+            # Obtener el id del bibliotecario logeado
+            bibliotecarioId = self.obtenerUsuarioLog(correo)
 
-            if bibliotecario_result is None:
-                messagebox.showerror("Error de registro de préstamo", "El bibliotecario no esta registrado.")
-                return
-            
-            bibliotecarioId = bibliotecario_result[0]
-            f_prestamo = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-            sql_prestamo = "INSERT INTO prestamo (F_PRESTAMO, F_DEVOLUCION, ID_B) VALUES (?, ? ,?)"
-            vals_prestamo = (f_prestamo, '', bibliotecarioId)
+            sql_prestamo = "INSERT INTO prestamo (RUT_U, ISBN, F_PRESTAMO, F_DEVOLUCION, TIPO_U, ID_B) VALUES (?, ?, ?, ?, ?, ?)"
+            vals_prestamo = (rut_u, isbn, f_prestamo, f_devolucion, tipo_u, bibliotecarioId)
+            print(bibliotecarioId)
             self.cursor.execute(sql_prestamo, vals_prestamo)
             self.connect.commit()
 
             messagebox.showinfo("Registro de préstamo", "El préstamo ha sido registrado correctamente.")
-
         except Error as e:
-            print(f"Error al ejecutar: {e}")
+            messagebox.showerror("Registro de préstamo", str(e))
+
+    def obtenerUsuarioLog(self, correo):
+        sql = "SELECT ID_B FROM bibliotecario WHERE CORREO_B = ?"
+        self.cursor.execute(sql, (correo,))
+        results = self.cursor.fetchone()
+
+        if results is None:
+            messagebox.showerror("Registro de préstamo", "El bibliotecario no está logeado")
+        else:
+            id_b = results[0]
+            return id_b
 
     # Método para mostrar información personal de los usuarios registrados
     def mostrarUsuarios(self):
