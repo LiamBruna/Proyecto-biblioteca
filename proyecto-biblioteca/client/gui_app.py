@@ -70,7 +70,10 @@ class VentanaRegistro(ck.CTkToplevel):
 
         # Botón para registrarse
         button_registrar = ck.CTkButton(frame_registro, width=200, text="Registrarse", command=self.registrar, image=self.registro_photo, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
-        button_registrar.place(x=150, y=420)
+        button_registrar.place(x=120, y=420)
+
+        self.volver_button = ck.CTkButton(master = frame_registro, command=self.volverLogin, text="Volver", font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.volver_button.place(x=338, y=460)
 
 # Método para validar el correo electrónico
     def validarCorreo(self, correo):
@@ -150,6 +153,11 @@ class VentanaRegistro(ck.CTkToplevel):
         self.parent.deiconify()  # Muestra la ventana de login
         self.destroy()
 
+    def volverLogin(self):
+        self.withdraw()  # Oculta la ventana de registro 
+        self.parent.deiconify()  # Muestra la ventana de login
+        self.destroy()
+
 # Ventana recuperar contraseña
 class VentanaRecuperarContraseña(ck.CTkToplevel):
     def __init__(self, parent):
@@ -158,7 +166,7 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         self.bd = BD()
         self.iconbitmap('img\\libros.ico')
         self.title("Recuperar Contraseña")
-        self.geometry("600x600")
+        self.geometry("600x700")
         self.resizable(0, 0)
 
         # Variables para obtener los datos de los entry´s
@@ -174,7 +182,7 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
 
         self.frame_recuperar_contraseña = ck.CTkFrame(master=fondo, corner_radius=15)
         self.frame_recuperar_contraseña.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
-        self.frame_recuperar_contraseña.configure(width=320, height=500)
+        self.frame_recuperar_contraseña.configure(width=320, height=520)
 
         self.numero_celular_label = ck.CTkLabel(master=self.frame_recuperar_contraseña, text="Ingrese su numero de celular: ", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.numero_celular_label.place(x=25, y=0)
@@ -192,7 +200,10 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         self.codigo_celular_entry.place(x=35, y=160)
 
         self.codigo_celular_button = ck.CTkButton(master = self.frame_recuperar_contraseña, command=self.verificar_codigo_ingresado, text="Verificar codigo", font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
-        self.codigo_celular_button.place(x=90, y=200) 
+        self.codigo_celular_button.place(x=90, y=200)
+
+        self.volver_button = ck.CTkButton(master = self.frame_recuperar_contraseña, command=self.volverLogin, text="Volver", font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.volver_button.place(x=170, y=480)
 
     # Método para generar un código único de 7 dígitos
     def generar_codigo_unico(self):
@@ -272,6 +283,11 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         self.parent.deiconify()  # Muestra la ventana de login
         self.destroy()
 
+    def volverLogin(self):
+        self.withdraw()  # Oculta la ventana de registro 
+        self.parent.deiconify()  # Muestra la ventana de login
+        self.destroy()
+
     # Método para mostrar la contraseña al presionar el Checkbox
     def mostrarContraseñaRegistro(self):
         # Cambia la visibilidad de la contraseña basado en el estado del checkbox
@@ -281,15 +297,6 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         else:
             self.contraseña_entry.configure(show="*")
             self.contraseña_entry_confirmar.configure(show="*")
-
-    # Método para validar el correo electrónico
-    def validarCorreo(self, correo):
-        patron = r'^[\w\.-]+@\w+\.\w+$'
-
-        if re.match(patron, correo):
-            return True
-        else:
-            return False
 
 # Ventana Login
 class Frame(ck.CTkFrame):
