@@ -159,3 +159,14 @@ class BD:
             messagebox.showinfo("Registrar Usuario", f"El usuario {nombre} ha sido registrado correctamente.")
         except Exception as e:
             messagebox.showerror("Registrar Usuario", f"{str(e)}")
+
+    # MÉTODO PARA ACTUALIZAR LA CONTRASEÑA DEL BIBLIOTECARIO
+    def actualizarContraseñaBibliotecario(self, celular, contraseña):
+        sql = "UPDATE bibliotecario SET CONTRASENA = ? WHERE CELULAR_B = ?"
+        try:
+            contraHash = hashlib.sha256(contraseña.encode()).hexdigest()
+            self.cursor.execute(sql, (contraHash, celular))
+            self.connect.commit()
+            messagebox.showinfo("Recuperación de contraseña", f"Su contraseña ha sido actualizada.")
+        except Exception as e:
+            messagebox.showerror(f"Recuperación de contraseña", f"{str(e)}")

@@ -290,3 +290,128 @@ self.main_frame.grid_columnconfigure(0, weight=1)
             return results
         except Exception as e:
             messagebox.showerror("Mostrar usuarios", f"{str(e)}")
+
+
+        # FRAME LIBROS EN PRÉSTAMO
+        self.frame_libros_en_prestamo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+        self.frame_libros_en_prestamo.grid(row=0, column=0, sticky="nsew")
+        self.frame_libros_en_prestamo.grid_columnconfigure(0, weight=1) # Expansión horizontal
+        self.frame_libros_en_prestamo.grid_rowconfigure(1, weight=1) # Expansión vertical
+
+        actualizar_librosPrestamo_button = ck.CTkButton(self.frame_libros_en_prestamo, text='ACTUALIZAR TABLA LIBROS EN PRÉSTAMO', font=('Arial', 11, 'bold'), command=self.mostrarDatosLibros) # FALTA EL COMMAND
+        actualizar_librosPrestamo_button.grid(columnspan=1, row=2, pady=5)
+
+        # Estilo de la tabla para mostrar los datos
+        estilo_tabla = ttk.Style()
+        estilo_tabla.configure("Treeview", font=('Helvetica', 10, 'bold'), foreground='black', background='white')
+        estilo_tabla.map('Treeview', background=[('selected', 'green')], foreground=[('selected', 'black')])
+        estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=('Calibri (body)', 10, 'bold'))
+        estilo_tabla.configure('Item', foreground='transparent', focuscolor='DarkOrchid1')
+        estilo_tabla.configure('TScrollbar', arrowcolor='DarkOrchid1', bordercolor='black', troughcolor='DarkOrchid1', background='white')
+
+        # Mostrar la tabla en el frame libros en prestamo
+        self.frame_tabla_dos = ck.CTkFrame(self.frame_libros_en_prestamo)
+        self.frame_tabla_dos.grid(column=0, row=1, sticky='nsew')
+
+        self.tabla_dos = ttk.Treeview(self.frame_tabla_dos)
+        self.tabla_dos.grid(column=0, row=0, sticky='nsew')
+
+        ladox = ttk.Scrollbar(self.frame_tabla_dos, orient='horizontal', command=self.tabla_dos.xview)
+        ladox.grid(column=0, row=1, sticky='ew')
+
+        ladoy = ttk.Scrollbar(self.frame_tabla_dos, orient='vertical', command=self.tabla_dos.yview)
+        ladoy.grid(column=1, row=0, sticky='ns')
+
+        # Configurar expansión en todas las direcciones para el frame y la tabla
+        self.frame_tabla_dos.grid_rowconfigure(0, weight=1)
+        self.frame_tabla_dos.grid_columnconfigure(0, weight=1)
+        self.tabla_dos.grid(sticky='nsew')
+
+        # Columnas que se mostrarán en la tabla
+        self.tabla_dos.configure(xscrollcommand=ladox.set, yscrollcommand=ladoy.set)
+        self.tabla_dos['columns'] = ('Titulo', 'Estado')
+
+        # Ajustar ancho mínimo y ancho de cada columna de encabezado
+        self.tabla_dos.column('#0', minwidth=60, width=70, anchor='center')
+        self.tabla_dos.column('Titulo', minwidth=100, width=130, anchor='center')
+        self.tabla_dos.column('Estado', minwidth=100, width=120, anchor='center')
+
+        # Configurar el texto de encabezado para que se muestre completo
+        self.tabla_dos.heading('#0', text='Id', anchor='center')
+        self.tabla_dos.heading('Titulo', text='Titulo', anchor='center')
+        self.tabla_dos.heading('Estado', text='Estado', anchor='center')
+
+        self.tabla_dos.bind("<<TreeviewSelect>>", self.obtener_filaLibros) #AUN NO USARRRRRRR
+
+        # Ajustar expansión del marco principal
+        self.main_frame.grid_rowconfigure(0, weight=1)
+        self.main_frame.grid_columnconfigure(0, weight=1)
+
+        self.rut_usuario_entry.bind("<KeyRelease>", self.obtenerTipoUsuario)
+
+        # FRAME ACTUALIZAR STOCK
+        self.stock = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+        self.stock.grid(row=0, column=0, sticky="nsew")
+
+        self.actualizar_stock_label_image = ck.CTkLabel(self.stock, text="", image=self.actualizar_stock_image)
+        self.actualizar_stock_label_image.grid(row=0, columnspan=3, padx=20)
+
+        self.buscar_libro_isbn_label = ck.CTkLabel(self.stock, text="Ingrese el ISBN del libro para actualizar stock: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.buscar_libro_isbn_label.grid(row=10, column=0, padx=10)
+
+        self.buscar_libro_isbn_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.buscar_actualiza, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.buscar_libro_isbn_entry.grid(row=10, column=1, padx=10)
+        self.buscar_libro_isbn_entry.bind("<Return>", self.buscarLibroStock)
+
+        # Botón para buscar el libro
+        self.buscar_libro_isbn_button = ck.CTkButton(self.stock, command=self.buscarLibroStock, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.buscar_libro_isbn_button.grid(row=10, column=2, padx=3)
+
+        # Widgets del frame stock a mostrar
+        self.isbn_label = ck.CTkLabel(self.stock, text="ISBN: ",
+                        font=ck.CTkFont(size=20, weight="bold"))
+        self.isbn_label.grid(row=15, column=0, pady=15)
+
+        self.isbn_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.isbn, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.isbn_entry.grid(row=15, columnspan=7, padx=10)
+        
+        self.titulo_label = ck.CTkLabel(self.stock, text="Titulo: ",
+                        font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.titulo_label.grid(row=16, column=0, pady=10)
+
+        self.titulo_entry = ck.CTkEntry(self.stock, width=200, textvariable=self.titulo, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.titulo_entry.grid(row=16, columnspan=7, padx=10)
+
+        self.numero_paginas_label = ck.CTkLabel(self.stock, text="N° de Paginas: ",
+                        font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.numero_paginas_label.grid(row=17, column=0, pady=10)
+
+        self.numero_paginas_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.numero_paginas, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.numero_paginas_entry.grid(row=17, columnspan=7, padx=10)
+
+        # Campo que se va a actualizar
+        self.stock_label = ck.CTkLabel(self.stock, text="Stock: ",
+                        font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.stock_label.grid(row=18, column=0, pady=10)
+
+        self.stock_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.stockLibro, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.stock_entry.grid(row=18, columnspan=7, padx=10)
+        self.stock_entry.bind("<Return>", self.actualizarStock)
+
+        # Botón para actualizar el stock del libro
+        self.actualizar_stock_button = ck.CTkButton(self.stock, command=self.actualizarStock, text="ACTUALIZAR", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.actualizar_stock_button.place(x=600, y=400)
+
+        
+contraseña = self.contraseña_entry.get()
+        confirmarContraseña = self.contraseña_entry_confirmar.get()
+
+
+ # Método para actualizar el stock de un libro
+    def actualizarStock(self, event = None):
+        isbn = self.isbn.get()
+        stock = self.stockLibro.get()
+        titulo = self.titulo.get()
+        self.bd.actualizarStock(stock, isbn)  
+        self.limpiarCamposStock()
