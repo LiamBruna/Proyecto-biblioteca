@@ -421,6 +421,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.usuarios_registrados_image = ck.CTkImage(Image.open("img\\usuarios_registrados.png"), size=(450, 120))
         self.libros_prestamo_image = ck.CTkImage(Image.open("img\\libros_en_prestamo.png"), size=(450, 120))
         self.realizar_prestamo_image = ck.CTkImage(Image.open("img\\realizar_prestamo.png"), size=(450, 120))
+        self.registrar_usuario_image = ck.CTkImage(Image.open("img\\registrar_usuario.png"), size=(450, 120))
 
         # Crear Frame lateral de navegación
         self.frameNavegacion = ck.CTkFrame(self, corner_radius=0)
@@ -762,8 +763,8 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.frame_registrar_usuario = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.frame_registrar_usuario.grid(row=0, column=0, sticky="nsew")
 
-        self.registrar_usuario_image = ck.CTkLabel(self.frame_registrar_usuario, text="", image=self.libros_prestamo_image)
-        self.registrar_usuario_image.grid(row=0, columnspan=2, padx=20)
+        self.registrar_usuario_image_label = ck.CTkLabel(self.frame_registrar_usuario, text="", image=self.registrar_usuario_image)
+        self.registrar_usuario_image_label.grid(row=0, columnspan=2, padx=20)
 
         self.nombre_usuario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese el nombre del usuario: ",
                                                 font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
