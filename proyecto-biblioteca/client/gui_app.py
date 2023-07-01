@@ -435,6 +435,11 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.libros_prestamo_image = ck.CTkImage(Image.open("img\\libros_en_prestamo.png"), size=(450, 120))
         self.realizar_prestamo_image = ck.CTkImage(Image.open("img\\realizar_prestamo.png"), size=(450, 120))
         self.registrar_usuario_image = ck.CTkImage(Image.open("img\\registrar_usuario.png"), size=(450, 120))
+        self.realizar_prestamo_icono = ck.CTkImage(Image.open("img\\realizar_prestamo_icono.png"), size=(26, 26))
+        self.libros_prestamo_icono = ck.CTkImage(Image.open("img\\libros_prestamo.png"), size=(26, 26))
+        self.renovar_libro_icono = ck.CTkImage(Image.open("img\\renovar_libro.png"), size=(26, 26))
+        self.catalogo_libro_icono = ck.CTkImage(Image.open("img\\catalogo_libros.png"), size=(26, 26))
+        self.renovar_libro_image_titulo = ck.CTkImage(Image.open("img\\renovar_libro_titulo.png"), size=(450, 120))
 
         # Crear Frame lateral de navegación
         self.frameNavegacion = ck.CTkFrame(self, corner_radius=0)
@@ -456,7 +461,7 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         self.catalogo_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Catalogo",
                                         fg_color="transparent", text_color=("gray10", "gray90"),
-                                        hover_color=("gray70", "gray30"), image=self.home_image, anchor="w",
+                                        hover_color=("gray70", "gray30"), image=self.catalogo_libro_icono, anchor="w",
                                         command=self.catalogo_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.catalogo_button.grid(row=2, column=0, sticky="ew")
 
@@ -476,14 +481,14 @@ class VentanaPrincipal(ck.CTkToplevel):
         # Botón de Realizar prestamos en navegación
         self.realizar_prestamo_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
                                            text="Realizar Prestamo", fg_color="transparent", text_color=("gray10", "gray90"),
-                                           hover_color=("gray70", "gray30"), image=self.chat_image, anchor="w",
+                                           hover_color=("gray70", "gray30"), image=self.realizar_prestamo_icono, anchor="w",
                                            command=self.realizarPrestamo_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.realizar_prestamo_button.grid(row=5, column=0, sticky="ew")
 
         # Botón de Frame Libros en Préstamo
         self.frame_libros_en_prestamo_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
                                            text="Libros en Préstamo", fg_color="transparent", text_color=("gray10", "gray90"),
-                                           hover_color=("gray70", "gray30"), image=self.add_user_image, anchor="w",
+                                           hover_color=("gray70", "gray30"), image=self.libros_prestamo_icono, anchor="w",
                                            command=self.frame_libros_en_prestamo_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.frame_libros_en_prestamo_button.grid(row=6, column=0, sticky="ew")
         
@@ -494,13 +499,20 @@ class VentanaPrincipal(ck.CTkToplevel):
                                            command=self.frame_registrar_usuario_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.frame_registrar_usuario_button.grid(row=7, column=0, sticky="ew")
 
+        # Botón de Frame Renovar Libro
+        self.frame_renovar_libro_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
+                                           text="Renovar Libro", fg_color="transparent", text_color=("gray10", "gray90"),
+                                           hover_color=("gray70", "gray30"), image=self.renovar_libro_icono, anchor="w",
+                                           command=self.frame_renovar_libro_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.frame_renovar_libro_button.grid(row=8, column=0, sticky="ew")
+
         # Menu de opciones para cambiar de apariencia la app
         self.menu_apariencia = ck.CTkOptionMenu(self.frameNavegacion, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"), values=["Dark", "Light"], command=self.evento_cambiar_apariencia)
-        self.menu_apariencia.grid(row=8, column=0, padx=20, pady=20, sticky="s")
+        self.menu_apariencia.grid(row=9, column=0, padx=20, pady=20, sticky="s")
 
         # Botón para cerrar sesion
         self.button_cerrarSesion = ck.CTkButton(self.frameNavegacion, font=ck.CTkFont(size=18, weight="bold", family="Calibri (body)"), text="Cerrar sesión", image=self.cerrar_sesion_imagen, command=self.cerrar_sesion)
-        self.button_cerrarSesion.grid(row=9, column=0, padx=20, pady=20, sticky="s")
+        self.button_cerrarSesion.grid(row=10, column=0, padx=20, pady=20, sticky="s")
 
         # CONTENEDOR MAINS
         self.main_frame = ck.CTkFrame(self, corner_radius=0, fg_color="transparent")
@@ -707,7 +719,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.tipo_usuario_entry.grid(row=14, column=1, padx=5)
 
         # Botón que realizara el prestamo
-        self.completar_prestamo_button = ck.CTkButton(self.frame_realizar_prestamo, command=self.registrarPrestamo, text="REALIZAR PRÉSTAMO", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.completar_prestamo_button = ck.CTkButton(self.frame_realizar_prestamo, command=self.realizarPrestamo, text="REALIZAR PRÉSTAMO", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.completar_prestamo_button.place(x=280, y=400)
 
         # Botón para borrar el contenido de todos los campos
@@ -828,12 +840,41 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.tipo_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.tipo_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.tipo_usuario_entry.grid(row=16, column=1, pady=10, padx=5)
 
-        self.espacio = ck.CTkLabel(self.frame_registrar_usuario, text="",
-                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
-        self.espacio.grid(row=17, column=0, pady=5, padx=5)
-
         self.registrar_usuario_button = ck.CTkButton(self.frame_registrar_usuario, text="REGISTRAR USUARIO", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"), command=self.registrarUsuario)
         self.registrar_usuario_button.place(x=288, y=480)
+
+        # FRAME RENOVAR LIBRO
+        self.frame_renovar_libro = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+        self.frame_renovar_libro.grid(row=0, column=0, sticky="nsew")
+
+        self.renovar_libro_image = ck.CTkLabel(self.frame_renovar_libro, text="", image=self.renovar_libro_image_titulo)
+        self.renovar_libro_image.grid(row=0, columnspan=2, padx=20)
+
+        self.rut_usuario_label = ck.CTkLabel(self.frame_renovar_libro, text="Ingrese el rut del usuario: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.rut_usuario_label.grid(row=1, column=0, pady=5, padx=5)
+
+        self.rut_usuario_entry = ck.CTkEntry(self.frame_renovar_libro, textvariable=self.rut_usuario, width=200, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.rut_usuario_entry.grid(row=1, column=1, pady=5, padx=5)
+
+        self.isbn_label = ck.CTkLabel(self.frame_renovar_libro, text="Ingrese el ISBN del libro: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.isbn_label.grid(row=2, column=0, pady=5, padx=5)
+
+        self.isbn_entry = ck.CTkEntry(self.frame_renovar_libro, textvariable=self.isbn, width=200, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.isbn_entry.grid(row=2, column=1, pady=5, padx=5)
+
+        self.fecha_devolucion_label = ck.CTkLabel(self.frame_renovar_libro, text="Fecha Devolución de Préstamo: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.fecha_devolucion_label.grid(row=3, column=0, pady=5, padx=5)
+
+        self.fecha_devolucion = DateEntry(self.frame_renovar_libro, width=16,
+                          date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"),
+                          highlightbackground="deep sky blue", highlightthickness=1, corner_radius=10)
+        self.fecha_devolucion.grid(row=3, column=1, pady=5, padx=5)
+
+        self.renovar_libro_button = ck.CTkButton(self.frame_renovar_libro, text="RENOVAR LIBRO", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"), command=self.renovarLibro)
+        self.renovar_libro_button.place(x=288, y=260)
 
         # FRAME SELECCIONADO POR DEFECTO
         self.seleccion_frame_nombre("home")
@@ -847,6 +888,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.realizar_prestamo_button.configure(fg_color=("gray75", "gray25") if name == "realizar_prestamo" else "transparent")
         self.frame_libros_en_prestamo.configure(fg_color=("gray75", "gray25") if name == "libros_prestamo" else "transparent")
         self.frame_registrar_usuario.configure(fg_color=("gray75", "gray25") if name == "registrar_usuario" else "transparent")
+        self.frame_renovar_libro.configure(fg_color=("gray75", "gray25") if name == "renovar_libro" else "transparent")
 
         # Mostrar frame seleccionado
         if name == "home":
@@ -857,6 +899,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid_forget()
             self.frame_registrar_usuario.grid_forget()
+            self.frame_renovar_libro.grid_forget()
         elif name == "catalogo":
             self.inicio_frame.grid_forget()
             self.catalogo.grid(row=0, column=0, sticky="nsew")
@@ -865,6 +908,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid_forget()
             self.frame_registrar_usuario.grid_forget()
+            self.frame_renovar_libro.grid_forget()
         elif name == "stock":
             self.inicio_frame.grid_forget()
             self.stock.grid(row=0, column=0, sticky="nsew")
@@ -872,6 +916,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid_forget()
             self.frame_registrar_usuario.grid_forget()
+            self.frame_renovar_libro.grid_forget()
         elif name == "usuarios":
             self.inicio_frame.grid_forget()
             self.stock.grid_forget()
@@ -879,6 +924,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid_forget()
             self.frame_registrar_usuario.grid_forget()
+            self.frame_renovar_libro.grid_forget()
         elif name == "realizar_prestamo":
             self.inicio_frame.grid_forget()
             self.stock.grid_forget()
@@ -886,6 +932,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_realizar_prestamo.grid(row=0, column=0, sticky="nsew")
             self.frame_libros_en_prestamo.grid_forget()
             self.frame_registrar_usuario.grid_forget()
+            self.frame_renovar_libro.grid_forget()
         elif name == "libros_prestamo":
             self.inicio_frame.grid_forget()
             self.stock.grid_forget()
@@ -893,6 +940,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid(row=0, column=0, sticky="nsew")
             self.frame_registrar_usuario.grid_forget()
+            self.frame_renovar_libro.grid_forget()
         elif name == "registrar_usuario":
             self.inicio_frame.grid_forget()
             self.stock.grid_forget()
@@ -900,6 +948,15 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid_forget()
             self.frame_registrar_usuario.grid(row=0, column=0, sticky="nsew")
+            self.frame_renovar_libro.grid_forget()
+        elif name == "renovar_libro":
+            self.inicio_frame.grid_forget()
+            self.stock.grid_forget()
+            self.usuario.grid_forget()
+            self.frame_realizar_prestamo.grid_forget()
+            self.frame_libros_en_prestamo.grid_forget()
+            self.frame_registrar_usuario.grid_forget()
+            self.frame_renovar_libro.grid(row=0, column=0, sticky="nsew")
 
     # Metodos para que cuando se presione el botón con este método, muestre el frame relacionado
     def inicio_button_evento(self):
@@ -922,6 +979,9 @@ class VentanaPrincipal(ck.CTkToplevel):
 
     def frame_registrar_usuario_button_evento(self):
         self.seleccion_frame_nombre("registrar_usuario")
+
+    def frame_renovar_libro_button_evento(self):
+        self.seleccion_frame_nombre("renovar_libro")
 
     # Método para cambiar la apariencia de la app
     def evento_cambiar_apariencia(self, new_appearance_mode):
@@ -1015,13 +1075,20 @@ class VentanaPrincipal(ck.CTkToplevel):
         else:
             messagebox.showerror("Realizar Prestamo", f"El RUT {rut} no es valido.")
 
-    def registrarPrestamo(self):
+    def realizarPrestamo(self):
         rut = self.rut_usuario.get()
         isbn = self.isbn_libro_entry.get()
         f_prestamo = self.fecha_inicio.get_date()
         f_devolucion = self.fecha_devolucion.get_date()
         tipo_usuario = self.bd.obtenerTipoUsuario(rut)
         id_bibliotecario = self.bd.obtenerUsuarioLog(self.correo_actual)
+
+        # Verificar la cantidad de libros en préstamo del usuario
+        cantidad_prestamos = self.bd.obtenerCantidadLibrosPrestamo(rut)
+
+        if tipo_usuario == "Alumno" and cantidad_prestamos >= 4:
+            messagebox.showwarning("Límite de préstamos alcanzado", "El alumno ha alcanzado el límite máximo de préstamos (4 libros).")
+            return
 
         # Registrar el prestamo en la base de datos
         self.bd.registrarPrestamo(self.correo_actual, rut, isbn, f_prestamo, f_devolucion, tipo_usuario)
@@ -1032,7 +1099,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         fecha_devolucion = fecha_actual + timedelta(days=dias)
         return fecha_devolucion
     
-    # MÉTODOs PARA EL FRAME REGISTRAR USUARIO
+    # MÉTODOS PARA EL FRAME REGISTRAR USUARIO
     # Método para registrar usuario
     def registrarUsuario(self):
         nombre = self.nombre_usuario.get()
@@ -1050,6 +1117,41 @@ class VentanaPrincipal(ck.CTkToplevel):
                 messagebox.showerror("Registrar Usuario", f"El correo {correo} no es valido.")
         else:
             messagebox.showerror("Registrar Usuario", f"El RUT {rut} ingresado no es valido.")
+
+    # METODO PARA EL FRAME RENOVAR PRÉSTAMO
+    def renovarLibro(self):
+        # Obtener los datos necesarios
+        rut = self.rut_usuario.get()
+        isbn = self.isbn_entry.get()
+        tipo_usuario = self.bd.obtenerTipoUsuario(rut)
+        id_bibliotecario = self.bd.obtenerUsuarioLog(self.correo_actual)
+
+        # Verificar si el usuario es "Alumno"
+        if tipo_usuario == "Alumno":
+            # Verificar si el alumno ya ha realizado una renovación
+            if self.bd.haRealizadoRenovacion(rut):
+                messagebox.showinfo("Renovación de libro", "El alumno ya ha realizado una renovación y no puede renovar más libros.")
+                return
+
+        # Obtener la fecha de devolución actual del préstamo
+        fecha_devolucion_actual = self.bd.obtenerFechaDevolucionPrestamo(rut, isbn)
+        if fecha_devolucion_actual is None:
+            messagebox.showerror("Renovación de libro", "No se encontró un préstamo vigente para el usuario y el libro especificados.")
+            return
+
+        # Calcular la nueva fecha de devolución sumando 3 días a la fecha actual
+        nueva_fecha_devolucion = datetime.datetime.strptime(fecha_devolucion_actual, "%Y-%m-%d") + datetime.timedelta(days=3)
+        nueva_fecha_devolucion_str = nueva_fecha_devolucion.strftime("%Y-%m-%d")
+
+        # Registrar la renovación del libro
+        if self.bd.registrarRenovacion(rut, isbn):
+            # Actualizar la fecha de devolución en la base de datos
+            if self.bd.actualizarPrestamo(rut, isbn, nueva_fecha_devolucion_str, id_bibliotecario):
+                messagebox.showinfo("Renovación de libro", "El libro ha sido renovado exitosamente.")
+            else:
+                messagebox.showerror("Renovación de libro", "Error al actualizar la fecha de devolución del préstamo.")
+        else:
+            messagebox.showerror("Renovación de libro", "Error al registrar la renovación del libro.")
 
     # Método para validar el correo electrónico
     def validarCorreo(self, correo):

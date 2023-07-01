@@ -144,6 +144,17 @@ class BD:
         except Exception as e:
             messagebox.showerror("Realizar Préstamo", f"{str(e)}")
 
+    def obtenerCantidadLibrosPrestamo(self, rut_u):
+        try:
+            sql = "SELECT COUNT(*) FROM prestamo WHERE RUT_U = ?"
+            self.cursor.execute(sql, (rut_u,))
+            results = self.cursor.fetchone()
+            cantidad = results[0]
+            return cantidad
+        except Exception as e:
+            messagebox.showerror("Realizar Préstamo", f"{str(e)}")
+            return 0
+
     # MÉTODO PARA FRAME REGISTRAR USUARIO
     # Método para registrar un usuario
     def registrarUsuario(self, nombre, apellido, direccion, rut, celular, correo, tipo):
@@ -173,3 +184,58 @@ class BD:
             messagebox.showinfo("Recuperación de contraseña", f"Su contraseña ha sido actualizada.")
         except Exception as e:
             messagebox.showerror(f"Recuperación de contraseña", f"{str(e)}")
+
+    # MÉTODOS PARA RENOVAR LIBRO
+    def actualizarPrestamo(self, rut, isbn, nueva_fecha_devolucion, id_bibliotecario):
+        try:
+            sql_actualizar = "UPDATE prestamo SET F_DEVOLUCION = ?, ID_B = ? WHERE RUT_U = ? AND ISBN = ?"
+            vals_actualizar = (nueva_fecha_devolucion, id_bibliotecario, rut, isbn)
+            self.cursor.execute(sql_actualizar, vals_actualizar)
+            self.connect.commit()
+        except Exception as e:
+            messagebox.showerror("Error al actualizar préstamo", str(e))
+
+    def obtenerFechaDevolucionPrestamo(self, rut, isbn):
+        try:
+            sql = "SELECT F_DEVOLUCION FROM prestamo WHERE RUT_U = ? AND ISBN = ?"
+            vals = (rut, isbn)
+            self.cursor.execute(sql, vals)
+            result = self.cursor.fetchone()
+            if result:
+                fecha_devolucion = result[0]
+                return fecha_devolucion
+            else:
+                return None
+        except Error as e:
+            messagebox.showerror("Error al obtener la fecha de devolución del préstamo:", str(e))
+            return None
+        
+    def haRealizadoRenovacion(self, rut):
+        # Consultar la cantidad de renovaciones realizadas por el alumno
+        query = "SELECT COUNT(*) FROM prestamo WHERE RUT_U = ? AND RENOVADO = 1"
+        params = (rut,)
+        result = self.execute_query(query, params)
+
+        # Verificar si se encontraron registros de renovaciones
+        if result is not None and len(result) > 0:
+            cantidad_renovaciones = result[0][0]
+            return cantidad_renovaciones > 0
+        else:
+            return False
+        
+    def registrarRenovacion(self, rut, isbn):
+        try:
+            # Verificar si el alumno ya ha realizado una renovación
+            if self.haRealizadoRenovacion(rut):
+                return False
+
+            # Actualizar el campo "Renovado" a 1 para el libro específico prestado por el alumno
+            query = "UPDATE prestamo SET RENOVADO = 1 WHERE RUT_U = ? AND ISBN = ?"
+            params = (rut, isbn)
+            self.cursor.execute(query, params)
+            self.connect.commit()
+
+            return True
+        except Exception as e:
+            messagebox.showerror("Error al registrar la renovación", str(e))
+            return False
