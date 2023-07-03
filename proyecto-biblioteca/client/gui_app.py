@@ -864,6 +864,9 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.isbn_entry = ck.CTkEntry(self.frame_renovar_libro, textvariable=self.isbn, width=200, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.isbn_entry.grid(row=2, column=1, pady=5, padx=5)
 
+        self.buscar_usuario = ck.CTkButton(self.frame_renovar_libro, text="BUSCAR USUARIO", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"), command=self.obtenerFechaDevolucion)
+        self.buscar_usuario.grid(row=2, column=2, pady=5, padx=5)
+
         self.fecha_devolucion_label = ck.CTkLabel(self.frame_renovar_libro, text="Fecha Devolución de Préstamo: ",
                                                 font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.fecha_devolucion_label.grid(row=3, column=0, pady=5, padx=5)
@@ -872,6 +875,9 @@ class VentanaPrincipal(ck.CTkToplevel):
                           date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"),
                           highlightbackground="deep sky blue", highlightthickness=1, corner_radius=10)
         self.fecha_devolucion.grid(row=3, column=1, pady=5, padx=5)
+
+        self.sumar_dias = ck.CTkButton(self.frame_renovar_libro, text="SUMAR DÍAS", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"), command=self.sumarDiasRenovacion)
+        self.sumar_dias.grid(row=3, column=2, pady=5, padx=5)
 
         self.renovar_libro_button = ck.CTkButton(self.frame_renovar_libro, text="RENOVAR LIBRO", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"), command=self.renovarLibro)
         self.renovar_libro_button.place(x=288, y=260)
@@ -1123,9 +1129,24 @@ class VentanaPrincipal(ck.CTkToplevel):
         # Obtener los datos necesarios
         rut = self.rut_usuario.get()
         isbn = self.isbn_entry.get()
-        tipo_usuario = self.bd.obtenerTipoUsuario(rut)
         id_bibliotecario = self.bd.obtenerUsuarioLog(self.correo_actual)
+        nueva_fecha_devolucion = self.fecha_devolucion.get_date()
 
+        # Registrar la renovación del libro
+        if self.bd.registrarRenovacion(rut, isbn):
+            # Actualizar la fecha de devolución en la base de datos
+            if self.bd.actualizarPrestamo(rut, isbn, nueva_fecha_devolucion, id_bibliotecario):
+                messagebox.showinfo("Renovación de libro", "El libro ha sido renovado exitosamente.")
+                self.limpiarCamposRenovacion()
+            else:
+                messagebox.showerror("Renovación de libro", "Error al actualizar la fecha de devolución del préstamo.")
+        else:
+            messagebox.showerror("Renovación de libro", "Error al registrar la renovación del libro.")
+
+    def obtenerFechaDevolucion(self):
+        rut = self.rut_usuario.get()
+        isbn = self.isbn_entry.get()
+        tipo_usuario = self.bd.obtenerTipoUsuario(rut)
         # Verificar si el usuario es "Alumno"
         if tipo_usuario == "Alumno":
             # Verificar si el alumno ya ha realizado una renovación
@@ -1138,20 +1159,23 @@ class VentanaPrincipal(ck.CTkToplevel):
         if fecha_devolucion_actual is None:
             messagebox.showerror("Renovación de libro", "No se encontró un préstamo vigente para el usuario y el libro especificados.")
             return
+        
+        # Establecer la fecha de devolución actual en el DateEntry
+        self.fecha_devolucion.set_date(datetime.strptime(fecha_devolucion_actual, "%Y-%m-%d"))
+        messagebox.showinfo("Renovación de libro", f"La fecha de devolución establecida para el alumno por este libro es: {self.fecha_devolucion.get_date()}")
 
+    def sumarDiasRenovacion(self):
+        rut = self.rut_usuario.get()
+        isbn = self.isbn_entry.get()
+        # Obtener la fecha de devolución actual del préstamo
+        fecha_devolucion_actual = self.bd.obtenerFechaDevolucionPrestamo(rut, isbn)
+        if fecha_devolucion_actual is None:
+            messagebox.showerror("Renovación de libro", "No se encontró un préstamo vigente para el usuario y el libro especificados.")
+            return
         # Calcular la nueva fecha de devolución sumando 3 días a la fecha actual
-        nueva_fecha_devolucion = datetime.datetime.strptime(fecha_devolucion_actual, "%Y-%m-%d") + datetime.timedelta(days=3)
-        nueva_fecha_devolucion_str = nueva_fecha_devolucion.strftime("%Y-%m-%d")
-
-        # Registrar la renovación del libro
-        if self.bd.registrarRenovacion(rut, isbn):
-            # Actualizar la fecha de devolución en la base de datos
-            if self.bd.actualizarPrestamo(rut, isbn, nueva_fecha_devolucion_str, id_bibliotecario):
-                messagebox.showinfo("Renovación de libro", "El libro ha sido renovado exitosamente.")
-            else:
-                messagebox.showerror("Renovación de libro", "Error al actualizar la fecha de devolución del préstamo.")
-        else:
-            messagebox.showerror("Renovación de libro", "Error al registrar la renovación del libro.")
+        nueva_fecha_devolucion = datetime.strptime(fecha_devolucion_actual, "%Y-%m-%d").date() + timedelta(days=3)
+        self.fecha_devolucion.set_date(nueva_fecha_devolucion)
+        messagebox.showinfo("Renovación de libro", f"Se han sumado 3 dias a la fecha de devolución, ahora la nueva fecha es: {nueva_fecha_devolucion}") 
 
     # Método para validar el correo electrónico
     def validarCorreo(self, correo):
@@ -1183,6 +1207,10 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         return dv == dvEsperado
 
+    def limpiarCamposRenovacion(self):
+        self.rut_usuario.set('')
+        self.isbn.set('')
+        self.fecha_devolucion.set_date(datetime.now().date())
         
     def limpiarCamposUsuario(self):
         self.nombre_usuario.set('')

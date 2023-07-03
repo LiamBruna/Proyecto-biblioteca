@@ -15,3 +15,13 @@ TWILIO_AUTH_TOKEN=8e549a03d607cdd90de517a898026b20
 10. Cambios en la Base de Datos: Tabla bibliotecario se añadio CELULAR_B
 11. Cambios en la Base de Datos: Tabla prestamo se añadio RUT_U, ISBN, TIPO_U, ID_B
 12. Cambios en la Base de Datos: Tabla ejemplares => ejemplar y se añadio ID_L como FK referencia a ID_L de la tabla libro
+
+
+Para el sprint 1:
+semana entera 3 horas al día = 21 horas
+Ventana de logeo ✔️
+actualizar stock ✔️
+usuarios registrados ✔️
+realizar prestamo ✔️
+libros en prestamo ✔️
+renovar libro ✔️

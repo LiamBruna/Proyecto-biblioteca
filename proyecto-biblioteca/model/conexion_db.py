@@ -43,8 +43,8 @@ class BD:
                     messagebox.showerror("Error de inicio de sesión", "Contraseña incorrecta")
             else:
                 messagebox.showerror("Error de inicio de sesión", f"El correo {correo} no está registrado")
-        except Error as e:
-            print("Error al ejecutar: ", e)
+        except Exception as e:
+            messagebox.showerror("Error de inicio de sesión", f"{str(e)}")
 
         return False
 
@@ -73,7 +73,6 @@ class BD:
 
             sql_prestamo = "INSERT INTO prestamo (RUT_U, ISBN, F_PRESTAMO, F_DEVOLUCION, TIPO_U, ID_B) VALUES (?, ?, ?, ?, ?, ?)"
             vals_prestamo = (rut_u, isbn, f_prestamo, f_devolucion, tipo_u, bibliotecarioId)
-            print(bibliotecarioId)
             self.cursor.execute(sql_prestamo, vals_prestamo)
             self.connect.commit()
 
@@ -192,8 +191,10 @@ class BD:
             vals_actualizar = (nueva_fecha_devolucion, id_bibliotecario, rut, isbn)
             self.cursor.execute(sql_actualizar, vals_actualizar)
             self.connect.commit()
+            return True  # Devolver True si la actualización es exitosa
         except Exception as e:
             messagebox.showerror("Error al actualizar préstamo", str(e))
+            return False  # Devolver False en caso de error
 
     def obtenerFechaDevolucionPrestamo(self, rut, isbn):
         try:
@@ -212,14 +213,14 @@ class BD:
         
     def haRealizadoRenovacion(self, rut):
         # Consultar la cantidad de renovaciones realizadas por el alumno
-        query = "SELECT COUNT(*) FROM prestamo WHERE RUT_U = ? AND RENOVADO = 1"
+        query = "SELECT COUNT(*) FROM prestamo WHERE RUT_U = ? AND Renovado = 1"
         params = (rut,)
-        result = self.execute_query(query, params)
+        self.cursor.execute(query, params)
+        result = self.cursor.fetchone()
 
-        # Verificar si se encontraron registros de renovaciones
-        if result is not None and len(result) > 0:
-            cantidad_renovaciones = result[0][0]
-            return cantidad_renovaciones > 0
+        # Verificar si se encontró un registro de renovación
+        if result is not None and result[0] > 0:
+            return True
         else:
             return False
         
