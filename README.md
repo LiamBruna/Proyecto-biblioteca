@@ -17,11 +17,22 @@ TWILIO_AUTH_TOKEN=8e549a03d607cdd90de517a898026b20
 12. Cambios en la Base de Datos: Tabla ejemplares => ejemplar y se añadio ID_L como FK referencia a ID_L de la tabla libro
 
 
-Para el sprint 1:
+Sprint 1:
 semana entera 3 horas al día = 21 horas
-Ventana de logeo ✔️
-actualizar stock ✔️
-usuarios registrados ✔️
-realizar prestamo ✔️
-libros en prestamo ✔️
-renovar libro ✔️
+Frame Ventana de logeo ✔️
+Frame actualizar stock ✔️
+Frame usuarios registrados ✔️
+Frame realizar prestamo ✔️
+Frame libros en prestamo ✔️
+Frame renovar libro ✔️
+Frame ventana de registro ✔️
+
+Sprint 2
+Semana entera 3 horas al dia = 21 horas
+Funciones actualizar stock ✔️
+Funciones usuarios registrados ✔️
+Funciones realizar prestamo ✔️
+Funciones libros en prestamo ✔️
+Funciones registrar usuarios✔️
+Funciones renovar libro ✔️
+Funciones cerrar sesion, cambiar apariencia de app, registrarse y cambiar contraseña✔️
