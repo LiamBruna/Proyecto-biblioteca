@@ -273,3 +273,8 @@ class BD:
         except Exception as e:
             messagebox.showerror("Error al registrar la renovación", str(e))
             return False
+
+    # Método para obtener los libros y autores de la base de datos
+    def obtenerTituloLibro(self):
+        try:
+            sql = "SELECT TITULO FROM libro"

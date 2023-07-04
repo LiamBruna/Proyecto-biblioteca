@@ -38,6 +38,11 @@ Funciones registrar usuarios✔️
 Funciones renovar libro ✔️
 Funciones cerrar sesión, cambiar apariencia de app, registrarse y cambiar contraseña✔️
 
+Sprint 3
+Semana entera 3 horas al dia = 21 horas
+Se agrego barra de progreso
+Frame catalogo
+
 
 Modificaciones en la base de datos
 

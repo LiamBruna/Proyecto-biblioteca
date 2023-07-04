@@ -545,6 +545,8 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.catalogo.grid_columnconfigure(0, weight=1)  # Expansión horizontal
         self.catalogo.grid_rowconfigure(1, weight=1)  # Expansión vertical
 
+        # Obtener los datos de los libros desde la base de datos        
+
         # FRAME ACTUALIZAR STOCK
         self.stock = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.stock.grid(row=0, column=0, sticky="nsew")
@@ -1168,7 +1170,7 @@ class VentanaPrincipal(ck.CTkToplevel):
                 # Nostrar barra de progreso en el Frame
                 self.barra_progreso_label = ck.CTkLabel(self.frame_registrar_usuario, text="",
                                                         font=ck.CTkFont(size=14, weight="bold", family="Calibri (body)"))
-                self.barra_progreso_label.place(x=100, y=520)
+                self.barra_progreso_label.place(x=80, y=520)
 
                 # Realizar el préstamo
                 for i in range(total_elementos):
