@@ -65,6 +65,7 @@ class BD:
         self.connect.commit()
         messagebox.showinfo(f"Registro exitoso", f"El usuario {nombre} ha sido registrado correctamente.")
 
+    # MÉTODOS PARA FRAME REGISTRAR PRÉSTAMO
     # Método para registrar un préstamo de libro
     def registrarPrestamo(self, correo, rut_u, isbn, f_prestamo, f_devolucion, tipo_u):
         try:
@@ -75,6 +76,15 @@ class BD:
             vals_prestamo = (rut_u, isbn, f_prestamo, f_devolucion, tipo_u, bibliotecarioId)
             self.cursor.execute(sql_prestamo, vals_prestamo)
             self.connect.commit()
+
+            # Obtener el stock actual del libro
+            stock_actual = self.obtenerStockLibro(isbn)
+
+            # Hacemos la resta en el stock actual en caso de que se realice el prestamo de un libro
+            nuevo_stock = stock_actual - 1
+
+            # Actualizamos el stock actual
+            self.actualizarStockLibro(nuevo_stock, isbn)
 
             messagebox.showinfo("Registro de préstamo", "El préstamo ha sido registrado correctamente.")
         except Error as e:
@@ -90,6 +100,29 @@ class BD:
         else:
             id_b = results[0]
             return id_b
+
+    def actualizarStockLibro(self, nuevo_stock, isbn):
+        try:
+            sql = "UPDATE libro SET STOCK = ? WHERE ISBN = ?"
+            vals = (nuevo_stock, isbn)
+            self.cursor.execute(sql, vals)
+            self.connect.commit()
+        except Exception as e:
+            messagebox.showerror("Registro de préstamo", f"{str(e)}")
+
+    def obtenerStockLibro(self, isbn):
+        try:
+            sql = "SELECT STOCK FROM libro WHERE ISBN = ?"
+            self.cursor.execute(sql, (isbn,))
+            resultado = self.cursor.fetchone()
+            if resultado:
+                return resultado[0]
+            else:
+                messagebox.showerror("Registro de préstamo", f"Libro con ISBN {isbn} no encontrado.")
+                return 0  # O cualquier otro valor predeterminado en caso de no encontrar el libro
+        except Exception as e:
+            messagebox.showerror("Registro de préstamo", str(e))
+            return 0  # O cualquier otro valor predeterminado en caso de error
 
     # Método para mostrar información personal de los usuarios registrados
     def mostrarUsuarios(self):

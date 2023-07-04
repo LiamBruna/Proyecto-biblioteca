@@ -22,8 +22,8 @@ semana entera 3 horas al día = 21 horas
 Frame Ventana de logeo ✔️
 Frame actualizar stock ✔️
 Frame usuarios registrados ✔️
-Frame realizar prestamo ✔️
-Frame libros en prestamo ✔️
+Frame realizar préstamo ✔️
+Frame libros en préstamo ✔️
 Frame renovar libro ✔️
 Frame ventana de registro ✔️
 
@@ -31,8 +31,17 @@ Sprint 2
 Semana entera 3 horas al dia = 21 horas
 Funciones actualizar stock ✔️
 Funciones usuarios registrados ✔️
-Funciones realizar prestamo ✔️
-Funciones libros en prestamo ✔️
+Funciones realizar préstamo ✔️
+Funciones libros en préstamo ✔️
 Funciones registrar usuarios✔️
 Funciones renovar libro ✔️
-Funciones cerrar sesion, cambiar apariencia de app, registrarse y cambiar contraseña✔️
+Funciones cerrar sesión, cambiar apariencia de app, registrarse y cambiar contraseña✔️
+
+
+Modificaciones en la base de datos
+
+- Tabla usuario se añadió TIPO_u
+- Tabla préstamo se añadió RUT_U, ISBN, TIPO_U, ID_B, RENOVADO
+- Tabla bibliotecario se añadió CELULAR_B
+- Tabla ejemplares se cambio el nombre a "ejemplar" y se añadió ISBN
+- Tabla libro se elimino columna CATALOGO
