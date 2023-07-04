@@ -7,11 +7,12 @@ from PIL import Image, ImageTk # Modulo para importar imágenes
 import re # Modulo para poder validar si el correo electrónico es un correo electrónico
 import random # Modulo para crear un código random
 from twilio.rest import Client
-from dotenv import load_dotenv
 import os
+import time
 from datetime import datetime, timedelta
 
 from model.conexion_db import BD
+from client.barra import BarraProgreso
 
 
 # Ventana de registro
@@ -666,7 +667,6 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.main_frame.grid_rowconfigure(0, weight=1)
         self.main_frame.grid_columnconfigure(0, weight=1)
 
-
         # FRAME REALIZAR PRESTAMO
         self.frame_realizar_prestamo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.frame_realizar_prestamo.grid(row=0, column=0, sticky="nsew")
@@ -697,7 +697,7 @@ class VentanaPrincipal(ck.CTkToplevel):
                                                 font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.fecha_inicio_label.grid(row=12, column=0, pady=5)
         
-        self.fecha_inicio = DateEntry(self.frame_realizar_prestamo, width=12,
+        self.fecha_inicio = DateEntry(self.frame_realizar_prestamo, width=14,
                           date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"),
                           highlightbackground="deep sky blue", highlightthickness=1, corner_radius=10)
         self.fecha_inicio.grid(row=12, column=1, pady=5)
@@ -706,7 +706,7 @@ class VentanaPrincipal(ck.CTkToplevel):
                                                 font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.fecha_devolucion_label.grid(row=13, column=0, pady=5)
 
-        self.fecha_devolucion = DateEntry(self.frame_realizar_prestamo, width=12,
+        self.fecha_devolucion = DateEntry(self.frame_realizar_prestamo, width=14,
                           date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"),
                           highlightbackground="deep sky blue", highlightthickness=1, corner_radius=10)
         self.fecha_devolucion.grid(row=13, column=1, pady=5)
@@ -848,39 +848,39 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.frame_renovar_libro.grid(row=0, column=0, sticky="nsew")
 
         self.renovar_libro_image = ck.CTkLabel(self.frame_renovar_libro, text="", image=self.renovar_libro_image_titulo)
-        self.renovar_libro_image.grid(row=0, columnspan=2, padx=20)
+        self.renovar_libro_image.grid(row=0, columnspan=3, padx=20)
 
         self.rut_usuario_label = ck.CTkLabel(self.frame_renovar_libro, text="Ingrese el rut del usuario: ",
                                                 font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
-        self.rut_usuario_label.grid(row=1, column=0, pady=5, padx=5)
+        self.rut_usuario_label.grid(row=3, column=0, pady=5, padx=5)
 
         self.rut_usuario_entry = ck.CTkEntry(self.frame_renovar_libro, textvariable=self.rut_usuario, width=200, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
-        self.rut_usuario_entry.grid(row=1, column=1, pady=5, padx=5)
+        self.rut_usuario_entry.grid(row=3, column=1, pady=5, padx=5)
 
         self.isbn_label = ck.CTkLabel(self.frame_renovar_libro, text="Ingrese el ISBN del libro: ",
                                                 font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
-        self.isbn_label.grid(row=2, column=0, pady=5, padx=5)
+        self.isbn_label.grid(row=4, column=0, pady=5, padx=5)
 
         self.isbn_entry = ck.CTkEntry(self.frame_renovar_libro, textvariable=self.isbn, width=200, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
-        self.isbn_entry.grid(row=2, column=1, pady=5, padx=5)
+        self.isbn_entry.grid(row=4, column=1, pady=5, padx=5)
 
         self.buscar_usuario = ck.CTkButton(self.frame_renovar_libro, text="BUSCAR USUARIO", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"), command=self.obtenerFechaDevolucion)
-        self.buscar_usuario.grid(row=2, column=2, pady=5, padx=5)
+        self.buscar_usuario.grid(row=4, column=2, pady=5, padx=5)
 
         self.fecha_devolucion_label = ck.CTkLabel(self.frame_renovar_libro, text="Fecha Devolución de Préstamo: ",
                                                 font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
-        self.fecha_devolucion_label.grid(row=3, column=0, pady=5, padx=5)
+        self.fecha_devolucion_label.grid(row=7, column=0, pady=5, padx=5)
 
-        self.fecha_devolucion = DateEntry(self.frame_renovar_libro, width=16,
+        self.fecha_devolucion = DateEntry(self.frame_renovar_libro, width=20,
                           date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"),
                           highlightbackground="deep sky blue", highlightthickness=1, corner_radius=10)
-        self.fecha_devolucion.grid(row=3, column=1, pady=5, padx=5)
+        self.fecha_devolucion.grid(row=7, column=1, pady=5, padx=5)
 
         self.sumar_dias = ck.CTkButton(self.frame_renovar_libro, text="SUMAR DÍAS", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"), command=self.sumarDiasRenovacion)
-        self.sumar_dias.grid(row=3, column=2, pady=5, padx=5)
+        self.sumar_dias.grid(row=7, column=2, pady=5, padx=5)
 
         self.renovar_libro_button = ck.CTkButton(self.frame_renovar_libro, text="RENOVAR LIBRO", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"), command=self.renovarLibro)
-        self.renovar_libro_button.place(x=288, y=260)
+        self.renovar_libro_button.place(x=330, y=260)
 
         # FRAME SELECCIONADO POR DEFECTO
         self.seleccion_frame_nombre("home")
@@ -1016,8 +1016,28 @@ class VentanaPrincipal(ck.CTkToplevel):
         isbn = self.isbn.get()
         stock = self.stockLibro.get()
         titulo = self.titulo.get()
-        self.bd.actualizarStock(stock, isbn)  
+        # Crear instancia de BarraProgreso
+        total_elementos = 100
+        barra = BarraProgreso(total_elementos)
+
+        # Nostrar barra de progreso en el Frame
+        self.barra_progreso_label = ck.CTkLabel(self.stock, text="",
+                                                font=ck.CTkFont(size=14, weight="bold", family="Calibri (body)"))
+        self.barra_progreso_label.place(x=65, y=450)
+
+        # Realizar el préstamo
+        for i in range(total_elementos):
+            mensaje_progreso = barra.actualizar()
+            self.barra_progreso_label.configure(text=mensaje_progreso)
+            self.frame_realizar_prestamo.update() # Actualizar la ventana
+            time.sleep(0.1)
+
+        self.bd.actualizarStock(stock, isbn)
         self.limpiarCamposStock()
+
+        # Restablecer el estado de la barra de progreso
+        self.barra_progreso_label.configure(text="")
+        self.frame_realizar_prestamo.update() # Actualizar la ventana
 
     # METODOS PARA EL FRAME USUARIOS REGISTRADOS
     # Método para mostrar los datos en la tabla de usuarios
@@ -1095,9 +1115,29 @@ class VentanaPrincipal(ck.CTkToplevel):
         if tipo_usuario == "Alumno" and cantidad_prestamos >= 4:
             messagebox.showwarning("Límite de préstamos alcanzado", "El alumno ha alcanzado el límite máximo de préstamos (4 libros).")
             return
+        
+        # Crear instancia de BarraProgreso
+        total_elementos = 100
+        barra = BarraProgreso(total_elementos)
+
+        # Nostrar barra de progreso en el Frame
+        self.barra_progreso_label = ck.CTkLabel(self.frame_realizar_prestamo, text="",
+                                                font=ck.CTkFont(size=14, weight="bold", family="Calibri (body)"))
+        self.barra_progreso_label.place(x=65, y=450)
+
+        # Realizar el préstamo
+        for i in range(total_elementos):
+            mensaje_progreso = barra.actualizar()
+            self.barra_progreso_label.configure(text=mensaje_progreso)
+            self.frame_realizar_prestamo.update() # Actualizar la ventana
+            time.sleep(0.1)
 
         # Registrar el prestamo en la base de datos
         self.bd.registrarPrestamo(self.correo_actual, rut, isbn, f_prestamo, f_devolucion, tipo_usuario)
+
+        # Restablecer el estado de la barra de progreso
+        self.barra_progreso_label.configure(text="")
+        self.frame_realizar_prestamo.update() # Actualizar la ventana
 
                 
     def calcularFechaDevolucion(self, dias):
@@ -1115,10 +1155,33 @@ class VentanaPrincipal(ck.CTkToplevel):
         celular = self.celular_usuario.get()
         correo = self.correo_usuario.get()
         tipo = self.tipo_usuario.get()
+
+        if rut == "":
+            messagebox.showerror("Registrar Usuario", "Debe de ingresar un rut.")
+
         if self.validarRut(rut):
             if self.validarCorreo(correo):
+                # Crear instancia de BarraProgreso
+                total_elementos = 100
+                barra = BarraProgreso(total_elementos)
+
+                # Nostrar barra de progreso en el Frame
+                self.barra_progreso_label = ck.CTkLabel(self.frame_registrar_usuario, text="",
+                                                        font=ck.CTkFont(size=14, weight="bold", family="Calibri (body)"))
+                self.barra_progreso_label.place(x=100, y=520)
+
+                # Realizar el préstamo
+                for i in range(total_elementos):
+                    mensaje_progreso = barra.actualizar()
+                    self.barra_progreso_label.configure(text=mensaje_progreso)
+                    self.frame_registrar_usuario.update() # Actualizar la ventana
+                    time.sleep(0.1)
+
                 self.bd.registrarUsuario(nombre, apellido, direccion, rut, celular, correo, tipo)
                 self.limpiarCamposUsuario()
+                # Restablecer el estado de la barra de progreso
+                self.barra_progreso_label.configure(text="")
+                self.frame_registrar_usuario.update() # Actualizar la ventana
             else:
                 messagebox.showerror("Registrar Usuario", f"El correo {correo} no es valido.")
         else:
@@ -1147,6 +1210,10 @@ class VentanaPrincipal(ck.CTkToplevel):
         rut = self.rut_usuario.get()
         isbn = self.isbn_entry.get()
         tipo_usuario = self.bd.obtenerTipoUsuario(rut)
+
+        if rut == "" and isbn == "":
+            messagebox.showerror("Renovación de libro", "Debe de ingresar un RUT.")
+
         # Verificar si el usuario es "Alumno"
         if tipo_usuario == "Alumno":
             # Verificar si el alumno ya ha realizado una renovación
