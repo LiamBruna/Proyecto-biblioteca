@@ -1,6 +1,6 @@
 import sqlite3
 
-def insertar_imagen(ruta_imagen):
+def insertar_imagen(ruta_imagen, id):
     try:
         # Leer el archivo de imagen como datos binarios
         with open(ruta_imagen, 'rb') as file:
@@ -11,7 +11,7 @@ def insertar_imagen(ruta_imagen):
         cursor = conexion.cursor()
 
         # Insertar la imagen en la base de datos
-        cursor.execute("INSERT INTO libro (IMAGEN) VALUES (?)", (imagen_data,))
+        cursor.execute("UPDATE libro SET IMAGEN = ? WHERE ID_L = ?", (imagen_data, id))
 
         # Guardar los cambios y cerrar la conexión
         conexion.commit()
@@ -23,4 +23,4 @@ def insertar_imagen(ruta_imagen):
         print("Error al insertar la imagen en la base de datos:", str(e))
 
 # Llamar a la función insertar_imagen y pasar la ruta de la imagen
-insertar_imagen("C:\\workspace\\Proyecto-biblioteca\\proyecto-biblioteca\\img\\thelastofus.jpg")
+insertar_imagen("C:\\workspace\\Proyecto-biblioteca\\proyecto-biblioteca\\img\\thelastofus.jpg", 1)
