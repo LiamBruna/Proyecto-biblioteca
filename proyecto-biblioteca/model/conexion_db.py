@@ -6,6 +6,7 @@ import hashlib # Modulo para hashear las contraseñas ingresadas
 
 from model.classes import Libro
 
+
 class BD:
     def __init__(self):
         self.base_datos = 'database/biblioteca.db'
@@ -275,6 +276,11 @@ class BD:
             return False
 
     # Método para obtener los libros y autores de la base de datos
-    def obtenerTituloLibro(self):
+    def obtenerLibrosCatalogo(self):
+        sql = "SELECT A.NOMBRE_A, a.APELLIDO_A, a.NACIONALIDAD, l.TITULO, i.RUTA_IMAGEN FROM libro l LEFT JOIN autor a ON a.ID_A = l.ID_L LEFT JOIN image i ON i.ID_I = l.ID_L;"
         try:
-            sql = "SELECT TITULO FROM libro"
+            self.cursor.execute(sql)
+            results = self.cursor.fetchall()
+            return results
+        except Exception as e:
+            messagebox.showerror("Catalogo", f"{str(e)}")

@@ -545,7 +545,29 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.catalogo.grid_columnconfigure(0, weight=1)  # Expansión horizontal
         self.catalogo.grid_rowconfigure(1, weight=1)  # Expansión vertical
 
-        # Obtener los datos de los libros desde la base de datos        
+        libros = self.bd.obtenerLibrosCatalogo() # Obtener los libros desde la base de datos
+
+        for i, libro in enumerate(libros):
+            nombre = libro[0]
+            apellido = libro[1]
+            nacionalidad = libro[2]
+            titulo = libro[3]
+            imagen_ruta = libro[4]
+
+            imagen = ck.CTkImage(Image.open(imagen_ruta), size=(150, 200))
+
+            # Mostrar imagen del libro
+            self.imagen = ck.CTkLabel(self.catalogo, text="", image=imagen)
+            self.imagen.grid(row=i // 4, column=i % 4, padx=10, pady=10)
+
+            # Mostrar detalles del libro
+            self.titulo_label = ck.CTkLabel(self.catalogo, text=f"Titulo: {titulo}")
+            self.titulo_label.grid(row=i // 4, column=i % 4, padx=10, pady=10, sticky="n")
+
+            self.autor_label = ck.CTkLabel(self.catalogo, text=f"Autor: {nombre} {apellido} {nacionalidad}")
+            self.autor_label.grid(row=i // 4, column=i % 4, padx=10, pady=10, sticky="s")
+
+
 
         # FRAME ACTUALIZAR STOCK
         self.stock = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
