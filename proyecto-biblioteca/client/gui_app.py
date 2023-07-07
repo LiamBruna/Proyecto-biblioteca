@@ -7,7 +7,7 @@ from PIL import Image, ImageTk # Modulo para importar imágenes
 import re # Modulo para poder validar si el correo electrónico es un correo electrónico
 import random # Modulo para crear un código random
 from twilio.rest import Client
-import os
+import io
 import time
 from datetime import datetime, timedelta
 
@@ -552,13 +552,17 @@ class VentanaPrincipal(ck.CTkToplevel):
             apellido = libro[1]
             nacionalidad = libro[2]
             titulo = libro[3]
-            imagen_ruta = libro[4]
+            imagen_bytes = libro[4]
 
-            imagen = ck.CTkImage(Image.open(imagen_ruta), size=(150, 200))
+            imagen_ruta = io.BytesIO(imagen_bytes)
+            imagen = Image.open(imagen_ruta)
+            imagen = imagen.resize((150, 200))
 
             # Mostrar imagen del libro
-            self.imagen = ck.CTkLabel(self.catalogo, text="", image=imagen)
-            self.imagen.grid(row=i // 4, column=i % 4, padx=10, pady=10)
+            imagen_tk = ImageTk.PhotoImage(imagen)
+            imagen_label = ck.CTkLabel(self.catalogo, text="", image=imagen_tk)
+            imagen_label.image = imagen_tk
+            imagen_label.grid(row=i // 4, column=i % 4, padx=10, pady=10)
 
             # Mostrar detalles del libro
             self.titulo_label = ck.CTkLabel(self.catalogo, text=f"Titulo: {titulo}")
