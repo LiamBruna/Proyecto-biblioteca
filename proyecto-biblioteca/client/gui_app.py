@@ -557,31 +557,9 @@ class VentanaPrincipal(ck.CTkToplevel):
             imagen_bytes = libro[4]
 
             if imagen_bytes is not None:
-                # Resto del código para procesar la imagen
-                imagen_np = np.frombuffer(imagen_bytes, np.uint8)
-                imagen_cv2 = cv2.imdecode(imagen_np, cv2.IMREAD_COLOR)
+                imagen_flip = self.crear_imagen_flip(imagen_bytes, titulo, f"Autor: {nombre} {apellido}\nNacionalidad: {nacionalidad}")
+                imagen_flip.grid(row=i // 4, column=i % 4, padx=10, pady=10)
 
-                # Asegurarse de que la imagen_cv2 esté en formato RGB
-                if imagen_cv2.shape[2] == 3:
-                    imagen_cv2_rgb = cv2.cvtColor(imagen_cv2, cv2.COLOR_BGR2RGB)
-                else:
-                    imagen_cv2_rgb = cv2.cvtColor(imagen_cv2, cv2.COLOR_GRAY2RGB)
-
-                imagen_pil = Image.fromarray(imagen_cv2_rgb)
-
-                # Mostrar la imagen en la interfaz
-                imagen = ck.CTkImage(imagen_pil, size=(150, 200))
-                imagen_label = ck.CTkLabel(self.catalogo, text="", image=imagen)
-                imagen_label.image = imagen
-                imagen_label.grid(row=i // 4, column=i % 4, padx=10, pady=10)
-
-                # Mostrar detalles del libro
-                self.titulo_label = ck.CTkLabel(self.catalogo, text=f"Titulo: {titulo}")
-                self.titulo_label.grid(row=i // 4, column=i % 4, padx=10, pady=10, sticky="n")
-
-                self.autor_label = ck.CTkLabel(self.catalogo, text=f"Autor: {nombre} {apellido}\n Nacionalidad: {nacionalidad}")
-                self.autor_label.grid(row=i // 4, column=i % 4, padx=10, pady=10, sticky="s")
-            
         # FRAME ACTUALIZAR STOCK
         self.stock = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.stock.grid(row=0, column=0, sticky="nsew")
@@ -1280,6 +1258,32 @@ class VentanaPrincipal(ck.CTkToplevel):
         nueva_fecha_devolucion = datetime.strptime(fecha_devolucion_actual, "%Y-%m-%d").date() + timedelta(days=3)
         self.fecha_devolucion.set_date(nueva_fecha_devolucion)
         messagebox.showinfo("Renovación de libro", f"Se han sumado 3 dias a la fecha de devolución, ahora la nueva fecha es: {nueva_fecha_devolucion}") 
+
+    # MÉTODOS PARA FRAME CATALOGO
+    def crear_imagen_flip(self, imagen_bytes, titulo, detalle):
+        imagen_np = np.frombuffer(imagen_bytes, np.uint8)
+        imagen_cv2 = cv2.imdecode(imagen_np, cv2.IMREAD_COLOR)
+
+        if imagen_cv2.shape[2] == 3:
+            imagen_cv2_rgb = cv2.cvtColor(imagen_cv2, cv2.COLOR_BGR2RGB)
+        else:
+            imagen_cv2_rgb = cv2.cvtColor(imagen_cv2, cv2.COLOR_GRAY2RGB)
+
+        imagen_pil = Image.fromarray(imagen_cv2_rgb)
+
+        imagen = ck.CTkImage(imagen_pil, size=(150, 200))
+        imagen_label = ck.CTkLabel(self.catalogo, text="", image=imagen, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        imagen_label.image = imagen
+        imagen_label.bind("<Button-1>", lambda event: self.mostrar_detalle(imagen_label, titulo, detalle))
+
+        return imagen_label
+
+    def mostrar_detalle(self, imagen_label, titulo, detalle):
+        imagen_label.configure(text=f"{titulo}\n {detalle}")
+        imagen_label.after(2000, lambda: self.ocultar_detalle(imagen_label))
+
+    def ocultar_detalle(self, imagen_label):
+        imagen_label.configure(text="")
 
     # Método para validar el correo electrónico
     def validarCorreo(self, correo):
