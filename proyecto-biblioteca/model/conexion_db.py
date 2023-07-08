@@ -277,7 +277,7 @@ class BD:
 
     # Método para obtener los libros y autores de la base de datos
     def obtenerLibrosCatalogo(self):
-        sql = "SELECT A.NOMBRE_A, a.APELLIDO_A, a.NACIONALIDAD, l.TITULO, l.IMAGEN FROM libro l LEFT JOIN autor a ON a.ID_A = l.ID_L"
+        sql = "SELECT A.NOMBRE_A, a.APELLIDO_A, a.NACIONALIDAD, l.TITULO, l.IMAGEN, l.ISBN FROM libro l LEFT JOIN autor a ON a.ID_A = l.ID_L LIMIT 8"
         try:
             self.cursor.execute(sql)
             results = self.cursor.fetchall()

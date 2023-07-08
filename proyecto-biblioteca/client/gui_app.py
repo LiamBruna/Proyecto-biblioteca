@@ -555,9 +555,10 @@ class VentanaPrincipal(ck.CTkToplevel):
             nacionalidad = libro[2]
             titulo = libro[3]
             imagen_bytes = libro[4]
+            isbn = libro[5]
 
             if imagen_bytes is not None:
-                imagen_flip = self.crear_imagen_flip(imagen_bytes, titulo, f"Autor: {nombre} {apellido}\nNacionalidad: {nacionalidad}")
+                imagen_flip = self.crear_imagen_flip(imagen_bytes, titulo, f"ISBN: {isbn}\nAutor: {nombre} {apellido}\nNacionalidad: {nacionalidad}")
                 imagen_flip.grid(row=i // 4, column=i % 4, padx=10, pady=10)
 
         # FRAME ACTUALIZAR STOCK
@@ -1272,7 +1273,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         imagen_pil = Image.fromarray(imagen_cv2_rgb)
 
         imagen = ck.CTkImage(imagen_pil, size=(150, 200))
-        imagen_label = ck.CTkLabel(self.catalogo, text="", image=imagen, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        imagen_label = ck.CTkLabel(self.catalogo, text="", image=imagen, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"), text_color="pink")
         imagen_label.image = imagen
         imagen_label.bind("<Button-1>", lambda event: self.mostrar_detalle(imagen_label, titulo, detalle))
 
