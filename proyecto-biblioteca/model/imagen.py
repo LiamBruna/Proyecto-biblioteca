@@ -23,4 +23,4 @@ def insertar_imagen(ruta_imagen, id):
         print("Error al insertar la imagen en la base de datos:", str(e))
 
 # Llamar a la función insertar_imagen y pasar la ruta de la imagen
-insertar_imagen("C:\\workspace\\Proyecto-biblioteca\\proyecto-biblioteca\\img\\thelastofus.jpg", 1)
+insertar_imagen("C:\\workspace\\Proyecto-biblioteca\\proyecto-biblioteca\\img\\thegreatgatsby.png", 3)

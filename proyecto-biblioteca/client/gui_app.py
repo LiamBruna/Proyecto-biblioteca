@@ -10,6 +10,8 @@ from twilio.rest import Client
 import io
 import time
 from datetime import datetime, timedelta
+import numpy as np
+import cv2
 
 from model.conexion_db import BD
 from client.barra import BarraProgreso
@@ -554,25 +556,32 @@ class VentanaPrincipal(ck.CTkToplevel):
             titulo = libro[3]
             imagen_bytes = libro[4]
 
-            imagen_ruta = io.BytesIO(imagen_bytes)
-            imagen = Image.open(imagen_ruta)
-            imagen = imagen.resize((150, 200))
+            if imagen_bytes is not None:
+                # Resto del código para procesar la imagen
+                imagen_np = np.frombuffer(imagen_bytes, np.uint8)
+                imagen_cv2 = cv2.imdecode(imagen_np, cv2.IMREAD_COLOR)
 
-            # Mostrar imagen del libro
-            imagen_tk = ImageTk.PhotoImage(imagen)
-            imagen_label = ck.CTkLabel(self.catalogo, text="", image=imagen_tk)
-            imagen_label.image = imagen_tk
-            imagen_label.grid(row=i // 4, column=i % 4, padx=10, pady=10)
+                # Asegurarse de que la imagen_cv2 esté en formato RGB
+                if imagen_cv2.shape[2] == 3:
+                    imagen_cv2_rgb = cv2.cvtColor(imagen_cv2, cv2.COLOR_BGR2RGB)
+                else:
+                    imagen_cv2_rgb = cv2.cvtColor(imagen_cv2, cv2.COLOR_GRAY2RGB)
 
-            # Mostrar detalles del libro
-            self.titulo_label = ck.CTkLabel(self.catalogo, text=f"Titulo: {titulo}")
-            self.titulo_label.grid(row=i // 4, column=i % 4, padx=10, pady=10, sticky="n")
+                imagen_pil = Image.fromarray(imagen_cv2_rgb)
 
-            self.autor_label = ck.CTkLabel(self.catalogo, text=f"Autor: {nombre} {apellido} {nacionalidad}")
-            self.autor_label.grid(row=i // 4, column=i % 4, padx=10, pady=10, sticky="s")
+                # Mostrar la imagen en la interfaz
+                imagen = ck.CTkImage(imagen_pil, size=(150, 200))
+                imagen_label = ck.CTkLabel(self.catalogo, text="", image=imagen)
+                imagen_label.image = imagen
+                imagen_label.grid(row=i // 4, column=i % 4, padx=10, pady=10)
 
+                # Mostrar detalles del libro
+                self.titulo_label = ck.CTkLabel(self.catalogo, text=f"Titulo: {titulo}")
+                self.titulo_label.grid(row=i // 4, column=i % 4, padx=10, pady=10, sticky="n")
 
-
+                self.autor_label = ck.CTkLabel(self.catalogo, text=f"Autor: {nombre} {apellido}\n Nacionalidad: {nacionalidad}")
+                self.autor_label.grid(row=i // 4, column=i % 4, padx=10, pady=10, sticky="s")
+            
         # FRAME ACTUALIZAR STOCK
         self.stock = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.stock.grid(row=0, column=0, sticky="nsew")
