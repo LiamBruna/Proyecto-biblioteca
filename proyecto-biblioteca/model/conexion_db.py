@@ -64,6 +64,21 @@ class BD:
         self.connect.commit()
         messagebox.showinfo(f"Registro exitoso", f"El usuario {nombre} ha sido registrado correctamente.")
 
+    # MÉTODOS PARA FRAME INICIO
+    def obtenerPrestamosConRetraso(self):
+        sql = """
+        SELECT p.ID_P, u.NOMBRE_U, u.APELLIDO_U, p.RUT_U, u.TIPO_U, p.F_DEVOLUCION, p.ISBN, l.TITULO, u.MULTA, u.MONTO
+        FROM prestamo p
+        LEFT JOIN usuario u ON p.RUT_U = u.RUT_U
+        LEFT JOIN libro l ON p.ISBN = l.ISBN
+        WHERE p.F_DEVOLUCION < date('now');
+        """
+
+        self.cursor.execute(sql)
+        resultados = self.cursor.fetchall()
+
+        return resultados
+
     # MÉTODOS PARA FRAME REGISTRAR PRÉSTAMO
     # Método para registrar un préstamo de libro
     def registrarPrestamo(self, correo, rut_u, isbn, f_prestamo, f_devolucion, tipo_u):
@@ -189,6 +204,17 @@ class BD:
         except Exception as e:
             messagebox.showerror("Realizar Préstamo", f"{str(e)}")
             return 0
+
+    def retrasoDeFecha(self, rut):
+        sql = "SELECT COUNT(*) FROM prestamo WHERE RUT_U = ? AND F_DEVOLUCION < DATE('now')"
+        try:
+            self.cursor.execute(sql, (rut,))
+            results = self.cursor.fetchone()
+            cantidad_retrasos = results[0]
+            return cantidad_retrasos > 0
+        except Exception as e:
+            messagebox.showerror("Realizar Préstamo", f"{str(e)}")
+            return False
 
     # MÉTODO PARA FRAME REGISTRAR USUARIO
     # Método para registrar un usuario

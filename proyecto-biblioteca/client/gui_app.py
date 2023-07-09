@@ -526,20 +526,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.inicio_frame.grid(row=0, column=0, sticky="nsew")
         self.inicio_frame.grid_columnconfigure(0, weight=1)
 
-        self.inicio_frame_large_image_label = ck.CTkLabel(self.inicio_frame, text="", image=self.large_test_image)
-        self.inicio_frame_large_image_label.grid(row=0, column=0, padx=20, pady=10)
-
-        self.inicio_frame_button_1 = ck.CTkButton(self.inicio_frame, text="", image=self.image_icon_image)
-        self.inicio_frame_button_1.grid(row=1, column=0, padx=20, pady=10)
-        self.inicio_frame_button_2 = ck.CTkButton(self.inicio_frame, text="CTkButton", image=self.image_icon_image,
-                                                compound="right")
-        self.inicio_frame_button_2.grid(row=2, column=0, padx=20, pady=10)
-        self.inicio_frame_button_3 = ck.CTkButton(self.inicio_frame, text="CTkButton", image=self.image_icon_image,
-                                                compound="top")
-        self.inicio_frame_button_3.grid(row=3, column=0, padx=20, pady=10)
-        self.inicio_frame_button_4 = ck.CTkButton(self.inicio_frame, text="CTkButton", image=self.image_icon_image,
-                                                compound="bottom", anchor="w")
-        self.inicio_frame_button_4.grid(row=4, column=0, padx=20, pady=10)
+        
 
         # FRAME MODIFICAR CATALOGO
         self.catalogo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
@@ -1131,6 +1118,10 @@ class VentanaPrincipal(ck.CTkToplevel):
         id_bibliotecario = self.bd.obtenerUsuarioLog(self.correo_actual)
 
         if not rut:
+            return
+        
+        if self.bd.retrasoDeFecha(rut):
+            messagebox.showwarning("Realizar Préstamo", f"El usuario con RUT: {rut} tiene libros pendientes para devolución.")
             return
         
         # Verificar la cantidad de libros en préstamo del usuario
