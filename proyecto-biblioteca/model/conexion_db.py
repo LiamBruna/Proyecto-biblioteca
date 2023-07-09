@@ -4,8 +4,6 @@ from sqlite3 import Error # Modulo para mostrar errores por si se presentan
 from tkinter import messagebox # Modulo para mostrar mensajes en ventanas emergentes
 import hashlib # Modulo para hashear las contraseñas ingresadas
 
-from model.classes import Libro
-
 
 class BD:
     def __init__(self):
@@ -148,7 +146,7 @@ class BD:
         try:
             self.cursor.execute(sql, (stock, isbn))
             self.connect.commit()
-            messagebox.showinfo("Stock", f"El stock del libro ha sido actualizado")
+            messagebox.showinfo("Modificar Stock", f"El stock del libro ha sido actualizado")
         except Exception as e:
             messagebox.showerror(f"Modificar stock", f"{str(e)}")
 
@@ -165,6 +163,10 @@ class BD:
     # MÉTODOS PARA FRAME REALIZAR PRÉSTAMO
     # Método para obtener el tipo de usuario mediante el RUT
     def obtenerTipoUsuario(self, rut):
+        if not rut:
+            messagebox.showerror("Realizar Préstamo", "El campo RUT no puede estar vació.")
+            return None
+
         sql = "SELECT TIPO_U FROM usuario WHERE RUT_U = ?"
         try:
             self.cursor.execute(sql, (rut,))
@@ -173,7 +175,7 @@ class BD:
                 tipo_usuario = results[0]
                 return tipo_usuario
             else:
-                messagebox.showerror("Realizar Préstamo", f"El RUT {rut} no esta registrado en la base de datos.")
+                messagebox.showerror("Realizar Préstamo", f"El RUT {rut} no está registrado en la base de datos.")
         except Exception as e:
             messagebox.showerror("Realizar Préstamo", f"{str(e)}")
 
