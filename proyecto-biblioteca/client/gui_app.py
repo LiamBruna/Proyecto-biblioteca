@@ -932,10 +932,10 @@ class VentanaPrincipal(ck.CTkToplevel):
                                                 font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.fecha_devolucion_label.grid(row=7, column=0, pady=5, padx=5)
 
-        self.fecha_devolucion = DateEntry(self.frame_renovar_libro, width=16,
+        self.fecha_devolucion_renovar = DateEntry(self.frame_renovar_libro, width=16,
                           date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"),
                           highlightbackground="deep sky blue", highlightthickness=1, corner_radius=10)
-        self.fecha_devolucion.grid(row=7, column=1, pady=5, padx=5)
+        self.fecha_devolucion_renovar.grid(row=7, column=1, pady=5, padx=5)
 
         self.sumar_dias = ck.CTkButton(self.frame_renovar_libro, text="SUMAR DÍAS", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"), command=self.sumarDiasRenovacion)
         self.sumar_dias.grid(row=7, column=2, pady=5, padx=5)
@@ -1182,6 +1182,8 @@ class VentanaPrincipal(ck.CTkToplevel):
         rut = self.rut_usuario.get()
         isbn = self.isbn.get()
         tipo_usuario = self.bd.obtenerTipoUsuario(rut)
+        self.fecha_devolucion.get_date()
+
         if self.validarRut(rut):
             if tipo_usuario:
                 self.tipo_usuario.set(tipo_usuario)
@@ -1300,7 +1302,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         rut = self.rut_usuario.get()
         isbn = self.isbn_entry.get()
         id_bibliotecario = self.bd.obtenerUsuarioLog(self.correo_actual)
-        nueva_fecha_devolucion = self.fecha_devolucion.get_date()
+        nueva_fecha_devolucion = self.fecha_devolucion_renovar.get_date()
 
         if not rut:
             messagebox.showerror("Renovación de libro", "El campo RUT no debe estar vacío")
@@ -1363,8 +1365,8 @@ class VentanaPrincipal(ck.CTkToplevel):
             return
         
         # Establecer la fecha de devolución actual en el DateEntry
-        self.fecha_devolucion.set_date(datetime.strptime(fecha_devolucion_actual, "%Y-%m-%d"))
-        messagebox.showinfo("Renovación de libro", f"La fecha de devolución establecida para el alumno por este libro es: {self.fecha_devolucion.get_date()}")
+        self.fecha_devolucion_renovar.set_date(datetime.strptime(fecha_devolucion_actual, "%Y-%m-%d"))
+        messagebox.showinfo("Renovación de libro", f"La fecha de devolución establecida para el alumno por este libro es: {self.fecha_devolucion_renovar.get_date()}")
 
     def sumarDiasRenovacion(self):
         rut = self.rut_usuario.get()
@@ -1376,7 +1378,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             return
         # Calcular la nueva fecha de devolución sumando 3 días a la fecha actual
         nueva_fecha_devolucion = datetime.strptime(fecha_devolucion_actual, "%Y-%m-%d").date() + timedelta(days=3)
-        self.fecha_devolucion.set_date(nueva_fecha_devolucion)
+        self.fecha_devolucion_renovar.set_date(nueva_fecha_devolucion)
         messagebox.showinfo("Renovación de libro", f"Se han sumado 3 dias a la fecha de devolución, ahora la nueva fecha es: {nueva_fecha_devolucion}") 
 
     # MÉTODOS PARA FRAME CATALOGO
