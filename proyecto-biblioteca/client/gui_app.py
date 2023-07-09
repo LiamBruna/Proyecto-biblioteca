@@ -526,7 +526,65 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.inicio_frame.grid(row=0, column=0, sticky="nsew")
         self.inicio_frame.grid_columnconfigure(0, weight=1)
 
-        
+        self.prestamos_retrasados_label_image = ck.CTkLabel(self.inicio_frame, text="", image=self.usuarios_registrados_image)
+        self.prestamos_retrasados_label_image.grid(row=0, columnspan=1, padx=20)
+
+        # Crear el DateEntry con el date_pattern en año/mes/día
+        self.date_entry = DateEntry(self.inicio_frame, width=11,
+                          date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"),
+                          highlightbackground="deep sky blue", highlightthickness=1, corner_radius=10)
+        self.date_entry.place(x=40, y=80)
+
+        # Obtener la fecha seleccionada
+        fecha_seleccionada = self.date_entry.get_date()
+
+        self.actualizar_button = ck.CTkButton(self.inicio_frame, text='ACTUALIZAR TABLA', font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"), command=self.mostrarDatosPrestamo)
+        self.actualizar_button.grid(columnspan=1, row=2, pady=5)
+
+        self.tabla_inicio = ttk.Treeview(self.inicio_frame)
+        self.tabla_inicio.grid(row=1, column=0, sticky="nsew")
+
+        ladoy = ttk.Scrollbar(self.inicio_frame, orient='vertical', command=self.tabla_inicio.yview)
+        ladoy.grid(row=1, column=1, sticky='ns')
+
+        # Configurar expansión en todas las direcciones para el marco y la tabla
+        self.inicio_frame.grid_rowconfigure(1, weight=1)
+        self.inicio_frame.grid_columnconfigure(0, weight=1)
+        self.tabla_inicio.grid(sticky='nsew')
+
+        # Columnas que se mostrarán en la tabla
+        self.tabla_inicio.configure(yscrollcommand=ladoy.set)
+        self.tabla_inicio['columns'] = ('Nombre', 'Apellido', 'RUT', 'Tipo de usuario', 'F. Devolución', 'ISBN', 'Titulo', 'Multa', 'Monto')
+
+        # Ajustar ancho mínimo y ancho de cada columna de encabezado
+        self.tabla_inicio.column('#0', minwidth=60, width=70, anchor='center')
+        self.tabla_inicio.column('Nombre', minwidth=100, width=130, anchor='center')
+        self.tabla_inicio.column('Apellido', minwidth=100, width=120, anchor='center')
+        self.tabla_inicio.column('RUT', minwidth=100, width=120, anchor='center')
+        self.tabla_inicio.column('Tipo de usuario', minwidth=100, width=105, anchor='center')
+        self.tabla_inicio.column('F. Devolución', minwidth=100, width=105, anchor='center')
+        self.tabla_inicio.column('ISBN', minwidth=100, width=150, anchor='center')
+        self.tabla_inicio.column('Titulo', minwidth=100, width=120, anchor='center')
+        self.tabla_inicio.column('Multa', minwidth=100, width=120, anchor='center')
+        self.tabla_inicio.column('Monto', minwidth=100, width=120, anchor='center')
+
+        # Configurar el texto de encabezado para que se muestre completo
+        self.tabla_inicio.heading('#0', text='Id', anchor='center')
+        self.tabla_inicio.heading('Nombre', text='Nombre', anchor='center')
+        self.tabla_inicio.heading('Apellido', text='Apellido', anchor='center')
+        self.tabla_inicio.heading('RUT', text='RUT', anchor='center')
+        self.tabla_inicio.heading('Tipo de usuario', text='Tipo de usuario', anchor='center')
+        self.tabla_inicio.heading('F. Devolución', text='F. Devolución', anchor='center')
+        self.tabla_inicio.heading('ISBN', text='ISBN', anchor='center')
+        self.tabla_inicio.heading('Titulo', text='Titulo', anchor='center')
+        self.tabla_inicio.heading('Multa', text='Multa', anchor='center')
+        self.tabla_inicio.heading('Monto', text='Monto', anchor='center')
+
+        self.tabla_inicio.bind("<<TreeviewSelect>>")
+
+        # Ajustar expansión del marco principal
+        self.main_frame.grid_rowconfigure(0, weight=1)
+        self.main_frame.grid_columnconfigure(0, weight=1)
 
         # FRAME MODIFICAR CATALOGO
         self.catalogo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
@@ -684,7 +742,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.rut_usuario_entry = ck.CTkEntry(self.frame_realizar_prestamo, textvariable=self.rut_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.rut_usuario_entry.grid(row=10, column=1, pady=5)
         self.rut_usuario_entry.bind("<Return>", self.obtenerTipoUsuario) # Al presionar enter, me devuelve el dato solicitado
-        
+
         # Botón para buscar al usuario por el rut
         self.buscar_usuario_rut = ck.CTkButton(self.frame_realizar_prestamo, command=self.obtenerTipoUsuario, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.buscar_usuario_rut.grid(row=10, column=2, padx=3)
@@ -699,10 +757,10 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.fecha_inicio_label = ck.CTkLabel(self.frame_realizar_prestamo, text="Fecha Inicio de Préstamo: ",
                                                 font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.fecha_inicio_label.grid(row=12, column=0, pady=5)
-        
+
         self.fecha_inicio = DateEntry(self.frame_realizar_prestamo, width=11,
-                          date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"),
-                          highlightbackground="deep sky blue", highlightthickness=1, corner_radius=10)
+                        date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"),
+                        highlightbackground="deep sky blue", highlightthickness=1, corner_radius=10)
         self.fecha_inicio.grid(row=12, column=1, pady=5)
 
         self.fecha_devolucion_label = ck.CTkLabel(self.frame_realizar_prestamo, text="Fecha Devolución de Préstamo: ",
@@ -710,8 +768,8 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.fecha_devolucion_label.grid(row=13, column=0, pady=5)
 
         self.fecha_devolucion = DateEntry(self.frame_realizar_prestamo, width=11,
-                          date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"),
-                          highlightbackground="deep sky blue", highlightthickness=1, corner_radius=10)
+                        date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"),
+                        highlightbackground="deep sky blue", highlightthickness=1, corner_radius=10)
         self.fecha_devolucion.grid(row=13, column=1, pady=5)
 
         self.tipo_usuario_label = ck.CTkLabel(self.frame_realizar_prestamo, text="Tipo de Usuario: ",
@@ -721,7 +779,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.tipo_usuario_entry = ck.CTkEntry(self.frame_realizar_prestamo, textvariable=self.tipo_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.tipo_usuario_entry.grid(row=14, column=1, padx=5)
 
-        # Botón que realizara el prestamo
+        # Botón que realizara el préstamo
         self.completar_prestamo_button = ck.CTkButton(self.frame_realizar_prestamo, command=self.realizarPrestamo, text="REALIZAR PRÉSTAMO", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
         self.completar_prestamo_button.place(x=280, y=400)
 
@@ -996,6 +1054,39 @@ class VentanaPrincipal(ck.CTkToplevel):
     def evento_cambiar_apariencia(self, new_appearance_mode):
         ck.set_appearance_mode(new_appearance_mode)
 
+    # METODOS PARA EL FRAME INICIO
+    def mostrarDatosPrestamo(self):
+        datos = self.bd.obtenerPrestamosConRetraso()
+        self.tabla_inicio.delete(*self.tabla_inicio.get_children())
+        i = -1
+        for dato in datos:
+            i += 1
+            id_prestamo = datos[i][0]
+            rut_usuario = datos[i][3]
+            f_devolucion = datos[i][5]
+            titulo_libro = datos[i][7]
+            multa = datos[i][8]
+            monto = datos[i][9]
+
+            # Calcular días de retraso
+            fecha_actual = datetime.date.today()
+            dias_retraso = (fecha_actual - f_devolucion).days
+
+            # Verificar si hay retraso y asignar la etiqueta de estilo correspondiente
+            if dias_retraso > 0 and monto > 0:
+                self.tabla_inicio.insert('', i, text=id_prestamo, values=datos[i][1:10], tags='retraso')
+            else:
+                self.tabla_inicio.insert('', i, text=id_prestamo, values=datos[i][1:10])
+
+            # Verificar si hay un monto que pagar y aún no ha sido pagado
+            if monto > 0 and multa == 0:
+                self.tabla_inicio.set(id_prestamo, 'Multa', 'no pagado')
+
+        # Configurar estilo para las filas con retraso
+        self.tabla_inicio.tag_configure('retraso', background='yellow')
+
+        messagebox.showinfo("Devoluciones retrasadas", "La tabla ha sido actualizada.")
+
     # METODOS PARA EL FRAME STOCK
     # Método para buscar un libro
     def buscarLibroStock(self, event = None):
@@ -1098,16 +1189,18 @@ class VentanaPrincipal(ck.CTkToplevel):
                     fecha_devolucion = self.calcularFechaDevolucion(7)
                     messagebox.showinfo("Realizar Préstamo", f"Se han sumado 7 días por ser {tipo_usuario}")
                     if fecha_devolucion:
+                        self.fecha_devolucion.delete(0, 'end')
                         self.fecha_devolucion.set_date(fecha_devolucion)
                 elif tipo_usuario == "Docente":
                     fecha_devolucion = self.calcularFechaDevolucion(20)
                     messagebox.showinfo("Realizar Préstamo", f"Se han sumado 20 días por ser {tipo_usuario}")
                     if fecha_devolucion:
+                        self.fecha_devolucion.delete(0, 'end')
                         self.fecha_devolucion.set_date(fecha_devolucion)
                 else:
                     self.fecha_devolucion.configure(state="disabled")
         else:
-            messagebox.showerror("Realizar Prestamo", f"El RUT {rut} no es valido.")
+            messagebox.showerror("Realizar Prestamo", f"El RUT {rut} no es válido.")
 
     def realizarPrestamo(self):
         rut = self.rut_usuario.get()
@@ -1135,7 +1228,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         total_elementos = 100
         barra = BarraProgreso(total_elementos)
 
-        # Nostrar barra de progreso en el Frame
+        # Mostrar barra de progreso en el Frame
         self.barra_progreso_label = ck.CTkLabel(self.frame_realizar_prestamo, text="",
                                                 font=ck.CTkFont(size=14, weight="bold", family="Calibri (body)"))
         self.barra_progreso_label.place(x=65, y=450)
@@ -1147,18 +1240,18 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_realizar_prestamo.update() # Actualizar la ventana
             time.sleep(0.1)
 
-        # Registrar el prestamo en la base de datos
+        # Registrar el préstamo en la base de datos
         self.bd.registrarPrestamo(self.correo_actual, rut, isbn, f_prestamo, f_devolucion, tipo_usuario)
 
         # Restablecer el estado de la barra de progreso
         self.barra_progreso_label.configure(text="")
         self.frame_realizar_prestamo.update() # Actualizar la ventana
-             
+            
     def calcularFechaDevolucion(self, dias):
-        fecha_actual = datetime.now().date()
+        fecha_actual = datetime.now()
         fecha_devolucion = fecha_actual + timedelta(days=dias)
         return fecha_devolucion
-    
+            
     # MÉTODOS PARA EL FRAME REGISTRAR USUARIO
     # Método para registrar usuario
     def registrarUsuario(self):

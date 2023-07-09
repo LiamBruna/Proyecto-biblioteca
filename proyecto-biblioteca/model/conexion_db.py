@@ -66,6 +66,8 @@ class BD:
 
     # MÉTODOS PARA FRAME INICIO
     def obtenerPrestamosConRetraso(self):
+        fecha_actual = datetime.now()
+        
         sql = """
         SELECT p.ID_P, u.NOMBRE_U, u.APELLIDO_U, p.RUT_U, u.TIPO_U, p.F_DEVOLUCION, p.ISBN, l.TITULO, u.MULTA, u.MONTO
         FROM prestamo p
@@ -76,6 +78,18 @@ class BD:
 
         self.cursor.execute(sql)
         resultados = self.cursor.fetchall()
+
+        for resultado in resultados:
+            id_prestamo = resultado[0]
+            rut_usuario = resultado[3]
+            f_devolucion = resultado[5]
+
+            dias_retraso = (fecha_actual() - f_devolucion).days
+            multa = dias_retraso * 1000
+
+            # Actualizar la multa y el monto en la tabla usuario
+            sql_actualizar = "UPDATE usuario SET MULTA = ?, MONTO = MONTO + ? WHERE RUT_U = ?"
+            self.cursor.execute(sql_actualizar, (multa, multa, rut_usuario))
 
         return resultados
 
