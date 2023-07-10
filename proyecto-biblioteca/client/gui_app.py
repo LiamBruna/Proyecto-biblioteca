@@ -7,7 +7,6 @@ from PIL import Image, ImageTk # Modulo para importar imágenes
 import re # Modulo para poder validar si el correo electrónico es un correo electrónico
 import random # Modulo para crear un código random
 from twilio.rest import Client
-import io
 import time
 from datetime import datetime, timedelta
 import numpy as np
