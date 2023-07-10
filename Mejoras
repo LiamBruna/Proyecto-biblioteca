@@ -1,0 +1,15 @@
+Mejoras para el sistema.
+
+Base de datos:
+
+1.- Tenemos que analizar todos los campos de la tabla, que no falte ningún campo.
+2.- Creacion de tabla categoria, en la tabla libro agregar categoria.
+3.- Un prestámo considera n libros (5)
+
+Software:
+1.- agregacion de filtros (nombre,categoria,isbn,editorial)
+2.- Validacion de datos en todas las interfaces. (no permitir numeros negativos)
+3.- Se requiere una interfaz para ver prestamos de un usuario (ver los prestamos que el usuari pidio)  
+4.- Añadir tipo numerico para inputs relacionado con numeros. (rut = numero)
+5.- Cambio de nombre en interfaz para la renovar de libro ("renovacion de dias de libro")
+6.- agregacion de un limite de 4 libros para el usuario alumno y no limite a docente
