@@ -1,6 +1,8 @@
 from customtkinter import *
 from client.gui_app import Frame
 
+# Version 0.00001
+
 def main():
     root = CTk()
     root.title('Biblioteca Virtual')

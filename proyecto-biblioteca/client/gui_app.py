@@ -1,3 +1,5 @@
+from email.errors import MessageError
+from multiprocessing.sharedctypes import Value
 import customtkinter as ck # Modulo para mejorar la interfaz gráfica
 import tkinter as tk # Modulo para crear la interfaz gráfica
 from tkinter import messagebox # Modulo para mostrar mensajes en ventanas emergentes
@@ -405,7 +407,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.grid_columnconfigure(1, weight=1)
 
         # Variables de texto para el Frame de stock
-        self.stockLibro = ck.StringVar()
+        self.stockLibro = ck.IntVar(value="")
         self.numero_paginas = ck.StringVar()
         self.titulo = ck.StringVar()
         self.isbn = ck.StringVar()
@@ -1112,6 +1114,9 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         if not isbn:
             messagebox.showerror("Modificar Stock", "El campo ISBN no puede estar vació")
+            return
+        if stock < 0:
+            messagebox.showerror("Modificar Stock", "Ingrese un stock valido.")
             return
 
         # Crear instancia de BarraProgreso
