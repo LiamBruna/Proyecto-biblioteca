@@ -1,5 +1,6 @@
 from email.errors import MessageError
 from multiprocessing.sharedctypes import Value
+from sre_parse import State
 import customtkinter as ck # Modulo para mejorar la interfaz gráfica
 import tkinter as tk # Modulo para crear la interfaz gráfica
 from tkinter import messagebox # Modulo para mostrar mensajes en ventanas emergentes
@@ -48,44 +49,44 @@ class VentanaRegistro(ck.CTkToplevel):
         frame_registro.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
         frame_registro.configure(width=500, height=500)
 
-        label_log = ck.CTkLabel(master=frame_registro, text="Registrarse", font=ck.CTkFont(size=30, weight="bold", family="Calibri (body)"))
+        label_log = ck.CTkLabel(master=frame_registro, text="Registrarse", font=ck.CTkFont(size=30, weight="bold", family="Segoe UI Historic"))
         label_log.place(x=170, y=30)
 
         # Crea los campos de entrada de datos para el registro
-        self.nombre_entry = ck.CTkEntry(frame_registro, placeholder_text='Nombre (*)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.nombre_entry = ck.CTkEntry(frame_registro, placeholder_text='Nombre (*)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.nombre_entry.place(x=90, y=80)
 
-        self.apellido_entry = ck.CTkEntry(frame_registro, placeholder_text='Apellido (*)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.apellido_entry = ck.CTkEntry(frame_registro, placeholder_text='Apellido (*)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.apellido_entry.place(x=90, y=130)
 
-        self.rut_entry = ck.CTkEntry(frame_registro, placeholder_text='RUT (con puntos y guión)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.rut_entry = ck.CTkEntry(frame_registro, placeholder_text='RUT (con puntos y guión)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.rut_entry.place(x=90, y=180)
 
-        self.correo_entry = ck.CTkEntry(frame_registro, placeholder_text='Correo electrónico (*)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.correo_entry = ck.CTkEntry(frame_registro, placeholder_text='Correo electrónico (*)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.correo_entry.place(x=90, y=230)
 
-        self.celular_entry = ck.CTkEntry(frame_registro, placeholder_text='N° de Celular (*)', textvariable=self.celular, width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.celular_entry = ck.CTkEntry(frame_registro, placeholder_text='N° de Celular (*)', textvariable=self.celular, width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.celular_entry.place(x=90, y=280)
 
-        self.contraseña_entry = ck.CTkEntry(frame_registro, placeholder_text='Contraseña', width=220, height=40, show="*",font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.contraseña_entry = ck.CTkEntry(frame_registro, placeholder_text='Contraseña', width=220, height=40, show="*",font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.contraseña_entry.place(x=90, y=330)
 
-        self.contraseña_entry_confirmar = ck.CTkEntry(frame_registro, placeholder_text='Confirmar Contraseña', width=220, height=40, show="*", font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.contraseña_entry_confirmar = ck.CTkEntry(frame_registro, placeholder_text='Confirmar Contraseña', width=220, height=40, show="*", font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.contraseña_entry_confirmar.place(x=90, y=380)
         self.contraseña_entry_confirmar.bind("<Return>", self.registrar)
 
         # Este es un checkbox para mostrar la contraseña que estamos ingresando
         self.mostrarContraseña_Registro = tk.BooleanVar()
-        mostrar_contraseña_checkbox = ck.CTkCheckBox(frame_registro, text="Mostrar contraseña", variable=self.mostrarContraseña_Registro, command=self.mostrarContraseñaRegistro, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        mostrar_contraseña_checkbox = ck.CTkCheckBox(frame_registro, text="Mostrar contraseña", variable=self.mostrarContraseña_Registro, command=self.mostrarContraseñaRegistro, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         mostrar_contraseña_checkbox.place(x=320, y=388)
 
         self.registro_photo = ck.CTkImage(Image.open("img\\registro.png"), size=(30,30))
 
         # Botón para registrarse
-        button_registrar = ck.CTkButton(frame_registro, width=200, text="Registrarse", command=self.registrar, image=self.registro_photo, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        button_registrar = ck.CTkButton(frame_registro, width=200, text="Registrarse", command=self.registrar, image=self.registro_photo, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         button_registrar.place(x=100, y=430)
 
-        self.volver_button = ck.CTkButton(master = frame_registro, command=self.volverLogin, text="Volver", font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.volver_button = ck.CTkButton(master = frame_registro, command=self.volverLogin, text="Volver", font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.volver_button.place(x=338, y=460)
 
 # Método para validar el correo electrónico
@@ -197,25 +198,25 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         self.frame_recuperar_contraseña.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
         self.frame_recuperar_contraseña.configure(width=320, height=520)
 
-        self.numero_celular_label = ck.CTkLabel(master=self.frame_recuperar_contraseña, text="Ingrese su numero de celular: ", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.numero_celular_label = ck.CTkLabel(master=self.frame_recuperar_contraseña, text="Ingrese su numero de celular: ", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.numero_celular_label.place(x=25, y=0)
 
-        self.numero_celular_entry = ck.CTkEntry(master=self.frame_recuperar_contraseña, textvariable=self.celular_bibliotecario, width=250, height=30, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.numero_celular_entry = ck.CTkEntry(master=self.frame_recuperar_contraseña, textvariable=self.celular_bibliotecario, width=250, height=30, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.numero_celular_entry.place(x=35, y=40)
 
-        self.button_celular = ck.CTkButton(master = self.frame_recuperar_contraseña, command=self.enviar_codigo_celular, text="Enviar código", font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.button_celular = ck.CTkButton(master = self.frame_recuperar_contraseña, command=self.enviar_codigo_celular, text="Enviar código", font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.button_celular.place(x=90, y=80)
 
-        self.codigo_celular_label = ck.CTkLabel(master=self.frame_recuperar_contraseña, text="Ingrese el código recibido: ", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.codigo_celular_label = ck.CTkLabel(master=self.frame_recuperar_contraseña, text="Ingrese el código recibido: ", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.codigo_celular_label.place(x=40, y=120)
 
-        self.codigo_celular_entry = ck.CTkEntry(master=self.frame_recuperar_contraseña, placeholder_text='Ingrese el código aquí ', textvariable=self.codigo_ingresado, width=250, height=30, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.codigo_celular_entry = ck.CTkEntry(master=self.frame_recuperar_contraseña, placeholder_text='Ingrese el código aquí ', textvariable=self.codigo_ingresado, width=250, height=30, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.codigo_celular_entry.place(x=35, y=160)
 
-        self.codigo_celular_button = ck.CTkButton(master = self.frame_recuperar_contraseña, command=self.verificar_codigo_ingresado, text="Verificar codigo", font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.codigo_celular_button = ck.CTkButton(master = self.frame_recuperar_contraseña, command=self.verificar_codigo_ingresado, text="Verificar codigo", font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.codigo_celular_button.place(x=90, y=200)
 
-        self.volver_button = ck.CTkButton(master = self.frame_recuperar_contraseña, command=self.volverLogin, text="Volver", font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.volver_button = ck.CTkButton(master = self.frame_recuperar_contraseña, command=self.volverLogin, text="Volver", font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.volver_button.place(x=170, y=480)
 
     # Método para generar un código único de 7 dígitos
@@ -265,24 +266,24 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
             messagebox.showerror("Recuperación de Contraseña", "Los códigos no coinciden")
     
     def mostrar_actualizar_contraseña(self):
-        self.contraseña_label = ck.CTkLabel(master=self.frame_recuperar_contraseña, text="Ingrese su nueva contraseña: ", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.contraseña_label = ck.CTkLabel(master=self.frame_recuperar_contraseña, text="Ingrese su nueva contraseña: ", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.contraseña_label.place(x=25, y=240)
 
-        self.contraseña_entry = ck.CTkEntry(master=self.frame_recuperar_contraseña, width=250, height=30, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.contraseña_entry = ck.CTkEntry(master=self.frame_recuperar_contraseña, width=250, height=30, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.contraseña_entry.place(x=35, y=280)
 
-        self.confirmar_contraseña_label = ck.CTkLabel(master=self.frame_recuperar_contraseña, text="Confirme su contraseña: ", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.confirmar_contraseña_label = ck.CTkLabel(master=self.frame_recuperar_contraseña, text="Confirme su contraseña: ", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.confirmar_contraseña_label.place(x=40, y=320)
 
-        self.contraseña_entry_confirmar = ck.CTkEntry(master=self.frame_recuperar_contraseña, width=250, height=30, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.contraseña_entry_confirmar = ck.CTkEntry(master=self.frame_recuperar_contraseña, width=250, height=30, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.contraseña_entry_confirmar.place(x=35, y=360)
 
         # Este es un checkbox para mostrar la contraseña que estamos ingresando
         self.mostrarContraseña_Registro = tk.BooleanVar()
-        self.mostrar_contraseña_checkbox = ck.CTkCheckBox(master=self.frame_recuperar_contraseña, text="Mostrar contraseña", variable=self.mostrarContraseña_Registro, command=self.mostrarContraseñaRegistro, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.mostrar_contraseña_checkbox = ck.CTkCheckBox(master=self.frame_recuperar_contraseña, text="Mostrar contraseña", variable=self.mostrarContraseña_Registro, command=self.mostrarContraseñaRegistro, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.mostrar_contraseña_checkbox.place(x=75, y=400)
 
-        self.actualizar_contraseña_button = ck.CTkButton(master = self.frame_recuperar_contraseña, command=self.actualizar_contraseña, text="Actualizar contraseña", font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.actualizar_contraseña_button = ck.CTkButton(master = self.frame_recuperar_contraseña, command=self.actualizar_contraseña, text="Actualizar contraseña", font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.actualizar_contraseña_button.place(x=75, y=440)
         
     def actualizar_contraseña(self):
@@ -330,31 +331,31 @@ class Frame(ck.CTkFrame):
         frame=ck.CTkFrame(master=fondo, width=320, height=360, corner_radius=15)
         frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
-        label_log = ck.CTkLabel(master=frame, text="Iniciar Sesión", font=ck.CTkFont(size=30, weight="bold", family="Calibri (body)"))
+        label_log = ck.CTkLabel(master=frame, text="Iniciar Sesión", font=ck.CTkFont(size=30, weight="bold", family="Segoe UI Historic"))
         label_log.place(x=60, y=40)
 
-        self.correo = ck.CTkEntry(master=frame, placeholder_text='Correo electrónico', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.correo = ck.CTkEntry(master=frame, placeholder_text='Correo electrónico', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.correo.place(x=50, y=80)
 
         self.contraseña = tk.StringVar()
-        self.contraseña_entry = ck.CTkEntry(master=frame, placeholder_text='Contraseña', width=220, height=40, show="*", font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.contraseña_entry = ck.CTkEntry(master=frame, placeholder_text='Contraseña', width=220, height=40, show="*", font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.contraseña_entry.place(x=50, y=130)
         self.contraseña_entry.bind("<Return>", self.login)
 
         # Checkbox para mostrar/ocultar la contraseña
         self.mostrar_contraseña = tk.BooleanVar()
-        self.checkbox_mostrar_contraseña = ck.CTkCheckBox(master=frame, text="Mostrar contraseña", variable=self.mostrar_contraseña, command=self.mostrarContraseña, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"))
+        self.checkbox_mostrar_contraseña = ck.CTkCheckBox(master=frame, text="Mostrar contraseña", variable=self.mostrar_contraseña, command=self.mostrarContraseña, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.checkbox_mostrar_contraseña.place(x=30, y=180)
 
         iniciar_sesion_photo = ck.CTkImage(Image.open("img\\iniciar_sesion.png"), size=(25, 25))
-        self.button_login = ck.CTkButton(master=frame, text="Iniciar sesión", command=self.login, image=iniciar_sesion_photo, font=ck.CTkFont(size=18, weight="bold", family="Calibri (body)"))
+        self.button_login = ck.CTkButton(master=frame, text="Iniciar sesión", command=self.login, image=iniciar_sesion_photo, font=ck.CTkFont(size=18, weight="bold", family="Segoe UI Historic"))
         self.button_login.place(x=80, y=220)
 
         registrarse_photo = ck.CTkImage(Image.open("img\\registrarse.png"), size=(25, 25))
-        self.button_registrar = ck.CTkButton(master=frame, text="Registrarse", command=self.abrir_ventana_registro, image=registrarse_photo, font=ck.CTkFont(size=18, weight="bold", family="Calibri (body)"))
+        self.button_registrar = ck.CTkButton(master=frame, text="Registrarse", command=self.abrir_ventana_registro, image=registrarse_photo, font=ck.CTkFont(size=18, weight="bold", family="Segoe UI Historic"))
         self.button_registrar.place(x=86, y=270)
 
-        self.button_olvido_contraseña = ck.CTkButton(master=frame, text="¿Olvidó su contraseña?", font=ck.CTkFont(size=18, weight="bold", family="Calibri (body)"), command=self.abrir_ventana_recuperar_contraseña)
+        self.button_olvido_contraseña = ck.CTkButton(master=frame, text="¿Olvidó su contraseña?", font=ck.CTkFont(size=18, weight="bold", family="Segoe UI Historic"), command=self.abrir_ventana_recuperar_contraseña)
         self.button_olvido_contraseña.place(x=48, y=320)
 
     def login(self, event=None):
@@ -453,69 +454,69 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         # Crear icono en frame lateral
         self.frameNavegacion_label = ck.CTkLabel(self.frameNavegacion, text="  Biblioteca Virtual", image=self.logo_imagen,
-                                                  compound="left", font=ck.CTkFont(size=30, weight="bold", family="Calibri (body)"))
+                                                  compound="left", font=ck.CTkFont(size=30, weight="bold", family="Segoe UI Historic"))
         self.frameNavegacion_label.grid(row=0, column=0, padx=20, pady=20)
 
         # Botón de Inicio en navegación
         self.inicio_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Inicio",
                                         fg_color="transparent", text_color=("gray10", "gray90"),
                                         hover_color=("gray70", "gray30"), image=self.home_image, anchor="w",
-                                        command=self.inicio_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                        command=self.inicio_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.inicio_button.grid(row=1, column=0, sticky="ew")
 
         self.catalogo_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Catalogo",
                                         fg_color="transparent", text_color=("gray10", "gray90"),
                                         hover_color=("gray70", "gray30"), image=self.catalogo_libro_icono, anchor="w",
-                                        command=self.catalogo_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                        command=self.catalogo_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.catalogo_button.grid(row=2, column=0, sticky="ew")
 
         # Botón de Stock en navegación
         self.stock_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Actualizar Stock",
                                          fg_color="transparent", text_color=("gray10", "gray90"),
                                          hover_color=("gray70", "gray30"), image=self.stock_image, anchor="w",
-                                         command=self.stock_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                         command=self.stock_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.stock_button.grid(row=3, column=0, sticky="ew")
 
         # Botón de Usuarios en navegación
         self.usuario_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Usuarios Registrados",
                                            fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                           image=self.usuario_image, anchor="w",command=self.usuario_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                           image=self.usuario_image, anchor="w",command=self.usuario_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.usuario_button.grid(row=4, column=0, sticky="ew")
 
         # Botón de Realizar prestamos en navegación
         self.realizar_prestamo_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
                                            text="Realizar Prestamo", fg_color="transparent", text_color=("gray10", "gray90"),
                                            hover_color=("gray70", "gray30"), image=self.realizar_prestamo_icono, anchor="w",
-                                           command=self.realizarPrestamo_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                           command=self.realizarPrestamo_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.realizar_prestamo_button.grid(row=5, column=0, sticky="ew")
 
         # Botón de Frame Libros en Préstamo
         self.frame_libros_en_prestamo_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
                                            text="Libros en Préstamo", fg_color="transparent", text_color=("gray10", "gray90"),
                                            hover_color=("gray70", "gray30"), image=self.libros_prestamo_icono, anchor="w",
-                                           command=self.frame_libros_en_prestamo_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                           command=self.frame_libros_en_prestamo_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.frame_libros_en_prestamo_button.grid(row=6, column=0, sticky="ew")
         
         # Botón de Frame Registrar Usuario
         self.frame_registrar_usuario_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
                                            text="Registrar Usuario", fg_color="transparent", text_color=("gray10", "gray90"),
                                            hover_color=("gray70", "gray30"), image=self.add_user_image, anchor="w",
-                                           command=self.frame_registrar_usuario_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                           command=self.frame_registrar_usuario_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.frame_registrar_usuario_button.grid(row=7, column=0, sticky="ew")
 
         # Botón de Frame Renovar Libro
         self.frame_renovar_libro_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
                                            text="Renovar Libro", fg_color="transparent", text_color=("gray10", "gray90"),
                                            hover_color=("gray70", "gray30"), image=self.renovar_libro_icono, anchor="w",
-                                           command=self.frame_renovar_libro_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                           command=self.frame_renovar_libro_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.frame_renovar_libro_button.grid(row=8, column=0, sticky="ew")
 
         # Menu de opciones para cambiar de apariencia la app
-        self.menu_apariencia = ck.CTkOptionMenu(self.frameNavegacion, font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"), values=["Dark", "Light"], command=self.evento_cambiar_apariencia)
+        self.menu_apariencia = ck.CTkOptionMenu(self.frameNavegacion, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"), values=["Dark", "Light"], command=self.evento_cambiar_apariencia)
         self.menu_apariencia.grid(row=9, column=0, padx=20, pady=20, sticky="s")
 
         # Botón para cerrar sesion
-        self.button_cerrarSesion = ck.CTkButton(self.frameNavegacion, font=ck.CTkFont(size=18, weight="bold", family="Calibri (body)"), text="Cerrar sesión", image=self.cerrar_sesion_imagen, command=self.cerrar_sesion)
+        self.button_cerrarSesion = ck.CTkButton(self.frameNavegacion, font=ck.CTkFont(size=18, weight="bold", family="Segoe UI Historic"), text="Cerrar sesión", image=self.cerrar_sesion_imagen, command=self.cerrar_sesion)
         self.button_cerrarSesion.grid(row=10, column=0, padx=20, pady=20, sticky="s")
 
         # CONTENEDOR MAINS
@@ -532,14 +533,14 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         # Crear el DateEntry con el date_pattern en año/mes/día
         self.date_entry = DateEntry(self.inicio_frame, width=11,
-                          date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"),
+                          date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"),
                           highlightbackground="deep sky blue", highlightthickness=1, corner_radius=10)
         self.date_entry.place(x=40, y=80)
 
         # Obtener la fecha seleccionada
         fecha_seleccionada = self.date_entry.get_date()
 
-        self.actualizar_button = ck.CTkButton(self.inicio_frame, text='ACTUALIZAR TABLA', font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"), command=self.mostrarDatosPrestamo)
+        self.actualizar_button = ck.CTkButton(self.inicio_frame, text='ACTUALIZAR TABLA', font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"), command=self.mostrarDatosPrestamo)
         self.actualizar_button.grid(columnspan=1, row=2, pady=5)
 
         self.tabla_inicio = ttk.Treeview(self.inicio_frame)
@@ -615,15 +616,15 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.actualizar_stock_label_image.grid(row=0, columnspan=3, padx=20)
 
         self.buscar_libro_isbn_label = ck.CTkLabel(self.stock, text="Ingrese el ISBN del libro para actualizar stock: ",
-                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.buscar_libro_isbn_label.grid(row=10, column=0, padx=10)
 
-        self.buscar_libro_isbn_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.buscar_actualiza, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.buscar_libro_isbn_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.buscar_actualiza, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.buscar_libro_isbn_entry.grid(row=10, column=1, padx=10)
         self.buscar_libro_isbn_entry.bind("<Return>", self.buscarLibroStock) # Al presionar enter, me devuelve el dato solicitado
 
         # Botón para buscar el libro
-        self.buscar_libro_isbn_button = ck.CTkButton(self.stock, command=self.buscarLibroStock, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.buscar_libro_isbn_button = ck.CTkButton(self.stock, command=self.buscarLibroStock, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.buscar_libro_isbn_button.grid(row=10, column=2, padx=3)
 
         # Widgets del frame stock a mostrar
@@ -631,34 +632,34 @@ class VentanaPrincipal(ck.CTkToplevel):
                         font=ck.CTkFont(size=20, weight="bold"))
         self.isbn_label.grid(row=15, column=0, pady=15)
 
-        self.isbn_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.isbn, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.isbn_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.isbn, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), state="disabled")
         self.isbn_entry.grid(row=15, columnspan=7, padx=10)
         
         self.titulo_label = ck.CTkLabel(self.stock, text="Titulo: ",
-                        font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                        font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.titulo_label.grid(row=16, column=0, pady=10)
 
-        self.titulo_entry = ck.CTkEntry(self.stock, width=200, textvariable=self.titulo, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.titulo_entry = ck.CTkEntry(self.stock, width=200, textvariable=self.titulo, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), state="disabled")
         self.titulo_entry.grid(row=16, columnspan=7, padx=10)
 
         self.numero_paginas_label = ck.CTkLabel(self.stock, text="N° de Paginas: ",
-                        font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                        font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.numero_paginas_label.grid(row=17, column=0, pady=10)
 
-        self.numero_paginas_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.numero_paginas, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.numero_paginas_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.numero_paginas, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), state="disabled")
         self.numero_paginas_entry.grid(row=17, columnspan=7, padx=10)
 
         # Campo que se va a actualizar
         self.stock_label = ck.CTkLabel(self.stock, text="Stock: ",
-                        font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                        font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.stock_label.grid(row=18, column=0, pady=10)
 
-        self.stock_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.stockLibro, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.stock_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.stockLibro, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.stock_entry.grid(row=18, columnspan=7, padx=10)
         self.stock_entry.bind("<Return>", self.actualizarStock)
 
         # Botón para actualizar el stock del libro
-        self.actualizar_stock_button = ck.CTkButton(self.stock, command=self.actualizarStock, text="ACTUALIZAR", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.actualizar_stock_button = ck.CTkButton(self.stock, command=self.actualizarStock, text="ACTUALIZAR", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.actualizar_stock_button.place(x=600, y=400)
         
         # FRAME MOSTRAR USUARIOS REGISTRADOS
@@ -670,14 +671,14 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.usuarios_registrados_label_image = ck.CTkLabel(self.usuario, text="", image=self.usuarios_registrados_image)
         self.usuarios_registrados_label_image.grid(row=0, columnspan=1, padx=20)
 
-        self.actualizar_button = ck.CTkButton(self.usuario, text='ACTUALIZAR TABLA', font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"), command=self.mostrarDatosUsuario)
+        self.actualizar_button = ck.CTkButton(self.usuario, text='ACTUALIZAR TABLA', font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"), command=self.mostrarDatosUsuario)
         self.actualizar_button.grid(columnspan=1, row=2, pady=5)
         
         # Estilo de la tabla para mostrar los datos
         estilo_tabla = ttk.Style()
-        estilo_tabla.configure("Treeview", font=ck.CTkFont(size=10, weight="bold", family="Calibri (body)"), foreground='black', background='white')
+        estilo_tabla.configure("Treeview", font=ck.CTkFont(size=10, weight="bold", family="Segoe UI Historic"), foreground='black', background='white')
         estilo_tabla.map('Treeview', background=[('selected', 'green')], foreground=[('selected', 'black')])
-        estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         estilo_tabla.configure('Item', foreground='transparent', focuscolor='DarkOrchid1')
         estilo_tabla.configure('TScrollbar', arrowcolor='DarkOrchid1', bordercolor='black', troughcolor='DarkOrchid1', background='white')
 
@@ -737,55 +738,55 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.realizar_prestamo_label_image.grid(row=0, columnspan=3, padx=20)
 
         self.rut_usuario_label = ck.CTkLabel(self.frame_realizar_prestamo, text="Ingrese el RUT del Usuario: ",
-                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.rut_usuario_label.grid(row=10, column=0, pady=5)
 
-        self.rut_usuario_entry = ck.CTkEntry(self.frame_realizar_prestamo, textvariable=self.rut_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.rut_usuario_entry = ck.CTkEntry(self.frame_realizar_prestamo, textvariable=self.rut_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.rut_usuario_entry.grid(row=10, column=1, pady=5)
         self.rut_usuario_entry.bind("<Return>", self.obtenerTipoUsuario) # Al presionar enter, me devuelve el dato solicitado
 
         # Botón para buscar al usuario por el rut
-        self.buscar_usuario_rut = ck.CTkButton(self.frame_realizar_prestamo, command=self.obtenerTipoUsuario, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.buscar_usuario_rut = ck.CTkButton(self.frame_realizar_prestamo, command=self.obtenerTipoUsuario, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.buscar_usuario_rut.grid(row=10, column=2, padx=3)
 
         self.isbn_libro_label = ck.CTkLabel(self.frame_realizar_prestamo, text="Ingrese el ISBN del Libro: ",
-                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.isbn_libro_label.grid(row=11, column=0, pady=5)
 
-        self.isbn_libro_entry = ck.CTkEntry(self.frame_realizar_prestamo, textvariable=self.isbn, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.isbn_libro_entry = ck.CTkEntry(self.frame_realizar_prestamo, textvariable=self.isbn, width=140, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.isbn_libro_entry.grid(row=11, column=1, padx=5)
 
         self.fecha_inicio_label = ck.CTkLabel(self.frame_realizar_prestamo, text="Fecha Inicio de Préstamo: ",
-                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.fecha_inicio_label.grid(row=12, column=0, pady=5)
 
         self.fecha_inicio = DateEntry(self.frame_realizar_prestamo, width=11,
-                        date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"),
+                        date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"),
                         highlightbackground="deep sky blue", highlightthickness=1, corner_radius=10)
         self.fecha_inicio.grid(row=12, column=1, pady=5)
 
         self.fecha_devolucion_label = ck.CTkLabel(self.frame_realizar_prestamo, text="Fecha Devolución de Préstamo: ",
-                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.fecha_devolucion_label.grid(row=13, column=0, pady=5)
 
         self.fecha_devolucion = DateEntry(self.frame_realizar_prestamo, width=11,
-                        date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"),
+                        date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"),
                         highlightbackground="deep sky blue", highlightthickness=1, corner_radius=10)
         self.fecha_devolucion.grid(row=13, column=1, pady=5)
 
         self.tipo_usuario_label = ck.CTkLabel(self.frame_realizar_prestamo, text="Tipo de Usuario: ",
-                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.tipo_usuario_label.grid(row=14, column=0, pady=5)
 
-        self.tipo_usuario_entry = ck.CTkEntry(self.frame_realizar_prestamo, textvariable=self.tipo_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.tipo_usuario_entry = ck.CTkEntry(self.frame_realizar_prestamo, textvariable=self.tipo_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.tipo_usuario_entry.grid(row=14, column=1, padx=5)
 
         # Botón que realizara el préstamo
-        self.completar_prestamo_button = ck.CTkButton(self.frame_realizar_prestamo, command=self.realizarPrestamo, text="REALIZAR PRÉSTAMO", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.completar_prestamo_button = ck.CTkButton(self.frame_realizar_prestamo, command=self.realizarPrestamo, text="REALIZAR PRÉSTAMO", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.completar_prestamo_button.place(x=280, y=400)
 
         # Botón para borrar el contenido de todos los campos
-        self.borrar_campos_prestamo = ck.CTkButton(self.frame_realizar_prestamo, text="BORRAR TODO", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"), command=self.limpiarCamposPrestamo)
+        self.borrar_campos_prestamo = ck.CTkButton(self.frame_realizar_prestamo, text="BORRAR TODO", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), command=self.limpiarCamposPrestamo)
         self.borrar_campos_prestamo.place(x=65, y=400)
 
         # FRAME LIBROS EN PRÉSTAMO
@@ -797,14 +798,14 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.librosPrestamos_label_image = ck.CTkLabel(self.frame_libros_en_prestamo, text="", image=self.libros_prestamo_image)
         self.librosPrestamos_label_image.grid(row=0, columnspan=1, padx=20)
 
-        actualizar_librosPrestamo_button = ck.CTkButton(self.frame_libros_en_prestamo, text='ACTUALIZAR TABLA LIBROS EN PRÉSTAMO', font=ck.CTkFont(size=15, weight="bold", family="Calibri (body)"), command=self.mostrarDatosLibros)
+        actualizar_librosPrestamo_button = ck.CTkButton(self.frame_libros_en_prestamo, text='ACTUALIZAR TABLA LIBROS EN PRÉSTAMO', font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"), command=self.mostrarDatosLibros)
         actualizar_librosPrestamo_button.grid(columnspan=1, row=2, pady=5)
 
         # Estilo de la tabla para mostrar los datos
         estilo_tabla = ttk.Style()
-        estilo_tabla.configure("Treeview", font=ck.CTkFont(size=10, weight="bold", family="Calibri (body)"), foreground='black', background='white')
+        estilo_tabla.configure("Treeview", font=ck.CTkFont(size=10, weight="bold", family="Segoe UI Historic"), foreground='black', background='white')
         estilo_tabla.map('Treeview', background=[('selected', 'green')], foreground=[('selected', 'black')])
-        estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         estilo_tabla.configure('Item', foreground='transparent', focuscolor='DarkOrchid1')
         estilo_tabla.configure('TScrollbar', arrowcolor='DarkOrchid1', bordercolor='black', troughcolor='DarkOrchid1', background='white')
 
@@ -854,55 +855,55 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.registrar_usuario_image_label.grid(row=0, columnspan=2, padx=20)
 
         self.nombre_usuario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese el nombre del usuario: ",
-                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.nombre_usuario_label.grid(row=10, column=0, pady=5, padx=5)
 
-        self.nombre_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.nombre_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.nombre_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.nombre_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.nombre_usuario_entry.grid(row=10, column=1, pady=10, padx=5)
 
         self.apellido_ususario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese el apellido del usuario: ",
-                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.apellido_ususario_label.grid(row=11, column=0, pady=5, padx=5)
 
-        self.apellido_ususario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.apellido_ususario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.apellido_ususario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.apellido_ususario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.apellido_ususario_entry.grid(row=11, column=1, pady=10, padx=5)
 
         self.direccion_usuario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese la dirección del usuario: ",
-                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.direccion_usuario_label.grid(row=12, column=0, pady=5, padx=5)
 
-        self.direccion_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.direccion_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.direccion_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.direccion_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.direccion_usuario_entry.grid(row=12, column=1, pady=10, padx=5)
 
         self.rut_usuario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese el RUT del usuario: ",
-                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.rut_usuario_label.grid(row=13, column=0, pady=5, padx=5)
 
-        self.rut_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.rut_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.rut_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.rut_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.rut_usuario_entry.grid(row=13, column=1, pady=10, padx=5)
 
         self.celular_usuario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese el celular del usuario: ",
-                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.celular_usuario_label.grid(row=14, column=0, pady=5, padx=5)
 
-        self.celular_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.celular_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.celular_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.celular_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.celular_usuario_entry.grid(row=14, column=1, pady=10, padx=5)
 
         self.correo_usuario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese el correo electrónico del usuario: ",
-                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.correo_usuario_label.grid(row=15, column=0, pady=5, padx=5)
 
-        self.correo_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.correo_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.correo_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.correo_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.correo_usuario_entry.grid(row=15, column=1, pady=10, padx=5)
 
         self.tipo_usuario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese el tipo de usuario: ",
-                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.tipo_usuario_label.grid(row=16, column=0, pady=5, padx=5)
 
-        self.tipo_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.tipo_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.tipo_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.tipo_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.tipo_usuario_entry.grid(row=16, column=1, pady=10, padx=5)
 
-        self.registrar_usuario_button = ck.CTkButton(self.frame_registrar_usuario, text="REGISTRAR USUARIO", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"), command=self.registrarUsuario)
+        self.registrar_usuario_button = ck.CTkButton(self.frame_registrar_usuario, text="REGISTRAR USUARIO", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), command=self.registrarUsuario)
         self.registrar_usuario_button.place(x=288, y=480)
 
         # FRAME RENOVAR LIBRO
@@ -913,35 +914,35 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.renovar_libro_image.grid(row=0, columnspan=3, padx=20)
 
         self.rut_usuario_label = ck.CTkLabel(self.frame_renovar_libro, text="Ingrese el rut del usuario: ",
-                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.rut_usuario_label.grid(row=3, column=0, pady=5, padx=5)
 
-        self.rut_usuario_entry = ck.CTkEntry(self.frame_renovar_libro, textvariable=self.rut_usuario, width=200, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.rut_usuario_entry = ck.CTkEntry(self.frame_renovar_libro, textvariable=self.rut_usuario, width=200, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.rut_usuario_entry.grid(row=3, column=1, pady=5, padx=5)
 
         self.isbn_label = ck.CTkLabel(self.frame_renovar_libro, text="Ingrese el ISBN del libro: ",
-                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.isbn_label.grid(row=4, column=0, pady=5, padx=5)
 
-        self.isbn_entry = ck.CTkEntry(self.frame_renovar_libro, textvariable=self.isbn, width=200, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+        self.isbn_entry = ck.CTkEntry(self.frame_renovar_libro, textvariable=self.isbn, width=200, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.isbn_entry.grid(row=4, column=1, pady=5, padx=5)
 
-        self.buscar_usuario = ck.CTkButton(self.frame_renovar_libro, text="BUSCAR USUARIO", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"), command=self.obtenerFechaDevolucion)
+        self.buscar_usuario = ck.CTkButton(self.frame_renovar_libro, text="BUSCAR USUARIO", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), command=self.obtenerFechaDevolucion)
         self.buscar_usuario.grid(row=4, column=2, pady=5, padx=5)
 
         self.fecha_devolucion_label = ck.CTkLabel(self.frame_renovar_libro, text="Fecha Devolución de Préstamo: ",
-                                                font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"))
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.fecha_devolucion_label.grid(row=7, column=0, pady=5, padx=5)
 
         self.fecha_devolucion_renovar = DateEntry(self.frame_renovar_libro, width=16,
-                          date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"),
+                          date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"),
                           highlightbackground="deep sky blue", highlightthickness=1, corner_radius=10)
         self.fecha_devolucion_renovar.grid(row=7, column=1, pady=5, padx=5)
 
-        self.sumar_dias = ck.CTkButton(self.frame_renovar_libro, text="SUMAR DÍAS", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"), command=self.sumarDiasRenovacion)
+        self.sumar_dias = ck.CTkButton(self.frame_renovar_libro, text="SUMAR DÍAS", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), command=self.sumarDiasRenovacion)
         self.sumar_dias.grid(row=7, column=2, pady=5, padx=5)
 
-        self.renovar_libro_button = ck.CTkButton(self.frame_renovar_libro, text="RENOVAR LIBRO", font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"), command=self.renovarLibro)
+        self.renovar_libro_button = ck.CTkButton(self.frame_renovar_libro, text="RENOVAR LIBRO", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), command=self.renovarLibro)
         self.renovar_libro_button.place(x=330, y=260)
 
         # FRAME SELECCIONADO POR DEFECTO
@@ -1125,7 +1126,7 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         # Nostrar barra de progreso en el Frame
         self.barra_progreso_label = ck.CTkLabel(self.stock, text="",
-                                                font=ck.CTkFont(size=14, weight="bold", family="Calibri (body)"))
+                                                font=ck.CTkFont(size=14, weight="bold", family="Segoe UI Historic"))
         self.barra_progreso_label.place(x=65, y=450)
 
         # Realizar el préstamo
@@ -1133,7 +1134,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             mensaje_progreso = barra.actualizar()
             self.barra_progreso_label.configure(text=mensaje_progreso)
             self.frame_realizar_prestamo.update() # Actualizar la ventana
-            time.sleep(0.1)
+            time.sleep(0.001)
 
         self.bd.actualizarStock(stock, isbn)
         self.limpiarCamposStock()
@@ -1236,7 +1237,7 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         # Mostrar barra de progreso en el Frame
         self.barra_progreso_label = ck.CTkLabel(self.frame_realizar_prestamo, text="",
-                                                font=ck.CTkFont(size=14, weight="bold", family="Calibri (body)"))
+                                                font=ck.CTkFont(size=14, weight="bold", family="Segoe UI Historic"))
         self.barra_progreso_label.place(x=65, y=450)
 
         # Realizar el préstamo
@@ -1280,7 +1281,7 @@ class VentanaPrincipal(ck.CTkToplevel):
 
                 # Nostrar barra de progreso en el Frame
                 self.barra_progreso_label = ck.CTkLabel(self.frame_registrar_usuario, text="",
-                                                        font=ck.CTkFont(size=14, weight="bold", family="Calibri (body)"))
+                                                        font=ck.CTkFont(size=14, weight="bold", family="Segoe UI Historic"))
                 self.barra_progreso_label.place(x=80, y=520)
 
                 # Realizar el préstamo
@@ -1322,7 +1323,7 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         # Mostrar barra de progreso en el Frame
         self.barra_progreso_label = ck.CTkLabel(self.frame_renovar_libro, text="",
-                                                font=ck.CTkFont(size=14, weight="bold", family="Calibri (body)"))
+                                                font=ck.CTkFont(size=14, weight="bold", family="Segoe UI Historic"))
         self.barra_progreso_label.grid(row=4, column=0, padx=10, pady=10)
 
         # Realizar la renovación del libro
@@ -1398,7 +1399,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         imagen_pil = Image.fromarray(imagen_cv2_rgb)
 
         imagen = ck.CTkImage(imagen_pil, size=(150, 200))
-        imagen_label = ck.CTkLabel(self.catalogo, text="", image=imagen, font=ck.CTkFont(size=20, weight="bold", family="Calibri (body)"), text_color="blue")
+        imagen_label = ck.CTkLabel(self.catalogo, text="", image=imagen, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), text_color="blue")
         imagen_label.image = imagen
         imagen_label.bind("<Button-1>", lambda event: self.mostrar_detalle(imagen_label, titulo, detalle))
 
