@@ -1134,7 +1134,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             mensaje_progreso = barra.actualizar()
             self.barra_progreso_label.configure(text=mensaje_progreso)
             self.frame_realizar_prestamo.update() # Actualizar la ventana
-            time.sleep(0.001)
+            time.sleep(0.003)
 
         self.bd.actualizarStock(stock, isbn)
         self.limpiarCamposStock()
@@ -1245,7 +1245,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             mensaje_progreso = barra.actualizar()
             self.barra_progreso_label.configure(text=mensaje_progreso)
             self.frame_realizar_prestamo.update() # Actualizar la ventana
-            time.sleep(0.1)
+            time.sleep(0.003)
 
         # Registrar el préstamo en la base de datos
         self.bd.registrarPrestamo(self.correo_actual, rut, isbn, f_prestamo, f_devolucion, tipo_usuario)
@@ -1331,7 +1331,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             mensaje_progreso = barra.actualizar()
             self.barra_progreso_label.configure(text=mensaje_progreso)
             self.frame_renovar_libro.update()  # Actualizar la ventana
-            time.sleep(0.1)
+            time.sleep(0.003)
 
         # Registrar la renovación del libro
         if self.bd.registrarRenovacion(rut, isbn):
