@@ -472,6 +472,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.renovar_libro_icono = ck.CTkImage(Image.open("img\\renovar_libro.png"), size=(26, 26))
         self.catalogo_libro_icono = ck.CTkImage(Image.open("img\\catalogo_libros.png"), size=(26, 26))
         self.renovar_libro_image_titulo = ck.CTkImage(Image.open("img\\renovar_libro_titulo.png"), size=(450, 120))
+        self.inicio_image = ck.CTkImage(Image.open("img\\retrasos_en_prestamo.png"), size=(450, 120))
 
         # Crear Frame lateral de navegación
         self.frameNavegacion = ck.CTkFrame(self, corner_radius=0)
@@ -555,8 +556,8 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.inicio_frame.grid(row=0, column=0, sticky="nsew")
         self.inicio_frame.grid_columnconfigure(0, weight=1)
 
-        self.prestamos_retrasados_label_image = ck.CTkLabel(self.inicio_frame, text="", image=self.usuarios_registrados_image)
-        self.prestamos_retrasados_label_image.grid(row=0, columnspan=1, padx=20)
+        self.inicio_label_image = ck.CTkLabel(self.inicio_frame, text="", image=self.inicio_image)
+        self.inicio_label_image.grid(row=0, columnspan=1, padx=20)
 
         # Crear el DateEntry con el date_pattern en año/mes/día
         self.date_entry = DateEntry(self.inicio_frame, width=11,
@@ -620,6 +621,9 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.catalogo.grid(row=0, column=0, sticky="nsew")
         self.catalogo.grid_columnconfigure(0, weight=1)  # Expansión horizontal
         self.catalogo.grid_rowconfigure(1, weight=1)  # Expansión vertical
+
+        self.scrollbar = ck.CTkScrollbar(self.catalogo)
+        self.scrollbar.grid(row=0, column=1, sticky="ns")
 
         libros = self.bd.obtenerLibrosCatalogo() # Obtener los libros desde la base de datos
 
