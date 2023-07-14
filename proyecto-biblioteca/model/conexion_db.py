@@ -64,6 +64,17 @@ class BD:
         self.connect.commit()
         messagebox.showinfo(f"Registro exitoso", f"El usuario {nombre} ha sido registrado correctamente.")
 
+    def obtenerUsuarioLog(self, correo):
+        sql = "SELECT ID_B FROM bibliotecario WHERE CORREO_B = ?"
+        self.cursor.execute(sql, (correo,))
+        results = self.cursor.fetchone()
+
+        if results is None:
+            messagebox.showerror("Registro de préstamo", "El bibliotecario no está logeado")
+        else:
+            id_b = results[0]
+            return id_b
+
     # MÉTODOS PARA FRAME INICIO
     def obtenerPrestamosConRetraso(self):
         fecha_actual = datetime.now()
@@ -93,64 +104,16 @@ class BD:
 
         return resultados
 
-    # MÉTODOS PARA FRAME REGISTRAR PRÉSTAMO
-    # Método para registrar un préstamo de libro
-    def registrarPrestamo(self, correo, rut_u, isbn, f_prestamo, f_devolucion, tipo_u):
+    def retrasoDeFecha(self, rut):
+        sql = "SELECT COUNT(*) FROM prestamo WHERE RUT_U = ? AND F_DEVOLUCION < DATE('now')"
         try:
-            # Obtener el id del bibliotecario logeado
-            bibliotecarioId = self.obtenerUsuarioLog(correo)
-
-            sql_prestamo = "INSERT INTO prestamo (RUT_U, ISBN, F_PRESTAMO, F_DEVOLUCION, TIPO_U, ID_B) VALUES (?, ?, ?, ?, ?, ?)"
-            vals_prestamo = (rut_u, isbn, f_prestamo, f_devolucion, tipo_u, bibliotecarioId)
-            self.cursor.execute(sql_prestamo, vals_prestamo)
-            self.connect.commit()
-
-            # Obtener el stock actual del libro
-            stock_actual = self.obtenerStockLibro(isbn)
-
-            # Hacemos la resta en el stock actual en caso de que se realice el prestamo de un libro
-            nuevo_stock = stock_actual - 1
-
-            # Actualizamos el stock actual
-            self.actualizarStockLibro(nuevo_stock, isbn)
-
-            messagebox.showinfo("Registro de préstamo", "El préstamo ha sido registrado correctamente.")
-        except Error as e:
-            messagebox.showerror("Registro de préstamo", str(e))
-
-    def obtenerUsuarioLog(self, correo):
-        sql = "SELECT ID_B FROM bibliotecario WHERE CORREO_B = ?"
-        self.cursor.execute(sql, (correo,))
-        results = self.cursor.fetchone()
-
-        if results is None:
-            messagebox.showerror("Registro de préstamo", "El bibliotecario no está logeado")
-        else:
-            id_b = results[0]
-            return id_b
-
-    def actualizarStockLibro(self, nuevo_stock, isbn):
-        try:
-            sql = "UPDATE libro SET STOCK = ? WHERE ISBN = ?"
-            vals = (nuevo_stock, isbn)
-            self.cursor.execute(sql, vals)
-            self.connect.commit()
+            self.cursor.execute(sql, (rut,))
+            results = self.cursor.fetchone()
+            cantidad_retrasos = results[0]
+            return cantidad_retrasos > 0
         except Exception as e:
-            messagebox.showerror("Registro de préstamo", f"{str(e)}")
-
-    def obtenerStockLibro(self, isbn):
-        try:
-            sql = "SELECT STOCK FROM libro WHERE ISBN = ?"
-            self.cursor.execute(sql, (isbn,))
-            resultado = self.cursor.fetchone()
-            if resultado:
-                return resultado[0]
-            else:
-                messagebox.showerror("Registro de préstamo", f"Libro con ISBN {isbn} no encontrado.")
-                return 0  # O cualquier otro valor predeterminado en caso de no encontrar el libro
-        except Exception as e:
-            messagebox.showerror("Registro de préstamo", str(e))
-            return 0  # O cualquier otro valor predeterminado en caso de error
+            messagebox.showerror("Realizar Préstamo", f"{str(e)}")
+            return False
 
     # Método para mostrar información personal de los usuarios registrados
     def mostrarUsuarios(self):
@@ -192,10 +155,6 @@ class BD:
     # MÉTODOS PARA FRAME REALIZAR PRÉSTAMO
     # Método para obtener el tipo de usuario mediante el RUT
     def obtenerTipoUsuario(self, rut):
-        if not rut:
-            messagebox.showerror("Realizar Préstamo", "El campo RUT no puede estar vació.")
-            return None
-
         sql = "SELECT TIPO_U FROM usuario WHERE RUT_U = ?"
         try:
             self.cursor.execute(sql, (rut,))
@@ -207,6 +166,17 @@ class BD:
                 messagebox.showerror("Realizar Préstamo", f"El RUT {rut} no está registrado en la base de datos.")
         except Exception as e:
             messagebox.showerror("Realizar Préstamo", f"{str(e)}")
+        
+    def verificarISBN(self, isbn):
+        sql = "SELECT COUNT(*) FROM libro WHERE ISBN = ?"
+        try:
+            self.cursor.execute(sql, (isbn,))
+            result = self.cursor.fetchone()
+            cantidad = result[0]
+            return cantidad > 0
+        except Exception as e:
+            messagebox.showerror("Verificar ISBN", f"Error al verificar el ISBN: {str(e)}")
+            return False
 
     def obtenerCantidadLibrosPrestamo(self, rut_u):
         try:
@@ -218,17 +188,6 @@ class BD:
         except Exception as e:
             messagebox.showerror("Realizar Préstamo", f"{str(e)}")
             return 0
-
-    def retrasoDeFecha(self, rut):
-        sql = "SELECT COUNT(*) FROM prestamo WHERE RUT_U = ? AND F_DEVOLUCION < DATE('now')"
-        try:
-            self.cursor.execute(sql, (rut,))
-            results = self.cursor.fetchone()
-            cantidad_retrasos = results[0]
-            return cantidad_retrasos > 0
-        except Exception as e:
-            messagebox.showerror("Realizar Préstamo", f"{str(e)}")
-            return False
 
     # MÉTODO PARA FRAME REGISTRAR USUARIO
     # Método para registrar un usuario

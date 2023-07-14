@@ -781,13 +781,42 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.tipo_usuario_entry = ck.CTkEntry(self.frame_realizar_prestamo, textvariable=self.tipo_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.tipo_usuario_entry.grid(row=14, column=1, padx=5)
 
+        # Crear el Frame contenedor del Treeview y el Scrollbar
+        treeview_frame = ck.CTkFrame(self.frame_realizar_prestamo)
+        treeview_frame.grid(row=15, columnspan=3, padx=20, pady=5)
+
+        # Crear el Treeview dentro del Frame
+        self.treeview_prestamos = ttk.Treeview(treeview_frame, columns=("rut", "isbn", "f.inicio", "f.devolución", "tipo de usuario"), show="headings")
+        self.treeview_prestamos.heading("rut", text="RUT")
+        self.treeview_prestamos.heading("isbn", text="ISBN")
+        self.treeview_prestamos.heading("f.inicio", text="F.inicio")
+        self.treeview_prestamos.heading("f.devolución", text="F.devolución")
+        self.treeview_prestamos.heading("tipo de usuario", text="Tipo de Usuario")
+        self.treeview_prestamos.pack(side="left", fill="both", expand=True)
+
+        # Crear el Scrollbar vertical
+        scrollbar = ttk.Scrollbar(treeview_frame, orient="vertical", command=self.treeview_prestamos.yview)
+        scrollbar.pack(side="right", fill="y")
+
+        # Configurar el Scrollbar en el Treeview
+        self.treeview_prestamos.configure(yscrollcommand=scrollbar.set)
+
+        # Centrar los datos en cada columna
+        columns = ("rut", "isbn", "f.inicio", "f.devolución", "tipo de usuario")
+        for column in columns:
+            self.treeview_prestamos.column(column, anchor="center")
+
+        # Botón que agregará el libro a la tabla
+        self.agregar_libro_button = ck.CTkButton(self.frame_realizar_prestamo, command=self.agregarLibro, text="Agregar", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
+        self.agregar_libro_button.grid(row=16, column=0, pady=5)
+
+        #Botón que eliminará el libro de la tabla
+        self.eliminar_libro_button = ck.CTkButton(self.frame_realizar_prestamo, command=self.eliminarLibro, text="Eliminar", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
+        self.eliminar_libro_button.grid(row=16, column=1, pady=5)
+
         # Botón que realizara el préstamo
         self.completar_prestamo_button = ck.CTkButton(self.frame_realizar_prestamo, command=self.realizarPrestamo, text="REALIZAR PRÉSTAMO", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
-        self.completar_prestamo_button.place(x=280, y=400)
-
-        # Botón para borrar el contenido de todos los campos
-        self.borrar_campos_prestamo = ck.CTkButton(self.frame_realizar_prestamo, text="BORRAR TODO", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), command=self.limpiarCamposPrestamo)
-        self.borrar_campos_prestamo.place(x=65, y=400)
+        self.completar_prestamo_button.grid(row=17, column=2, padx=5, pady=5)
 
         # FRAME LIBROS EN PRÉSTAMO
         self.frame_libros_en_prestamo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
@@ -1210,15 +1239,14 @@ class VentanaPrincipal(ck.CTkToplevel):
             messagebox.showerror("Realizar Prestamo", f"El RUT {rut} no es válido.")
 
     def realizarPrestamo(self):
+        # Verificar la cantidad de préstamos pendientes y el límite máximo de préstamos permitidos
+        cantidad_prestamos = len(self.treeview_prestamos.get_children())
         rut = self.rut_usuario.get()
         isbn = self.isbn_libro_entry.get()
         f_prestamo = self.fecha_inicio.get_date()
         f_devolucion = self.fecha_devolucion.get_date()
         tipo_usuario = self.bd.obtenerTipoUsuario(rut)
         id_bibliotecario = self.bd.obtenerUsuarioLog(self.correo_actual)
-
-        if not rut:
-            return
         
         if self.bd.retrasoDeFecha(rut):
             messagebox.showwarning("Realizar Préstamo", f"El usuario con RUT: {rut} tiene libros pendientes para devolución.")
@@ -1247,8 +1275,20 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_realizar_prestamo.update() # Actualizar la ventana
             time.sleep(0.003)
 
-        # Registrar el préstamo en la base de datos
-        self.bd.registrarPrestamo(self.correo_actual, rut, isbn, f_prestamo, f_devolucion, tipo_usuario)
+
+        # Iterar sobre los préstamos pendientes y registrar cada uno en la base de datos
+        for child in self.treeview_prestamos.get_children():
+            rut = self.treeview_prestamos.item(child)["values"][0]
+            isbn = self.treeview_prestamos.item(child)["values"][1]
+            f_prestamo = self.treeview_prestamos.item(child)["values"][2]
+            f_devolucion = self.treeview_prestamos.item(child)["values"][3]
+            tipo_usuario = self.treeview_prestamos.item(child)["values"][4]
+
+            # Registrar el préstamo en la base de datos
+            self.bd.registrarPrestamo(self.correo_actual, rut, isbn, f_prestamo, f_devolucion, tipo_usuario)
+
+        # Limpiar el Treeview de préstamos pendientes
+        self.treeview_prestamos.delete(*self.treeview_prestamos.get_children())
 
         # Restablecer el estado de la barra de progreso
         self.barra_progreso_label.configure(text="")
@@ -1258,7 +1298,52 @@ class VentanaPrincipal(ck.CTkToplevel):
         fecha_actual = datetime.now()
         fecha_devolucion = fecha_actual + timedelta(days=dias)
         return fecha_devolucion
+
+    def agregarLibro(self):
+        rut = self.rut_usuario_entry.get()
+        isbn = self.isbn_libro_entry.get()
+        f_prestamo = self.fecha_inicio.get_date()
+        f_devolucion = self.fecha_devolucion.get_date()
+        tipo_usuario = self.bd.obtenerTipoUsuario(rut)
+
+        # Verificar si el ISBN ya está agregado en el Treeview
+        for child in self.treeview_prestamos.get_children():
+            if self.treeview_prestamos.item(child)["values"][1] == isbn:
+                messagebox.showerror("Agregar libro", f"El ISBN {isbn} ya está agregado.")
+                return
             
+        # Verificar si el ISBN existe en la base de datos
+        if not self.bd.verificarISBN(isbn):
+            messagebox.showerror("Agregar libro", f"El ISBN {isbn} no existe en la base de datos.")
+            return
+
+        # Verificar si se han ingresado todos los campos
+        if rut and isbn and f_prestamo and f_devolucion and tipo_usuario:
+            if tipo_usuario == "Alumno":
+                # Verificar la cantidad de préstamos del alumno
+                cantidad_prestamos_alumno = len(self.treeview_prestamos.get_children())
+                if cantidad_prestamos_alumno >= 4:
+                    messagebox.showwarning("Agregar libro", "El alumno ha alcanzado el límite máximo de préstamos (4 libros).")
+                    return
+                
+            # Agregar el libro al Treeview de préstamos pendientes
+            self.treeview_prestamos.insert("", "end", values=(rut, isbn, f_prestamo, f_devolucion, tipo_usuario))
+            # Limpiar los campos de entrada de datos del libro
+            self.isbn_libro_entry.delete(0, "end")
+            self.tipo_usuario_entry.delete(0, "end")
+            self.fecha_inicio.set_date(datetime.today())
+            self.fecha_devolucion.set_date(datetime.today())
+        else:
+            messagebox.showerror("Agregar Libro", "Por favor, complete todos los campos.")
+
+    def eliminarLibro(self):
+        # Obtener el índice del libro seleccionado en el Treeview
+        selected_item = self.treeview_prestamos.selection()
+        if selected_item:
+            self.treeview_prestamos.delete(selected_item)
+        else:
+            messagebox.showerror("Eliminar Libro", "Por favor, seleccione un libro para eliminar.")
+
     # MÉTODOS PARA EL FRAME REGISTRAR USUARIO
     # Método para registrar usuario
     def registrarUsuario(self):
