@@ -36,7 +36,11 @@ class VentanaRegistro(ck.CTkToplevel):
         self.iconphoto(True, icono)
 
         self.mostrar_contraseña = tk.BooleanVar(value=False)  # Variable para controlar la visibilidad de la contraseña
-        self.celular = ck.StringVar(value="+56 9")
+        
+        self.celular = ck.StringVar()
+        self.celular.trace("w", self.validarEnTiempoReal)
+
+        self.codigo_pais = ck.StringVar(value="+56 9")
 
         # Crear imagen de fondo como PhotoImage
         imagen_fondo = ImageTk.PhotoImage(Image.open("img\\pattern.png"))
@@ -65,8 +69,11 @@ class VentanaRegistro(ck.CTkToplevel):
         self.correo_entry = ck.CTkEntry(frame_registro, placeholder_text='Correo electrónico (*)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.correo_entry.place(x=90, y=230)
 
-        self.celular_entry = ck.CTkEntry(frame_registro, placeholder_text='N° de Celular (*)', textvariable=self.celular, width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
-        self.celular_entry.place(x=90, y=280)
+        self.codigo_pais_entry = ck.CTkEntry(frame_registro, textvariable=self.codigo_pais, width=60, height=40, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"), state="disabled")
+        self.codigo_pais_entry.place(x=90, y=280)
+
+        self.celular_entry = ck.CTkEntry(frame_registro, placeholder_text='N° de Celular (*)', textvariable=self.celular, width=150, height=40, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
+        self.celular_entry.place(x=160, y=280)
 
         self.contraseña_entry = ck.CTkEntry(frame_registro, placeholder_text='Contraseña', width=220, height=40, show="*",font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.contraseña_entry.place(x=90, y=330)
@@ -129,36 +136,37 @@ class VentanaRegistro(ck.CTkToplevel):
             self.contraseña_entry.configure(show="*")
             self.contraseña_entry_confirmar.configure(show="*")
 
-# Método para registrar un Bibliotecario
+    # Método para registrar un Bibliotecario
     def registrar(self, event=None):
         # Obtiene los datos ingresados por el usuario
         nombre = self.nombre_entry.get()
         apellido = self.apellido_entry.get()
         rut = self.rut_entry.get()
         correo = self.correo_entry.get()
-        celular = self.celular_entry.get()
+        codigo_pais = self.codigo_pais_entry.get()
+        celular = codigo_pais + self.celular_entry.get()
         contraseña = self.contraseña_entry.get()
         confirmarContraseña = self.contraseña_entry_confirmar.get()
-        
+
         if nombre == "": # Comprobar que haya un nombre en el campo
-            messagebox.showerror("Error de registro", "El campo 'nombre' no puede estar vació.")
+            messagebox.showerror("Error de registro", "El campo 'nombre' no puede estar vacío.")
             return
 
         if apellido == "": # Comprobar que haya un apellido en el campo
-            messagebox.showerror("Error de registro", "El campo 'apellido' no puede estar vació.")
+            messagebox.showerror("Error de registro", "El campo 'apellido' no puede estar vacío.")
 
         if correo == "": #Comprobar que haya un correo en el campo
             messagebox.showerror("Error de registro", "Debe ingresar un correo.")
             return
-        
+
         if not self.validarCorreo(correo):
             messagebox.showerror("Error de registro", f"Correo {correo} no válido.")
             return
-        
+
         if contraseña != confirmarContraseña: #Validación de contraseña
-            messagebox.showerror("Error de registro", "Las contraseña no coinciden.")
+            messagebox.showerror("Error de registro", "Las contraseñas no coinciden.")
             return
-        
+
         if not self.validarRut(rut): # Validación del RUT
             messagebox.showerror("Error de registro", f"Rut {rut} no válido.")
             return
@@ -168,6 +176,13 @@ class VentanaRegistro(ck.CTkToplevel):
         self.parent.deiconify()  # Muestra la ventana de login
         self.destroy()
 
+    def validarEnTiempoReal(self, *args):
+        # Validar número de celular
+        entrada_celular = self.celular.get()
+        if not entrada_celular.isdigit():
+            self.celular_entry.delete(0, tk.END)
+            self.celular_entry.insert(0, "".join(filter(str.isdigit, entrada_celular)))
+            
     def volverLogin(self):
         self.destroy()
         self.parent.deiconify()
@@ -184,8 +199,10 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         self.resizable(0, 0)
 
         # Variables para obtener los datos de los entry´s
-        self.celular_bibliotecario = ck.StringVar(value="+56 9")
+        self.celular_bibliotecario = ck.StringVar()
+        self.celular_bibliotecario.trace("w", self.validarEnTiempoReal)
         self.codigo_ingresado = ck.StringVar()
+        self.codigo_pais = ck.StringVar(value="+56 9")
 
         # Crear imagen de fondo como PhotoImage
         imagen_fondo = ImageTk.PhotoImage(Image.open("img\\pattern.png"))
@@ -201,8 +218,11 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         self.numero_celular_label = ck.CTkLabel(master=self.frame_recuperar_contraseña, text="Ingrese su numero de celular: ", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.numero_celular_label.place(x=25, y=0)
 
-        self.numero_celular_entry = ck.CTkEntry(master=self.frame_recuperar_contraseña, textvariable=self.celular_bibliotecario, width=250, height=30, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
-        self.numero_celular_entry.place(x=35, y=40)
+        self.codigo_pais_entry = ck.CTkEntry(self.frame_recuperar_contraseña, textvariable=self.codigo_pais, width=60, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"), state="disabled")
+        self.codigo_pais_entry.place(x=25, y=40)
+
+        self.numero_celular_entry = ck.CTkEntry(master=self.frame_recuperar_contraseña, textvariable=self.celular_bibliotecario, width=200, height=30, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
+        self.numero_celular_entry.place(x=90, y=40)
 
         self.button_celular = ck.CTkButton(master = self.frame_recuperar_contraseña, command=self.enviar_codigo_celular, text="Enviar código", font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.button_celular.place(x=90, y=80)
@@ -218,6 +238,13 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
 
         self.volver_button = ck.CTkButton(master = self.frame_recuperar_contraseña, command=self.volverLogin, text="Volver", font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.volver_button.place(x=170, y=480)
+
+    def validarEnTiempoReal(self, *args):
+        # Validar número de celular
+        entrada_celular = self.celular_bibliotecario.get()
+        if not entrada_celular.isdigit():
+            self.numero_celular_entry.delete(0, tk.END)
+            self.numero_celular_entry.insert(0, "".join(filter(str.isdigit, entrada_celular)))
 
     # Método para generar un código único de 7 dígitos
     def generar_codigo_unico(self):
