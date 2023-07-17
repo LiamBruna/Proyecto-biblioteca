@@ -1,6 +1,3 @@
-from email.errors import MessageError
-from multiprocessing.sharedctypes import Value
-from sre_parse import State
 import customtkinter as ck # Modulo para mejorar la interfaz gráfica
 import tkinter as tk # Modulo para crear la interfaz gráfica
 from tkinter import messagebox # Modulo para mostrar mensajes en ventanas emergentes
@@ -640,6 +637,16 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.buscar_nombre_libro_label = ck.CTkLabel(self.catalogo, text="Ingrese el nombre del libro: ",
                                                 font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.buscar_nombre_libro_label.place(x=530, y=130)
+
+        self.buscar_nombre_libro_entry = ck.CTkEntry(self.catalogo, width=200, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
+        self.buscar_nombre_libro_entry.place(x=800, y=130)
+
+        self.buscar_isbn_libro_label = ck.CTkLabel(self.catalogo, text="Ingrese el ISBN del libro: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
+        self.buscar_isbn_libro_label.place(x=1010, y=130)
+
+        self.buscar_isbn_libro_entry = ck.CTkEntry(self.catalogo, width=100, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
+        self.buscar_isbn_libro_entry.place(x=1250, y=130)
 
         self.frame_imagenes_catalogo = ck.CTkFrame(self.catalogo, corner_radius=0, fg_color="transparent")
         self.frame_imagenes_catalogo.grid(row=2, column=0, padx=10, pady=3, columnspan=2, sticky="nsew")
@@ -1535,7 +1542,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         imagen_pil = Image.fromarray(imagen_cv2_rgb)
 
         imagen = ck.CTkImage(imagen_pil, size=(150, 200))
-        imagen_label = ck.CTkLabel(self.frame_imagenes_catalogo, text="", image=imagen, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), text_color="blue")
+        imagen_label = ck.CTkLabel(self.frame_imagenes_catalogo, text="", image=imagen, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), text_color="white")
         imagen_label.image = imagen
         imagen_label.bind("<Button-1>", lambda event: self.mostrar_detalle(imagen_label, titulo, detalle))
 
@@ -1543,7 +1550,7 @@ class VentanaPrincipal(ck.CTkToplevel):
 
     def mostrar_detalle(self, imagen_label, titulo, detalle):
         imagen_label.configure(text=f"{titulo}\n {detalle}")
-        imagen_label.after(2000, lambda: self.ocultar_detalle(imagen_label))
+        self.frame_imagenes_catalogo.after(5000, lambda: self.ocultar_detalle(imagen_label))
 
     def ocultar_detalle(self, imagen_label):
         imagen_label.configure(text="")
