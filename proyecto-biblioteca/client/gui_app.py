@@ -473,12 +473,12 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.catalogo_libro_icono = ck.CTkImage(Image.open("img\\catalogo_libros.png"), size=(26, 26))
         self.renovar_libro_image_titulo = ck.CTkImage(Image.open("img\\renovar_libro_titulo.png"), size=(450, 120))
         self.inicio_image = ck.CTkImage(Image.open("img\\retrasos_en_prestamo.png"), size=(450, 120))
+        self.catalogo_image = ck.CTkImage(Image.open("img\\catalogo_de_libros.png"), size=(450, 120))
 
         # Crear Frame lateral de navegación
         self.frameNavegacion = ck.CTkFrame(self, corner_radius=0)
         self.frameNavegacion.grid(row=0, column=0, sticky="nsew")
         self.frameNavegacion.grid_rowconfigure(4, weight=1)
-
 
         # Crear icono en frame lateral
         self.frameNavegacion_label = ck.CTkLabel(self.frameNavegacion, text="  Biblioteca Virtual", image=self.logo_imagen,
@@ -547,7 +547,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.button_cerrarSesion = ck.CTkButton(self.frameNavegacion, font=ck.CTkFont(size=18, weight="bold", family="Segoe UI Historic"), text="Cerrar sesión", image=self.cerrar_sesion_imagen, command=self.cerrar_sesion)
         self.button_cerrarSesion.grid(row=10, column=0, padx=20, pady=20, sticky="s")
 
-        # CONTENEDOR MAINS
+        # CONTENEDOR MAIN
         self.main_frame = ck.CTkFrame(self, corner_radius=0, fg_color="transparent")
         self.main_frame.grid(row=0, column=1, sticky="nsew")
 
@@ -619,11 +619,30 @@ class VentanaPrincipal(ck.CTkToplevel):
         # FRAME MODIFICAR CATALOGO
         self.catalogo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.catalogo.grid(row=0, column=0, sticky="nsew")
-        self.catalogo.grid_columnconfigure(0, weight=1)  # Expansión horizontal
+        self.catalogo.grid_columnconfigure(0, weight=0)  # Expansión horizontal
         self.catalogo.grid_rowconfigure(1, weight=1)  # Expansión vertical
 
-        self.scrollbar = ck.CTkScrollbar(self.catalogo)
-        self.scrollbar.grid(row=0, column=1, sticky="ns")
+        self.catalogo_image_label = ck.CTkLabel(self.catalogo, text="", image=self.catalogo_image)
+        self.catalogo_image_label.grid(row=0, columnspan=3, padx=20)
+
+        self.buscar_categoria_label = ck.CTkLabel(self.catalogo, text="Seleccione la categoría: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
+        self.buscar_categoria_label.place(x=30, y=130)
+
+        categorias = self.bd.obtenerCategorias()
+
+        self.categoria = ttk.Combobox(self.catalogo, values=categorias, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
+        self.categoria.place(x=260, y=130)
+
+        # Configurar evento de selección de categoría
+        self.categoria.bind("<<ComboboxSelected>>")
+
+        self.buscar_nombre_libro_label = ck.CTkLabel(self.catalogo, text="Ingrese el nombre del libro: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
+        self.buscar_nombre_libro_label.place(x=530, y=130)
+
+        self.frame_imagenes_catalogo = ck.CTkFrame(self.catalogo, corner_radius=0, fg_color="transparent")
+        self.frame_imagenes_catalogo.grid(row=2, column=0, padx=10, pady=3, columnspan=2, sticky="nsew")
 
         libros = self.bd.obtenerLibrosCatalogo() # Obtener los libros desde la base de datos
 
@@ -637,7 +656,9 @@ class VentanaPrincipal(ck.CTkToplevel):
 
             if imagen_bytes is not None:
                 imagen_flip = self.crear_imagen_flip(imagen_bytes, titulo, f"ISBN: {isbn}\nAutor: {nombre} {apellido}\nNacionalidad: {nacionalidad}")
-                imagen_flip.grid(row=i // 4, column=i % 4, padx=10, pady=10)
+                imagen_flip.grid(row=i // 8, column=i % 8, padx=10, pady=10, sticky="nsew")
+                self.frame_imagenes_catalogo.grid_rowconfigure(i // 8, weight=1)  # Expansión vertical
+                self.frame_imagenes_catalogo.grid_columnconfigure(i % 8, weight=1)  # Expansión horizontal
 
         # FRAME ACTUALIZAR STOCK
         self.stock = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
@@ -1116,7 +1137,6 @@ class VentanaPrincipal(ck.CTkToplevel):
     def evento_cambiar_apariencia(self, new_appearance_mode):
         ck.set_appearance_mode(new_appearance_mode)
 
-    # METODOS PARA EL FRAME INICIO
     def mostrarDatosPrestamo(self):
         datos = self.bd.obtenerPrestamosConRetraso()
         self.tabla_inicio.delete(*self.tabla_inicio.get_children())
@@ -1125,23 +1145,23 @@ class VentanaPrincipal(ck.CTkToplevel):
             i += 1
             id_prestamo = datos[i][0]
             rut_usuario = datos[i][3]
-            f_devolucion = datos[i][5]
+            f_devolucion = datetime.strptime(datos[i][5], "%Y-%m-%d")
             titulo_libro = datos[i][7]
             multa = datos[i][8]
             monto = datos[i][9]
 
             # Calcular días de retraso
-            fecha_actual = datetime.date.today()
+            fecha_actual = datetime.today()
             dias_retraso = (fecha_actual - f_devolucion).days
 
             # Verificar si hay retraso y asignar la etiqueta de estilo correspondiente
-            if dias_retraso > 0 and monto > 0:
+            if dias_retraso > 0 and monto is not None and monto > 0:
                 self.tabla_inicio.insert('', i, text=id_prestamo, values=datos[i][1:10], tags='retraso')
             else:
                 self.tabla_inicio.insert('', i, text=id_prestamo, values=datos[i][1:10])
 
             # Verificar si hay un monto que pagar y aún no ha sido pagado
-            if monto > 0 and multa == 0:
+            if monto is not None and monto > 0 and multa == 0:
                 self.tabla_inicio.set(id_prestamo, 'Multa', 'no pagado')
 
         # Configurar estilo para las filas con retraso
@@ -1316,7 +1336,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             tipo_usuario = self.treeview_prestamos.item(child)["values"][4]
 
             # Registrar el préstamo en la base de datos
-            self.bd.registrarPrestamo(self.correo_actual, rut, isbn, f_prestamo, f_devolucion, tipo_usuario)
+            self.bd.registrarPrestamo(id_bibliotecario, rut, isbn, f_prestamo, f_devolucion, tipo_usuario)
 
         # Limpiar el Treeview de préstamos pendientes
         self.treeview_prestamos.delete(*self.treeview_prestamos.get_children())
@@ -1515,7 +1535,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         imagen_pil = Image.fromarray(imagen_cv2_rgb)
 
         imagen = ck.CTkImage(imagen_pil, size=(150, 200))
-        imagen_label = ck.CTkLabel(self.catalogo, text="", image=imagen, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), text_color="blue")
+        imagen_label = ck.CTkLabel(self.frame_imagenes_catalogo, text="", image=imagen, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), text_color="blue")
         imagen_label.image = imagen
         imagen_label.bind("<Button-1>", lambda event: self.mostrar_detalle(imagen_label, titulo, detalle))
 

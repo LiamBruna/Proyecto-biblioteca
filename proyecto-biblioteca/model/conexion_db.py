@@ -77,8 +77,8 @@ class BD:
 
     # MÉTODOS PARA FRAME INICIO
     def obtenerPrestamosConRetraso(self):
-        fecha_actual = datetime.now()
-        
+        fecha_actual = datetime.today()
+
         sql = """
         SELECT p.ID_P, u.NOMBRE_U, u.APELLIDO_U, p.RUT_U, u.TIPO_U, p.F_DEVOLUCION, p.ISBN, l.TITULO, u.MULTA, u.MONTO
         FROM prestamo p
@@ -93,17 +93,18 @@ class BD:
         for resultado in resultados:
             id_prestamo = resultado[0]
             rut_usuario = resultado[3]
-            f_devolucion = resultado[5]
+            f_devolucion = datetime.strptime(resultado[5], "%Y-%m-%d")
 
-            dias_retraso = (fecha_actual() - f_devolucion).days
-            multa = dias_retraso * 1000
+            dias_retraso = (fecha_actual - f_devolucion).days
+            multa = "No pagado"
+            monto = dias_retraso * 1000
 
             # Actualizar la multa y el monto en la tabla usuario
-            sql_actualizar = "UPDATE usuario SET MULTA = ?, MONTO = MONTO + ? WHERE RUT_U = ?"
-            self.cursor.execute(sql_actualizar, (multa, multa, rut_usuario))
+            sql_actualizar = "UPDATE usuario SET MULTA = ?, MONTO = ? WHERE RUT_U = ?"
+            self.cursor.execute(sql_actualizar, (multa, monto, rut_usuario))
 
-        return resultados
-
+        return resultados   
+    
     def retrasoDeFecha(self, rut):
         sql = "SELECT COUNT(*) FROM prestamo WHERE RUT_U = ? AND F_DEVOLUCION < DATE('now')"
         try:
@@ -188,6 +189,15 @@ class BD:
         except Exception as e:
             messagebox.showerror("Realizar Préstamo", f"{str(e)}")
             return 0
+
+    def registrarPrestamo(self, bibliotecario, rut, isbn, f_prestamo, f_devolucion, tipo_usuario):
+        sql = "INSERT INTO prestamo (RUT_U, ISBN, F_PRESTAMO, F_DEVOLUCION, TIPO_U, ID_B) VALUES (?, ?, ?, ?, ?, ?)"
+        try:
+            self.cursor.execute(sql, (rut, isbn, f_prestamo, f_devolucion, tipo_usuario, bibliotecario))
+            self.connect.commit()
+            messagebox.showinfo("Registro de Préstamo", "El préstamo se ha registrado exitosamente.")
+        except Exception as e:
+            messagebox.showerror("Error", f"No se pudo registrar el préstamo: {str(e)}")
 
     # MÉTODO PARA FRAME REGISTRAR USUARIO
     # Método para registrar un usuario
@@ -286,3 +296,23 @@ class BD:
             return results
         except Exception as e:
             messagebox.showerror("Catalogo", f"{str(e)}")
+
+    # Método para obtener todas las categorías
+    def obtenerCategorias(self):
+        sql = "SELECT CATEGORIA FROM categoria"
+        try:
+            self.cursor.execute(sql)
+            result = self.cursor.fetchall()
+            return result
+        except Exception as e:
+            messagebox.showerror("Categorías", f"{str(e)}")
+
+    # Método para obtener el libro por la categoría
+    def obtenerLibroCategoria(self, categoria):
+        sql = "SELECT l.ISBN, l.TITULO, l.IMAGEN, c.CATEGORIA FROM libro l INNER JOIN libro_categoria lc ON l.ID_L = lc.ID_L INNER JOIN categoria c ON c.ID_C = lc.ID_C WHERE c.CATEGORIA = ?"
+        try:
+            self.cursor.execute(sql, (categoria,))
+            result = self.cursor.fetchall()
+            return result
+        except Exception as e:
+           messagebox.showerror("Error al obtener libros por categoría", f"{str(e)}") 
