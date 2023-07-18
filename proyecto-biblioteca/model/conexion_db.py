@@ -289,7 +289,7 @@ class BD:
     # MÉTODOS PARA FRAME CATALOGO
     # Método para obtener los libros y autores de la base de datos
     def obtenerLibrosCatalogo(self):
-        sql = "SELECT A.NOMBRE_A, a.APELLIDO_A, a.NACIONALIDAD, l.TITULO, l.IMAGEN, l.ISBN FROM libro l LEFT JOIN autor a ON a.ID_A = l.ID_L"
+        sql = "SELECT a.NOMBRE_A, a.APELLIDO_A, a.NACIONALIDAD, l.TITULO, l.IMAGEN, l.ISBN FROM libro l LEFT JOIN autor a ON a.ID_A = l.ID_L"
         try:
             self.cursor.execute(sql)
             results = self.cursor.fetchall()
@@ -299,20 +299,47 @@ class BD:
 
     # Método para obtener todas las categorías
     def obtenerCategorias(self):
-        sql = "SELECT CATEGORIA FROM categoria"
+        sql = "SELECT DISTINCT CATEGORIA FROM categoria"
         try:
             self.cursor.execute(sql)
-            result = self.cursor.fetchall()
-            return result
+            resultados = self.cursor.fetchall()
+
+            if resultados:
+                categorias = [categoria[0] for categoria in resultados]
+                categorias_limpias = [categoria.strip().replace("{", "").replace("}", "") for categoria in categorias]
+                return categorias_limpias
+            else:
+                return []
         except Exception as e:
             messagebox.showerror("Categorías", f"{str(e)}")
 
     # Método para obtener el libro por la categoría
     def obtenerLibroCategoria(self, categoria):
-        sql = "SELECT l.ISBN, l.TITULO, l.IMAGEN, c.CATEGORIA FROM libro l INNER JOIN libro_categoria lc ON l.ID_L = lc.ID_L INNER JOIN categoria c ON c.ID_C = lc.ID_C WHERE c.CATEGORIA = ?"
+        sql = "SELECT a.NOMBRE_A, a.APELLIDO_A, a.NACIONALIDAD, l.TITULO, l.IMAGEN, l.ISBN FROM libro l INNER JOIN libro_categoria cl ON l.ID_L = cl.ID_L INNER JOIN categoria c ON cl.ID_C = c.ID_C INNER JOIN autor a ON a.ID_A = l.ID_L WHERE c.CATEGORIA = ?"
         try:
             self.cursor.execute(sql, (categoria,))
             result = self.cursor.fetchall()
             return result
         except Exception as e:
            messagebox.showerror("Error al obtener libros por categoría", f"{str(e)}") 
+
+    # Método para obtener el libro por su nombre
+    def obtenerLibroNombre(self, nombre):
+        sql = "SELECT a.NOMBRE_A, a.APELLIDO_A, a.NACIONALIDAD, l.TITULO, l.IMAGEN, l.ISBN FROM libro l INNER JOIN 	autor a ON a.ID_A = l.ID_L WHERE l.TITULO = ?"
+        try:
+            self.cursor.execute(sql, (nombre,))
+            result = self.cursor.fetchone()
+            return result
+        except Exception as e:
+            messagebox.showerror("Error al obtener libros por nombre", f"{str(e)}")
+
+    # Método para obtener el libro por su isbn
+    def obtenerLibroIsbn(self, isbn):
+        sql = "SELECT a.NOMBRE_A, a.APELLIDO_A, a.NACIONALIDAD, l.TITULO, l.IMAGEN, l.ISBN FROM libro l INNER JOIN 	autor a ON a.ID_A = l.ID_L WHERE l.ISBN = ?"
+        try:
+            self.cursor.execute(sql, (isbn,))
+            result = self.cursor.fetchone()
+            return result
+        except Exception as e:
+            messagebox.showerror("Error al obtener libros por ISBN", f"{str(e)}")
+

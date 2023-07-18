@@ -620,36 +620,51 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.catalogo.grid_rowconfigure(1, weight=1)  # Expansión vertical
 
         self.catalogo_image_label = ck.CTkLabel(self.catalogo, text="", image=self.catalogo_image)
-        self.catalogo_image_label.grid(row=0, columnspan=3, padx=20)
+        self.catalogo_image_label.grid(row=0, columnspan=6, padx=20)
 
         self.buscar_categoria_label = ck.CTkLabel(self.catalogo, text="Seleccione la categoría: ",
                                                 font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
-        self.buscar_categoria_label.place(x=30, y=130)
+        self.buscar_categoria_label.grid(row=1, column=0, padx=30, pady=10, sticky="w")
 
         categorias = self.bd.obtenerCategorias()
+        if categorias is None:
+            categorias = []
+        categorias.insert(0, "Mostrar Todos")
 
         self.categoria = ttk.Combobox(self.catalogo, values=categorias, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
-        self.categoria.place(x=260, y=130)
+        self.categoria.grid(row=1, column=1, padx=10, pady=10, sticky="w")
 
         # Configurar evento de selección de categoría
-        self.categoria.bind("<<ComboboxSelected>>")
+        self.categoria.bind("<<ComboboxSelected>>", self.seleccionarCategoria)
 
         self.buscar_nombre_libro_label = ck.CTkLabel(self.catalogo, text="Ingrese el nombre del libro: ",
-                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
-        self.buscar_nombre_libro_label.place(x=530, y=130)
+                                                    font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
+        self.buscar_nombre_libro_label.grid(row=1, column=2, padx=10, pady=10, sticky="w")
 
-        self.buscar_nombre_libro_entry = ck.CTkEntry(self.catalogo, width=200, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
-        self.buscar_nombre_libro_entry.place(x=800, y=130)
+        self.buscar_nombre_libro_entry = ck.CTkEntry(self.catalogo, placeholder_text="Con mayus y minus", width=200, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
+        self.buscar_nombre_libro_entry.grid(row=1, column=3, padx=10, pady=10, sticky="w")
+        self.buscar_nombre_libro_entry.bind("<Return>", self.buscarLibroNombre)
 
         self.buscar_isbn_libro_label = ck.CTkLabel(self.catalogo, text="Ingrese el ISBN del libro: ",
-                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
-        self.buscar_isbn_libro_label.place(x=1010, y=130)
+                                                    font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
+        self.buscar_isbn_libro_label.grid(row=1, column=4, padx=10, pady=10, sticky="w")
 
-        self.buscar_isbn_libro_entry = ck.CTkEntry(self.catalogo, width=100, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
-        self.buscar_isbn_libro_entry.place(x=1250, y=130)
+        self.buscar_isbn_libro_entry = ck.CTkEntry(self.catalogo, placeholder_text="Ej: l-001", width=100, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
+        self.buscar_isbn_libro_entry.grid(row=1, column=5, padx=10, pady=10, sticky="w")
+        self.buscar_isbn_libro_entry.bind("<Return>", self.buscarLibroIsbn)
 
         self.frame_imagenes_catalogo = ck.CTkFrame(self.catalogo, corner_radius=0, fg_color="transparent")
-        self.frame_imagenes_catalogo.grid(row=2, column=0, padx=10, pady=3, columnspan=2, sticky="nsew")
+        self.frame_imagenes_catalogo.grid(row=2, column=0, padx=10, pady=3, columnspan=6, sticky="nsew")
+
+        self.canvas = tk.Canvas(self.frame_imagenes_catalogo, bg="white")
+        self.canvas.grid(row=1, columnspan=6, sticky="nsew")
+
+        scrollbar = ttk.Scrollbar(self.frame_imagenes_catalogo, orient="vertical", command=self.canvas.yview)
+        scrollbar.grid(row=1, column=7, sticky="ns")
+        self.canvas.configure(yscrollcommand=scrollbar.set)
+
+        self.frame_imagenes = ck.CTkFrame(self.canvas, corner_radius=0, fg_color="transparent")
+        self.canvas.create_window((0, 0), window=self.frame_imagenes, anchor="center")
 
         libros = self.bd.obtenerLibrosCatalogo() # Obtener los libros desde la base de datos
 
@@ -664,8 +679,16 @@ class VentanaPrincipal(ck.CTkToplevel):
             if imagen_bytes is not None:
                 imagen_flip = self.crear_imagen_flip(imagen_bytes, titulo, f"ISBN: {isbn}\nAutor: {nombre} {apellido}\nNacionalidad: {nacionalidad}")
                 imagen_flip.grid(row=i // 8, column=i % 8, padx=10, pady=10, sticky="nsew")
-                self.frame_imagenes_catalogo.grid_rowconfigure(i // 8, weight=1)  # Expansión vertical
-                self.frame_imagenes_catalogo.grid_columnconfigure(i % 8, weight=1)  # Expansión horizontal
+                self.frame_imagenes.grid_rowconfigure(i // 8, weight=1)  # Expansión vertical
+                self.frame_imagenes.grid_columnconfigure(i % 8, weight=1)  # Expansión horizontal
+
+        self.canvas.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
+
+        self.mostar_libros_button = ck.CTkButton(self.catalogo, text="MOSTRAR TODOS LOS LIBROS",
+                                                font=ck.CTkFont(size=13, weight="bold", family="Segoe UI Historic"),
+                                                command=self.mostrarTodosLosLibros)
+        self.mostar_libros_button.grid(row=3, column=4, padx=10, pady=10, sticky="se")
+
 
         # FRAME ACTUALIZAR STOCK
         self.stock = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
@@ -1542,7 +1565,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         imagen_pil = Image.fromarray(imagen_cv2_rgb)
 
         imagen = ck.CTkImage(imagen_pil, size=(150, 200))
-        imagen_label = ck.CTkLabel(self.frame_imagenes_catalogo, text="", image=imagen, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), text_color="white")
+        imagen_label = ck.CTkLabel(self.canvas, text="", image=imagen, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), text_color="black")
         imagen_label.image = imagen
         imagen_label.bind("<Button-1>", lambda event: self.mostrar_detalle(imagen_label, titulo, detalle))
 
@@ -1554,6 +1577,118 @@ class VentanaPrincipal(ck.CTkToplevel):
 
     def ocultar_detalle(self, imagen_label):
         imagen_label.configure(text="")
+
+    def seleccionarCategoria(self, event):
+        categoria_seleccionada = self.categoria.get()
+
+        # Verificar si se seleccionó la opción "Mostrar Todos"
+        if categoria_seleccionada == "Mostrar Todos":
+            # Obtener todos los libros desde la base de datos
+            libros = self.bd.obtenerLibrosCatalogo()
+        else:
+            # Obtener los libros de la categoría seleccionada desde la base de datos
+            libros = self.bd.obtenerLibroCategoria(categoria_seleccionada)
+
+        # Limpiar el frame de imágenes antes de mostrar los nuevos libros
+        for widget in self.canvas.winfo_children():
+            widget.destroy()
+
+        for i, libro in enumerate(libros):
+            nombre = libro[0]
+            apellido = libro[1]
+            nacionalidad = libro[2]
+            titulo = libro[3]
+            imagen_bytes = libro[4]
+            isbn = libro[5]
+
+            if imagen_bytes is not None:
+                imagen_flip = self.crear_imagen_flip(imagen_bytes, titulo, f"ISBN: {isbn}\nAutor: {nombre} {apellido}\nNacionalidad: {nacionalidad}")
+                imagen_flip.grid(row=i // 8, column=i % 8, padx=10, pady=10, sticky="nsew")
+                self.frame_imagenes_catalogo.grid_rowconfigure(i // 8, weight=1)  # Expansión vertical
+                self.frame_imagenes_catalogo.grid_columnconfigure(i % 8, weight=1)  # Expansión horizontal
+
+    def buscarLibroNombre(self, event):
+        nombre_libro = self.buscar_nombre_libro_entry.get()
+        if nombre_libro:
+            libro = self.bd.obtenerLibroNombre(nombre_libro)
+            # Limpiar el frame de imágenes antes de mostrar los nuevos libros
+            for widget in self.canvas.winfo_children():
+                widget.destroy()
+
+            if libro:
+                # Obtener los datos del libro
+                nombre = libro[0]
+                apellido = libro[1]
+                nacionalidad = libro[2]
+                titulo = libro[3]
+                imagen_bytes = libro[4]
+                isbn = libro[5]
+
+                if imagen_bytes is not None:
+                    imagen_flip = self.crear_imagen_flip(imagen_bytes, titulo, f"ISBN: {isbn}\nAutor: {nombre} {apellido}\nNacionalidad: {nacionalidad}")
+                    imagen_flip.grid(row=4, column=8, padx=10, pady=10, sticky="nsew")
+                    self.frame_imagenes_catalogo.grid_rowconfigure( 8, weight=1)  # Expansión vertical
+                    self.frame_imagenes_catalogo.grid_columnconfigure( 8, weight=1)  # Expansión horizontal
+
+                # Restablecer el campo de búsqueda
+                self.buscar_nombre_libro_entry.delete(0, tk.END)
+            else:
+                messagebox.showinfo("Búsqueda de libro", f"No se encontró ningún libro con el nombre '{nombre_libro}'.")
+        else:
+            messagebox.showwarning("Campo vacío", "Por favor, ingrese un nombre de libro para realizar la búsqueda.")
+
+    def buscarLibroIsbn(self, event):
+        isbn_libro = self.buscar_isbn_libro_entry.get()
+        if isbn_libro:
+            libro = self.bd.obtenerLibroIsbn(isbn_libro)
+            # Limpiar el frame de imágenes antes de mostrar los nuevos libros
+            for widget in self.canvas.winfo_children():
+                widget.destroy()
+
+            if libro:
+                # Obtener los datos del libro
+                nombre = libro[0]
+                apellido = libro[1]
+                nacionalidad = libro[2]
+                titulo = libro[3]
+                imagen_bytes = libro[4]
+                isbn = libro[5]
+
+                if imagen_bytes is not None:
+                    imagen_flip = self.crear_imagen_flip(imagen_bytes, titulo, f"ISBN: {isbn}\nAutor: {nombre} {apellido}\nNacionalidad: {nacionalidad}")
+                    imagen_flip.grid(row=4, column=8, padx=10, pady=10, sticky="nsew")
+                    self.frame_imagenes_catalogo.grid_rowconfigure( 8, weight=1)  # Expansión vertical
+                    self.frame_imagenes_catalogo.grid_columnconfigure( 8, weight=1)  # Expansión horizontal
+
+                # Restablecer el campo de búsqueda
+                self.buscar_isbn_libro_entry.delete(0, tk.END)
+            else:
+                messagebox.showinfo("Búsqueda de libro", f"No se encontró ningún libro con el ISBN: '{isbn_libro}'.")
+        else:
+            messagebox.showwarning("Campo vacío", "Por favor, ingrese un ISBN de libro para realizar la búsqueda.")
+
+    def mostrarTodosLosLibros(self):
+    # Obtener nuevamente todos los libros desde la base de datos
+        libros = self.bd.obtenerLibrosCatalogo()
+
+        # Eliminar las imágenes existentes en el frame de imágenes del catálogo
+        for widget in self.canvas.winfo_children():
+            widget.destroy()
+
+        # Mostrar las imágenes de los libros nuevamente en el catálogo
+        for i, libro in enumerate(libros):
+            nombre = libro[0]
+            apellido = libro[1]
+            nacionalidad = libro[2]
+            titulo = libro[3]
+            imagen_bytes = libro[4]
+            isbn = libro[5]
+
+            if imagen_bytes is not None:
+                imagen_flip = self.crear_imagen_flip(imagen_bytes, titulo, f"ISBN: {isbn}\nAutor: {nombre} {apellido}\nNacionalidad: {nacionalidad}")
+                imagen_flip.grid(row=i // 8, column=i % 8, padx=10, pady=10, sticky="nsew")
+                self.frame_imagenes_catalogo.grid_rowconfigure(i // 8, weight=1)  # Expansión vertical
+                self.frame_imagenes_catalogo.grid_columnconfigure(i % 8, weight=1)  # Expansión horizontal
 
     # Método para validar el correo electrónico
     def validarCorreo(self, correo):
