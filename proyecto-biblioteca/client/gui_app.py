@@ -1347,7 +1347,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         # Mostrar barra de progreso en el Frame
         self.barra_progreso_label = ck.CTkLabel(self.frame_realizar_prestamo, text="",
                                                 font=ck.CTkFont(size=14, weight="bold", family="Segoe UI Historic"))
-        self.barra_progreso_label.place(x=65, y=450)
+        self.barra_progreso_label.place(x=65, y=630)
 
         # Realizar el préstamo
         for i in range(total_elementos):
