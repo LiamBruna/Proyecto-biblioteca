@@ -145,7 +145,7 @@ class BD:
 
     # Método para mostrar los libros en prestamo
     def mostrarLibrosPrestamo(self):
-        sql = "SELECT libro.ID_L, libro.TITULO, ejemplar.Estado FROM libro LEFT JOIN ejemplar ON libro.ISBN = ejemplar.ISBN LEFT JOIN prestamo ON libro.ISBN = prestamo.ISBN WHERE libro.ISBN = prestamo.ISBN"
+        sql = "SELECT libro.ISBN, libro.TITULO, ejemplar.Estado FROM libro LEFT JOIN ejemplar ON libro.ISBN = ejemplar.ISBN LEFT JOIN prestamo ON libro.ISBN = prestamo.ISBN WHERE libro.ISBN = prestamo.ISBN"
         try:
             self.cursor.execute(sql)
             results = self.cursor.fetchall()

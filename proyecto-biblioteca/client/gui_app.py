@@ -956,7 +956,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.tabla_dos.column('Estado', minwidth=100, width=120, anchor='center')
 
         # Configurar el texto de encabezado para que se muestre completo
-        self.tabla_dos.heading('#0', text='Id', anchor='center')
+        self.tabla_dos.heading('#0', text='ISBN', anchor='center')
         self.tabla_dos.heading('Titulo', text='Titulo', anchor='center')
         self.tabla_dos.heading('Estado', text='Estado', anchor='center')
 
