@@ -36,7 +36,21 @@ class VentanaRegistro(ck.CTkToplevel):
         self.codigo_pais = ck.IntVar(value="+56 9")
 
         # Crear imagen de fondo como PhotoImage
-        imagen_fondo = ImageTk.PhotoImage(Image.open("img\\pattern.png"))
+        
+        # Ruta de la imagen .ico
+        ruta_icono = "img\\pattern.ico"
+
+        # Abrir el archivo .ico
+        ico_imagen = Image.open(ruta_icono)
+
+        # Obtener el tamaño de la ventana
+        ancho_ventana, alto_ventana = 700, 600
+
+        # Escalar la imagen con el algoritmo LANCZOS para mejorar la calidad
+        imagen_escalada = ico_imagen.resize((ancho_ventana, alto_ventana), Image.LANCZOS)
+
+        # Crear el PhotoImage utilizando la imagen escalada
+        imagen_fondo = ImageTk.PhotoImage(imagen_escalada)
 
         # Crear etiqueta para la imagen de fondo
         fondo = ck.CTkLabel(master=self, image=imagen_fondo)
@@ -198,7 +212,21 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         self.codigo_pais = ck.StringVar(value="+56 9")
 
         # Crear imagen de fondo como PhotoImage
-        imagen_fondo = ImageTk.PhotoImage(Image.open("img\\pattern.png"))
+
+        # Ruta de la imagen .ico
+        ruta_icono = "img\\pattern.ico"
+
+        # Abrir el archivo .ico
+        ico_imagen = Image.open(ruta_icono)
+
+        # Obtener el tamaño de la ventana
+        ancho_ventana, alto_ventana = 600, 700
+
+        # Escalar la imagen con el algoritmo LANCZOS para mejorar la calidad
+        imagen_escalada = ico_imagen.resize((ancho_ventana, alto_ventana), Image.LANCZOS)
+
+        # Crear el PhotoImage utilizando la imagen escalada
+        imagen_fondo = ImageTk.PhotoImage(imagen_escalada)
 
         # Crear etiqueta para la imagen de fondo
         fondo = ck.CTkLabel(master=self, image=imagen_fondo, text="")
@@ -342,7 +370,21 @@ class Frame(ck.CTkFrame):
         self.correo_actual = None
 
         # Crear imagen de fondo como PhotoImage
-        imagen_fondo = ImageTk.PhotoImage(Image.open("img\\pattern.png"))
+
+        # Ruta de la imagen .ico
+        ruta_icono = "img\\pattern.ico"
+
+        # Abrir el archivo .ico
+        ico_imagen = Image.open(ruta_icono)
+
+        # Obtener el tamaño de la ventana
+        ancho_ventana, alto_ventana = 700, 600
+
+        # Escalar la imagen con el algoritmo LANCZOS para mejorar la calidad
+        imagen_escalada = ico_imagen.resize((ancho_ventana, alto_ventana), Image.LANCZOS)
+
+        # Crear el PhotoImage utilizando la imagen escalada
+        imagen_fondo = ImageTk.PhotoImage(imagen_escalada)
 
         # Crear etiqueta para la imagen de fondo
         fondo = ck.CTkLabel(master=self.root, image=imagen_fondo)
