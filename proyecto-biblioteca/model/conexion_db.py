@@ -343,3 +343,12 @@ class BD:
         except Exception as e:
             messagebox.showerror("Error al obtener libros por ISBN", f"{str(e)}")
 
+    # MÉTODOS PARA FRAME PRESTAMOS POR USUARIO
+    def obtenerPrestamoUsuarioRut(self, rut):
+        sql = "SELECT l.ISBN, l.TITULO, u.NOMBRE_U, u.APELLIDO_U, u.RUT_U FROM libro l LEFT JOIN prestamo p ON l.ISBN = p.ISBN LEFT JOIN usuario u ON u.RUT_U = p.RUT_U WHERE u.RUT_U = ?"
+        try:
+            self.cursor.execute(sql, (rut,))
+            result = self.cursor.fetchall()
+            return result
+        except Exception as e:
+            messagebox.showerror("Error al obtener el prestamo por RUT", f"{str(e)}")
