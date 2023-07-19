@@ -6,7 +6,7 @@ from tkcalendar import DateEntry # Modulo para seleccionar una fecha median un c
 from PIL import Image, ImageTk # Modulo para importar imágenes
 import re # Modulo para poder validar si el correo electrónico es un correo electrónico
 import random # Modulo para crear un código random
-from twilio.rest import Client
+from twilio.rest import Client # Modulo para poder conectar con la API de mensajería
 import time
 from datetime import datetime, timedelta
 import numpy as np
@@ -33,7 +33,7 @@ class VentanaRegistro(ck.CTkToplevel):
         self.celular = ck.StringVar()
         self.celular.trace("w", self.validarEnTiempoReal)
 
-        self.codigo_pais = ck.StringVar(value="+56 9")
+        self.codigo_pais = ck.IntVar(value="+56 9")
 
         # Crear imagen de fondo como PhotoImage
         imagen_fondo = ImageTk.PhotoImage(Image.open("img\\pattern.png"))
@@ -80,7 +80,7 @@ class VentanaRegistro(ck.CTkToplevel):
         mostrar_contraseña_checkbox = ck.CTkCheckBox(frame_registro, text="Mostrar contraseña", variable=self.mostrarContraseña_Registro, command=self.mostrarContraseñaRegistro, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         mostrar_contraseña_checkbox.place(x=320, y=388)
 
-        self.registro_photo = ck.CTkImage(Image.open("img\\registro.png"), size=(30,30))
+        self.registro_photo = ck.CTkImage(Image.open("img\\registro.ico"), size=(30,30))
 
         # Botón para registrarse
         button_registrar = ck.CTkButton(frame_registro, width=200, text="Registrarse", command=self.registrar, image=self.registro_photo, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
@@ -367,11 +367,11 @@ class Frame(ck.CTkFrame):
         self.checkbox_mostrar_contraseña = ck.CTkCheckBox(master=frame, text="Mostrar contraseña", variable=self.mostrar_contraseña, command=self.mostrarContraseña, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
         self.checkbox_mostrar_contraseña.place(x=30, y=180)
 
-        iniciar_sesion_photo = ck.CTkImage(Image.open("img\\iniciar_sesion.png"), size=(25, 25))
+        iniciar_sesion_photo = ck.CTkImage(Image.open("img\\iniciar_sesion.ico"), size=(25, 25))
         self.button_login = ck.CTkButton(master=frame, text="Iniciar sesión", command=self.login, image=iniciar_sesion_photo, font=ck.CTkFont(size=18, weight="bold", family="Segoe UI Historic"))
         self.button_login.place(x=80, y=220)
 
-        registrarse_photo = ck.CTkImage(Image.open("img\\registrarse.png"), size=(25, 25))
+        registrarse_photo = ck.CTkImage(Image.open("img\\registrarse.ico"), size=(25, 25))
         self.button_registrar = ck.CTkButton(master=frame, text="Registrarse", command=self.abrir_ventana_registro, image=registrarse_photo, font=ck.CTkFont(size=18, weight="bold", family="Segoe UI Historic"))
         self.button_registrar.place(x=86, y=270)
 
@@ -429,46 +429,45 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         # Variables de texto para el Frame de stock
         self.stockLibro = ck.IntVar(value="")
-        self.numero_paginas = ck.StringVar()
+        self.numero_paginas = ck.IntVar(value="")
         self.titulo = ck.StringVar()
         self.isbn = ck.StringVar()
         self.buscar_actualiza = ck.StringVar()
 
         # Variables de texto para el Frame Realizar Préstamo
-        self.rut_usuario = ck.StringVar()
+        self.rut_usuario = ck.IntVar(value="")
         self.tipo_usuario = ck.StringVar()
 
         # Variables de texto para el Frame Registrar Usuario
         self.nombre_usuario = ck.StringVar()
         self.apellido_ususario = ck.StringVar()
         self.direccion_usuario = ck.StringVar()
+        self.codigo_pais = ck.IntVar(value="+56 9")
         self.celular_usuario = ck.StringVar()
+        self.celular_usuario.trace("w", self.validarEnTiempoReal)
         self.correo_usuario = ck.StringVar()
         
         # Cargar imágenes para Menu
         self.logo_imagen = ck.CTkImage(Image.open("img\\libros.ico"), size=(30, 30))
-        self.large_test_image = ck.CTkImage(Image.open("img\\large_test_image.png"), size=(500, 150))
-        self.image_icon_image = ck.CTkImage(Image.open("img\\image_icon_light.png"), size=(26, 26))
-        self.home_image = ck.CTkImage(light_image=Image.open("img\\home_dark.png"), size=(26, 26))
-        self.chat_image = ck.CTkImage(light_image=Image.open("img\\chat_dark.png"), size=(26, 26))
-        self.add_user_image = ck.CTkImage(light_image=Image.open("img\\add_user_dark.png"), size=(26, 26))
-        self.cerrar_sesion_imagen = ck.CTkImage(Image.open("img\\cerrar_sesion.png"))
-        self.stock_image = ck.CTkImage(Image.open("img\\stock.png"), size=(26, 26))
-        self.usuario_image = ck.CTkImage(Image.open("img\\usuarios.png"), size=(26, 26))
-        self.actualizar_stock_image = ck.CTkImage(Image.open("img\\actualizar_stock.png"), size=(450, 120))
-        self.usuarios_registrados_image = ck.CTkImage(Image.open("img\\usuarios_registrados.png"), size=(450, 120))
-        self.libros_prestamo_image = ck.CTkImage(Image.open("img\\libros_en_prestamo.png"), size=(450, 120))
-        self.realizar_prestamo_image = ck.CTkImage(Image.open("img\\realizar_prestamo.png"), size=(450, 120))
-        self.registrar_usuario_image = ck.CTkImage(Image.open("img\\registrar_usuario.png"), size=(450, 120))
-        self.realizar_prestamo_icono = ck.CTkImage(Image.open("img\\realizar_prestamo_icono.png"), size=(26, 26))
-        self.libros_prestamo_icono = ck.CTkImage(Image.open("img\\libros_prestamo.png"), size=(26, 26))
-        self.renovar_libro_icono = ck.CTkImage(Image.open("img\\renovar_libro.png"), size=(26, 26))
-        self.catalogo_libro_icono = ck.CTkImage(Image.open("img\\catalogo_libros.png"), size=(26, 26))
-        self.renovar_libro_image_titulo = ck.CTkImage(Image.open("img\\renovar_libro_titulo.png"), size=(450, 120))
-        self.inicio_image = ck.CTkImage(Image.open("img\\retrasos_en_prestamo.png"), size=(450, 120))
-        self.catalogo_image = ck.CTkImage(Image.open("img\\catalogo_de_libros.png"), size=(450, 120))
-        self.prestamos_por_usuario_image = ck.CTkImage(Image.open("img\\prestamos_por_usuario.png"), size=(450, 120))
-        self.prestamos_por_usuario_image_icon = ck.CTkImage(Image.open("img\\prestamos_por_usuario_icono.png"), size=(26, 26))
+        home_image = ck.CTkImage(Image.open("img\\home.ico"), size=(28, 28))
+        self.add_user_image = ck.CTkImage(Image.open("img\\registrarse.ico"), size=(28, 28))
+        self.cerrar_sesion_imagen = ck.CTkImage(Image.open("img\\cerrar_sesion.ico"))
+        self.stock_image = ck.CTkImage(Image.open("img\\stock.ico"), size=(28, 28))
+        self.usuario_image = ck.CTkImage(Image.open("img\\usuarios.ico"), size=(28, 28))
+        self.actualizar_stock_image = ck.CTkImage(Image.open("img\\actualizar_stock.ico"), size=(450, 120))
+        self.usuarios_registrados_image = ck.CTkImage(Image.open("img\\usuarios_registrados.ico"), size=(450, 120))
+        self.libros_prestamo_image = ck.CTkImage(Image.open("img\\libros_en_prestamo.ico"), size=(450, 120))
+        self.realizar_prestamo_image = ck.CTkImage(Image.open("img\\realizar_prestamo.ico"), size=(450, 120))
+        self.registrar_usuario_image = ck.CTkImage(Image.open("img\\registrar_usuario.ico"), size=(450, 120))
+        self.realizar_prestamo_icono = ck.CTkImage(Image.open("img\\realizar_prestamo_icono.ico"), size=(28, 28))
+        self.libros_prestamo_icono = ck.CTkImage(Image.open("img\\libros_prestamo.ico"), size=(28, 28))
+        self.renovar_libro_icono = ck.CTkImage(Image.open("img\\renovar_libro.ico"), size=(28, 28))
+        self.catalogo_libro_icono = ck.CTkImage(Image.open("img\\catalogo_libros.ico"), size=(28, 28))
+        self.renovar_libro_image_titulo = ck.CTkImage(Image.open("img\\renovar_libro_titulo.ico"), size=(450, 120))
+        self.inicio_image = ck.CTkImage(Image.open("img\\retrasos_en_prestamo.ico"), size=(450, 120))
+        self.catalogo_image = ck.CTkImage(Image.open("img\\catalogo_de_libros.ico"), size=(450, 120))
+        self.prestamos_por_usuario_image = ck.CTkImage(Image.open("img\\prestamos_por_usuario.ico"), size=(450, 120))
+        self.prestamos_por_usuario_image_icon = ck.CTkImage(Image.open("img\\prestamos_por_usuario_icono.ico"), size=(28, 28))
 
         # Crear Frame lateral de navegación
         self.frameNavegacion = ck.CTkFrame(self, corner_radius=0)
@@ -483,7 +482,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         # Botón de Inicio en navegación
         self.inicio_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Inicio",
                                         fg_color="transparent", text_color=("gray10", "gray90"),
-                                        hover_color=("gray70", "gray30"), image=self.home_image, anchor="w",
+                                        hover_color=("gray70", "gray30"), image=home_image, anchor="w",
                                         command=self.inicio_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.inicio_button.grid(row=1, column=0, sticky="ew")
 
@@ -1000,6 +999,9 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.celular_usuario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese el celular del usuario: ",
                                                 font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.celular_usuario_label.grid(row=14, column=0, pady=5, padx=5)
+
+        self.codigo_pais_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.codigo_pais, width=70, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), state="disabled")
+        self.codigo_pais_entry.place(x=345, y=350)
 
         self.celular_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.celular_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.celular_usuario_entry.grid(row=14, column=1, pady=10, padx=5)
@@ -1523,7 +1525,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         apellido = self.apellido_ususario.get()
         direccion = self.direccion_usuario.get()
         rut = self.rut_usuario.get()
-        celular = self.celular_usuario.get()
+        celular = self.celular_usuario.get() + self.codigo_pais_entry.get()
         correo = self.correo_usuario.get()
         tipo = self.tipo_usuario.get()
 
@@ -1867,6 +1869,13 @@ class VentanaPrincipal(ck.CTkToplevel):
                 messagebox.showerror("RUT inválido", "El RUT ingresado no es válido. Por favor, ingrese un RUT válido.")
         else:
             messagebox.showwarning("Campo vacío", "Por favor, ingrese un RUT de usuario para realizar la búsqueda.")
+
+    def validarEnTiempoReal(self, *args):
+        # Validar número de celular
+        entrada_celular = self.celular_usuario.get()
+        if not entrada_celular.isdigit():
+            self.celular_usuario_entry.delete(0, tk.END)
+            self.celular_usuario_entry.insert(0, "".join(filter(str.isdigit, entrada_celular)))
 
     # Método para cerrar sesion en la app
     def cerrar_sesion(self):
