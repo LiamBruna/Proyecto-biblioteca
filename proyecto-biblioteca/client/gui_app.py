@@ -22,15 +22,11 @@ class VentanaRegistro(ck.CTkToplevel):
         super().__init__(parent)
         self.parent = parent
         self.title("Biblioteca Virtual")
-        #self.iconbitmap('img\\libros.ico')
+        self.after(250, lambda: self.iconbitmap('img\libros.ico'))
         self.geometry("700x600")
         self.resizable(0, 0)
 
         self.bd = BD()
-
-        icono = ImageTk.PhotoImage(Image.open("img\libros.ico"))
-
-        self.iconphoto(True, icono)
 
         self.mostrar_contraseña = tk.BooleanVar(value=False)  # Variable para controlar la visibilidad de la contraseña
         
@@ -190,7 +186,7 @@ class VentanaRecuperarContraseña(ck.CTkToplevel):
         super().__init__(parent)
         self.parent = parent
         self.bd = BD()
-        self.iconbitmap('img\\libros.ico')
+        self.after(250, lambda: self.iconbitmap('img\libros.ico'))
         self.title("Biblioteca Virtual")
         self.geometry("600x700")
         self.resizable(0, 0)
@@ -424,7 +420,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.parent = parent
         self.bd = BD() # Guardar el objeto de la clase BD
         self.correo_actual = correo_actual
-        self.iconbitmap('img\\libros.ico')
+        self.after(250, lambda: self.iconbitmap('img\libros.ico'))
         self.title("Biblioteca Virtual")
         self.resizable(0, 0)
 

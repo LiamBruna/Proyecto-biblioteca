@@ -1,28 +1,162 @@
-<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/workspace/Proyecto-biblioteca/proyecto-biblioteca/database/biblioteca.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1374"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,10:mainejemplares"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="autor" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="78"/><column index="3" value="88"/><column index="4" value="106"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="bibliotecario" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="76"/><column index="3" value="86"/><column index="4" value="140"/><column index="5" value="300"/><column index="6" value="157"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="contiene" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="40"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="ejemplares" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort><column index="1" mode="1"/></sort><column_widths><column index="1" value="40"/><column index="2" value="40"/><column index="3" value="58"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="escribe" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="40"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="libro" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort><column index="3" mode="0"/></sort><column_widths><column index="1" value="40"/><column index="2" value="61"/><column index="3" value="116"/><column index="4" value="217"/><column index="5" value="136"/><column index="6" value="48"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="pide" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="40"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="prestamo" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="129"/><column index="3" value="101"/><column index="4" value="40"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="registra" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="40"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="sqlite_sequence" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="76"/><column index="2" value="40"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="usuario" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort><column index="6" mode="0"/></sort><column_widths><column index="1" value="40"/><column index="2" value="76"/><column index="3" value="86"/><column index="4" value="92"/><column index="5" value="48"/><column index="6" value="80"/><column index="7" value="123"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">DROP TABLE usuario;
-
-CREATE TABLE IF NOT EXISTS &quot;usuario&quot; (
-	&quot;ID_U&quot;	INTEGER,
-	&quot;NOMBRE_U&quot;	TEXT,
-	&quot;APELLIDO_U&quot;	TEXT,
-	&quot;DIRECCION_U&quot;	TEXT,
-	&quot;RUT_U&quot;	TEXT NOT NULL,
-	&quot;CELULAR_U&quot;	INTEGER,
-	&quot;CORREO_U&quot;	TEXT,
-	&quot;TIPO_U&quot; TEXT,
-	PRIMARY KEY(&quot;ID_U&quot; AUTOINCREMENT)
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/workspace/Proyecto-biblioteca/proyecto-biblioteca/database/biblioteca.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="2376"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,8:mainprestamo"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="autor" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="78"/><column index="3" value="88"/><column index="4" value="106"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="bibliotecario" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="76"/><column index="3" value="86"/><column index="4" value="119"/><column index="5" value="300"/><column index="6" value="75"/><column index="7" value="96"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="categoria" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="136"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="contiene" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="40"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="ejemplar" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="40"/><column index="3" value="43"/><column index="4" value="52"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="escribe" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="40"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="libro" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="60"/><column index="2" value="60"/><column index="3" value="125"/><column index="4" value="125"/><column index="5" value="126"/><column index="6" value="60"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="libro_categoria" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="40"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="pide" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="40"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="prestamo" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="83"/><column index="3" value="40"/><column index="4" value="91"/><column index="5" value="101"/><column index="6" value="53"/><column index="7" value="131"/><column index="8" value="78"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="registra" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="40"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="usuario" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort><column index="6" mode="0"/></sort><column_widths><column index="1" value="40"/><column index="2" value="110"/><column index="3" value="86"/><column index="4" value="105"/><column index="5" value="83"/><column index="6" value="80"/><column index="7" value="129"/><column index="8" value="53"/><column index="9" value="51"/><column index="10" value="52"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">CREATE TABLE categoria (
+    ID_C INTEGER PRIMARY KEY AUTOINCREMENT,
+    CATEGORIA TEXT NOT NULL
 );
 
-INSERT INTO usuario (NOMBRE_U, APELLIDO_U, DIRECCION_U, RUT_U, CELULAR_U, CORREO_U, TIPO_U)
-VALUES(&quot;Emerson de Jesus&quot;, &quot;Ilaja&quot;, &quot;Granaderos 3250&quot;, &quot;13.293.245-k&quot;, 923548776, &quot;ilaja@example.com&quot;, &quot;Docente&quot;);
+CREATE TABLE libro_categoria (
+    ID_L INTEGER,
+    ID_C INTEGER,
+    FOREIGN KEY (ID_L) REFERENCES libro(ID_L),
+    FOREIGN KEY (ID_C) REFERENCES categoria(ID_C)
+);
 
-INSERT INTO usuario (NOMBRE_U, APELLIDO_U, DIRECCION_U, RUT_U, CELULAR_U, CORREO_U, TIPO_U)
-VALUES(&quot;John&quot;, &quot;Selti&quot;, &quot;Granaderos 3250&quot;, &quot;13.293.245-k&quot;, 923548776, &quot;selti@example.com&quot;, &quot;Alumno&quot;);
+INSERT INTO categoria (CATEGORIA) VALUES
+    ('Ficción'),
+    ('No ficción'),
+    ('Ciencia ficción'),
+    ('Drama'),
+    ('Romance'),
+    ('Misterio'),
+    ('Fantasía'),
+    ('Aventura'),
+    ('Biografía'),
+    ('Histórico');
+	
+INSERT INTO libro_categoria (ID_L, ID_C) VALUES (1, 1);  -- Asociar el libro con ID_L=1 a la categoría con ID_C=1
+INSERT INTO libro_categoria (ID_L, ID_C) VALUES (1, 3);  -- Asociar el libro con ID_L=1 a la categoría con ID_C=2
+INSERT INTO libro_categoria (ID_L, ID_C) VALUES (1, 8);
 
-INSERT INTO libro (ISBN, TITULO, NUMERO_PAGINAS, STOCK)
-VALUES(&quot;l-202&quot;, &quot;The Last Of Us&quot;, 100, 30);
+SELECT c.CATEGORIA, l.TITULO
+FROM categoria c
+JOIN libro_categoria lc ON c.ID_C = lc.ID_C
+JOIN libro l ON lc.ID_L = l.ID_L
+WHERE l.ID_L = 1;
 
-INSERT INTO ejemplares (ID_E, ID_L, ESTADO) VALUES(1, 1, &quot;BUENO&quot;);
+SELECT CATEGORIA
+FROM categoria;
 
-SELECT l.ID_L, l.TITULO, e.ESTADO
+SELECT l.ISBN, l.TITULO, l.IMAGEN, c.CATEGORIA
 FROM libro l
-LEFT JOIN ejemplares e ON l.ID_L = e.ID_E;</sql><current_tab id="0"/></tab_sql></sqlb_project>
+INNER JOIN libro_categoria lc ON l.ID_L = lc.ID_L
+INNER JOIN categoria c ON c.ID_C = lc.ID_C
+WHERE c.CATEGORIA = ?;
+
+CREATE TABLE prestamo (
+    ID_P INTEGER,
+    RUT_U TEXT NOT NULL,
+    ISBN INTEGER NOT NULL,
+    F_PRESTAMO DATE NOT NULL,
+    F_DEVOLUCION DATE NOT NULL,
+    TIPO_U TEXT NOT NULL,
+    ID_B INTEGER,
+    RENOVADO INTEGER,
+    PRIMARY KEY(ID_P AUTOINCREMENT),
+    FOREIGN KEY(ID_B) REFERENCES bibliotecario(ID_B),
+    FOREIGN KEY(ISBN) REFERENCES libro(ID_L),
+    FOREIGN KEY(RUT_U) REFERENCES usuario(ID_U)
+);
+
+SELECT p.ID_P, u.NOMBRE_U, u.APELLIDO_U, p.RUT_U, u.TIPO_U, p.F_DEVOLUCION, p.ISBN, l.TITULO, u.MULTA, u.MONTO
+        FROM prestamo p
+        LEFT JOIN usuario u ON p.RUT_U = u.RUT_U
+        LEFT JOIN libro l ON p.ISBN = l.ISBN
+        WHERE p.F_DEVOLUCION &lt; date('now');
+		
+SELECT a.NOMBRE_A, a.APELLIDO_A, a.NACIONALIDAD, l.TITULO, l.IMAGEN, l.ISBN, c.CATEGORIA
+FROM libro l
+INNER JOIN libro_categoria cl ON l.ID_L = cl.ID_L
+INNER JOIN categoria c ON cl.ID_C = c.ID_C
+INNER JOIN 	autor a ON a.ID_A = l.ID_L
+WHERE c.CATEGORIA = 'Ficción';
+
+INSERT INTO categoria (CATEGORIA) VALUES -- To kill a mockingbird
+	('Novela'),
+	('Thriller'),
+	('Historia legal'),
+	('Ficción doméstica');
+
+INSERT INTO libro_categoria (ID_L, ID_C) VALUES 
+	(2, 1),
+	(2, 8),
+	(2, 3),
+	(2, 7);
+	
+INSERT INTO categoria (CATEGORIA) VALUES -- The great gatsby
+	('Tragedia'),
+	('Novela biográfica'),
+	('Ficción metafísica');
+	
+INSERT INTO libro_categoria (ID_L, ID_C) VALUES 
+	(3, 7),
+	(3, 8),
+	(3, 1);
+
+INSERT INTO categoria (CATEGORIA) VALUES -- 1984
+	(''),
+	
+INSERT INTO libro_categoria (ID_L, ID_C) VALUES 
+	(4, 3);
+	
+INSERT INTO libro_categoria (ID_L, ID_C) VALUES --Where the Wild Things Are
+	(5, 7),
+	(5, 6);
+	
+INSERT INTO libro_categoria (ID_L, ID_C) VALUES --Charlottes Web
+	(6, 1),
+	(6, 7);
+	
+INSERT INTO libro_categoria (ID_L, ID_C) VALUES --HOLES
+	(7, 6),
+	(7, 1);
+	
+INSERT INTO libro_categoria (ID_L, ID_C) VALUES --harry
+	(8, 6),
+	(8, 1),
+	(8, 7),
+	(8, 8);
+	
+INSERT INTO libro_categoria (ID_L, ID_C) VALUES --juegos del hambre
+	(9, 3),
+	(9, 8);
+
+INSERT INTO libro_categoria (ID_L, ID_C) VALUES --the hobbit
+	(10, 7),
+	(10, 8),
+	(10, 6),
+	(10, 1);
+	
+INSERT INTO libro_categoria (ID_L, ID_C) VALUES --The Fault in Our Stars
+	(11, 1);
+
+INSERT INTO libro_categoria (ID_L, ID_C) VALUES --The Chronicles of Narnia
+	(12, 3),
+	(12, 6),
+	(12, 7),
+	(12, 8);
+	
+INSERT INTO libro_categoria (ID_L, ID_C) VALUES --The Alchemist
+	(13, 1),
+	(13, 8),
+	(13, 1);
+	
+INSERT INTO libro_categoria (ID_L, ID_C) VALUES
+	(14, 1);
+
+INSERT INTO libro_categoria (ID_L, ID_C) VALUES --Pride and Prejudice
+	(14, 1);
+	
+SELECT a.NOMBRE_A, a.APELLIDO_A, a.NACIONALIDAD, l.TITULO, l.IMAGEN, l.ISBN
+FROM libro l
+INNER JOIN 	autor a ON a.ID_A = l.ID_L
+WHERE l.TITULO = ?;
+
+SELECT a.NOMBRE_A, a.APELLIDO_A, a.NACIONALIDAD, l.TITULO, l.IMAGEN, l.ISBN
+FROM libro l
+INNER JOIN 	autor a ON a.ID_A = l.ID_L
+WHERE l.ISBN = ?;
+
+SELECT l.ISBN, l.TITULO, u.NOMBRE_U, u.APELLIDO_U, u.RUT_U
+FROM libro l
+LEFT JOIN prestamo p ON l.ISBN = p.ISBN
+LEFT JOIN usuario u ON u.RUT_U = p.RUT_U
+WHERE u.RUT_U = &quot;20.525.560-5&quot;;</sql><current_tab id="0"/></tab_sql></sqlb_project>
