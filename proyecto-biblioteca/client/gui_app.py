@@ -15,7 +15,6 @@ import cv2
 from model.conexion_db import BD
 from client.barra import BarraProgreso
 
-
 # Ventana de registro
 class VentanaRegistro(ck.CTkToplevel):
     def __init__(self, parent=None):
