@@ -11,6 +11,7 @@ import time
 from datetime import datetime, timedelta
 import numpy as np
 import cv2
+from babel.numbers import format_currency # Modulo para que los DateEntrys funcionen
 
 from model.conexion_db import BD
 from client.barra import BarraProgreso
@@ -476,7 +477,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.buscar_actualiza = ck.StringVar()
 
         # Variables de texto para el Frame Realizar Préstamo
-        self.rut_usuario = ck.IntVar(value="")
+        self.rut_usuario = ck.StringVar()
         self.tipo_usuario = ck.StringVar()
 
         # Variables de texto para el Frame Registrar Usuario
