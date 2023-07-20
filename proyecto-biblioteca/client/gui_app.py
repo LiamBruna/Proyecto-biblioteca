@@ -513,7 +513,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         # Crear Frame lateral de navegación
         self.frameNavegacion = ck.CTkFrame(self, corner_radius=0)
         self.frameNavegacion.grid(row=0, column=0, sticky="nsew")
-        self.frameNavegacion.grid_rowconfigure(4, weight=1)
+        self.frameNavegacion.grid_rowconfigure(8, weight=1)
 
         # Crear icono en frame lateral
         self.frameNavegacion_label = ck.CTkLabel(self.frameNavegacion, text="  Biblioteca Virtual", image=self.logo_imagen,
@@ -732,7 +732,6 @@ class VentanaPrincipal(ck.CTkToplevel):
                                                 font=ck.CTkFont(size=13, weight="bold", family="Segoe UI Historic"),
                                                 command=self.mostrarTodosLosLibros)
         self.mostar_libros_button.grid(row=3, column=4, padx=10, pady=10, sticky="se")
-
 
         # FRAME ACTUALIZAR STOCK
         self.stock = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
