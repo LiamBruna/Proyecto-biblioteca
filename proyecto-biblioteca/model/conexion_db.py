@@ -163,8 +163,6 @@ class BD:
             if results:
                 tipo_usuario = results[0]
                 return tipo_usuario
-            else:
-                messagebox.showerror("Realizar Préstamo", f"El RUT {rut} no está registrado en la base de datos.")
         except Exception as e:
             messagebox.showerror("Realizar Préstamo", f"{str(e)}")
         
