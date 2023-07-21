@@ -370,3 +370,11 @@ class BD:
             return None
 
     # MÉTODOS PARA EL FRAME PAGAR MULTA
+    def obtenerUsuarioMulta(self, rut):
+        sql = "SELECT NOMBRE_U, APELLIDO_U, DIRECCION_U, RUT_U, CELULAR_U, CORREO_U, TIPO_U, MULTA, MONTO FROM usuario WHERE RUT_U = ?"
+        try:
+            self.cursor.execute(sql, (rut,))
+            result = self.cursor.fetchone()
+            return result
+        except Exception as e:
+            messagebox.showerror("Error al obtener el usuario por RUT", f"{str(e)}")

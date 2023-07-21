@@ -1,5 +1,3 @@
-import time
-
 class BarraProgreso:
     def __init__(self, total, longitud=30):
         self.total = total

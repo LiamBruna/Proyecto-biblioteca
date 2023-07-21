@@ -1196,12 +1196,12 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         self.buscar_rut_multa_label = ck.CTkLabel(self.frame_pagar_multa, text="Ingrese el RUT del usuario: ",
                                                 font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
-        self.buscar_rut_multa_label.grid(row=1, columnspan=2, pady=5, padx=5, sticky="w")
+        self.buscar_rut_multa_label.grid(row=1, columnspan=2, pady=5, padx=10, sticky="w")
 
         self.buscar_rut_multa_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
         self.buscar_rut_multa_entry.place(x=330, y=148)
 
-        self.buscar_rut_multa_button = ck.CTkButton(self.frame_pagar_multa, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI")) # command=self.mostrarDatosPrestamoPorRut
+        self.buscar_rut_multa_button = ck.CTkButton(self.frame_pagar_multa, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), command=self.cargarDatosTablaMultas) # command=self.mostrarDatosPrestamoPorRut
         self.buscar_rut_multa_button.place(x=490, y=148)
 
         # Frame para el Treeview
@@ -1223,7 +1223,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.tabla_multa['columns'] = ('Nombre', 'Apellido', 'Dirección', 'RUT', 'Celular', 'Correo electrónico', 'Tipo de usuario', 'Multa', 'Monto')
 
         # Ajustar ancho mínimo y ancho de cada columna de encabezado
-        self.tabla_multa.column('#0', minwidth=60, width=70, anchor='center')
+        self.tabla_multa.column('#0', minwidth=60, width=0, anchor='center', stretch=False)
         self.tabla_multa.column('Nombre', minwidth=100, width=130, anchor='center')
         self.tabla_multa.column('Apellido', minwidth=100, width=120, anchor='center')
         self.tabla_multa.column('Dirección', minwidth=100, width=140, anchor='center')
@@ -1245,6 +1245,13 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.tabla_multa.heading('Tipo de usuario', text='Tipo de usuario', anchor='center')
         self.tabla_multa.heading('Multa', text='Multa', anchor='center')
         self.tabla_multa.heading('Monto', text='Monto', anchor='center')
+
+        self.multa_nombre_usuario_label = ck.CTkLabel(self.frame_pagar_multa, text="Nombre: ",
+                                                font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
+        self.multa_nombre_usuario_label.place(x=200, y=450)
+
+        self.pagar_multa_button = ck.CTkButton(self.frame_pagar_multa, text="PAGAR MULTA", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI")) # command=self.mostrarDatosPrestamoPorRut
+        self.pagar_multa_button.place(x=1005, y=690)
 
         # FRAME SELECCIONADO POR DEFECTO
         self.seleccion_frame_nombre("inicio")
@@ -2109,6 +2116,32 @@ class VentanaPrincipal(ck.CTkToplevel):
                         messagebox.showinfo("Búsqueda de préstamo", f"No se encontraron préstamos para el RUT: {rut_usuario}.")
                 else:
                     messagebox.showerror("Búsqueda de préstamo", f"El RUT {rut_usuario} no se encuentra en la base de datos.")
+            else:
+                messagebox.showerror("RUT inválido", "El RUT ingresado no es válido. Por favor, ingrese un RUT válido.")
+        else:
+            messagebox.showwarning("Campo vacío", "Por favor, ingrese un RUT de usuario para realizar la búsqueda.")
+
+    # MÉTODOS PARA FRAME PAGAR MULTAS
+    def cargarDatosTablaMultas(self):
+        rut_usuario = self.buscar_rut_multa_entry.get()
+
+        if rut_usuario:
+            # Validar el RUT ingresado
+            if self.validarRut(rut_usuario):
+                # Obtener datos del préstamo por el RUT del usuario
+                datos_multa = self.bd.obtenerUsuarioMulta(rut_usuario)
+
+                if datos_multa is not None:
+                    if datos_multa:  # Si la lista no está vacía
+                        # Eliminar cualquier dato previo en la tabla
+                        self.tabla_multa.delete(*self.tabla_multa.get_children())
+
+                        # Insertar los datos en la tabla
+                        self.tabla_multa.insert('', 'end', values=datos_multa)
+                    else:
+                        messagebox.showinfo("Búsqueda de multas", f"No se encontraron multas para el RUT: {rut_usuario}.")
+                else:
+                    messagebox.showerror("Búsqueda de multas", f"El RUT {rut_usuario} no se encuentra en la base de datos.")
             else:
                 messagebox.showerror("RUT inválido", "El RUT ingresado no es válido. Por favor, ingrese un RUT válido.")
         else:
