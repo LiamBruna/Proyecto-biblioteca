@@ -2180,20 +2180,18 @@ class VentanaPrincipal(ck.CTkToplevel):
         if rut_usuario:
             # Validar el RUT ingresado
             if self.validarRut(rut_usuario):
-                # Obtener datos del préstamo por el RUT del usuario
-                datos_multa = self.bd.obtenerUsuarioMulta(rut_usuario)
+                # Obtener datos de las multas por el RUT del usuario
+                datos_multas = self.bd.obtenerUsuarioMulta(rut_usuario)
 
-                if datos_multa is not None:
-                    if datos_multa:  # Si la lista no está vacía
-                        # Eliminar cualquier dato previo en la tabla
-                        self.tabla_multa.delete(*self.tabla_multa.get_children())
+                if datos_multas:  # Si la lista no está vacía
+                    # Limpiar la tabla
+                    self.tabla_multa.delete(*self.tabla_multa.get_children())
 
-                        # Insertar los datos en la tabla
-                        self.tabla_multa.insert('', 'end', values=datos_multa)
-                    else:
-                        messagebox.showinfo("Búsqueda de multas", f"No se encontraron multas para el RUT: {rut_usuario}.")
+                    # Insertar los datos en la tabla
+                    for multa in datos_multas:
+                        self.tabla_multa.insert('', 'end', values=multa)
                 else:
-                    messagebox.showerror("Búsqueda de multas", f"El RUT {rut_usuario} no se encuentra en la base de datos.")
+                    messagebox.showinfo("Búsqueda de multas", f"No se encontraron multas para el RUT: {rut_usuario}.")
             else:
                 messagebox.showerror("RUT inválido", "El RUT ingresado no es válido. Por favor, ingrese un RUT válido.")
         else:
@@ -2238,6 +2236,16 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.multa_monto_usuario_entry.configure(state="normal")
         self.multa_monto_usuario_entry.delete(0, tk.END)
         self.multa_monto_usuario_entry.insert(0, values[8])  # Monto
+
+        # Bloquear los Entry para que no se puedan editar
+        self.multa_nombre_usuario_entry.configure(state="disabled")
+        self.multa_apellido_usuario_entry.configure(state="disabled")
+        self.multa_rut_usuario_entry.configure(state="disabled")
+        self.multa_celular_usuario_entry.configure(state="disabled")
+        self.multa_correo_usuario_entry.configure(state="disabled")
+        self.multa_tipo_usuario_entry.configure(state="disabled")
+        self.multa_multa_usuario_entry.configure(state="disabled")
+        self.multa_monto_usuario_entry.configure(state="disabled")
 
     # MÉTODOS ADICIONALES
     def validarEnTiempoReal(self, *args):
