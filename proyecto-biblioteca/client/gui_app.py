@@ -2198,6 +2198,46 @@ class VentanaPrincipal(ck.CTkToplevel):
                 messagebox.showerror("RUT inválido", "El RUT ingresado no es válido. Por favor, ingrese un RUT válido.")
         else:
             messagebox.showwarning("Campo vacío", "Por favor, ingrese un RUT de usuario para realizar la búsqueda.")
+        # Vincular el evento de selección a la función actualizarDatosUsuario
+        self.tabla_multa.bind("<ButtonRelease-1>", self.actualizarDatosUsuario)
+
+    def actualizarDatosUsuario(self, event):
+        # Obtener el índice seleccionado de la tabla
+        selected_item = self.tabla_multa.selection()[0]
+        values = self.tabla_multa.item(selected_item, "values")
+
+        # Actualizar los Entry con los datos del usuario seleccionado
+        self.multa_nombre_usuario_entry.configure(state="normal")
+        self.multa_nombre_usuario_entry.delete(0, tk.END)
+        self.multa_nombre_usuario_entry.insert(0, values[0])  # Nombre
+
+        self.multa_apellido_usuario_entry.configure(state="normal")
+        self.multa_apellido_usuario_entry.delete(0, tk.END)
+        self.multa_apellido_usuario_entry.insert(0, values[1])  # Apellido
+
+        self.multa_rut_usuario_entry.configure(state="normal")
+        self.multa_rut_usuario_entry.delete(0, tk.END)
+        self.multa_rut_usuario_entry.insert(0, values[3])  # RUT
+
+        self.multa_celular_usuario_entry.configure(state="normal")
+        self.multa_celular_usuario_entry.delete(0, tk.END)
+        self.multa_celular_usuario_entry.insert(0, values[4])  # Celular
+
+        self.multa_correo_usuario_entry.configure(state="normal")
+        self.multa_correo_usuario_entry.delete(0, tk.END)
+        self.multa_correo_usuario_entry.insert(0, values[5])  # Correo electrónico
+
+        self.multa_tipo_usuario_entry.configure(state="normal")
+        self.multa_tipo_usuario_entry.delete(0, tk.END)
+        self.multa_tipo_usuario_entry.insert(0, values[6])  # Tipo de usuario
+
+        self.multa_multa_usuario_entry.configure(state="normal")
+        self.multa_multa_usuario_entry.delete(0, tk.END)
+        self.multa_multa_usuario_entry.insert(0, values[7])  # Multa
+
+        self.multa_monto_usuario_entry.configure(state="normal")
+        self.multa_monto_usuario_entry.delete(0, tk.END)
+        self.multa_monto_usuario_entry.insert(0, values[8])  # Monto
 
     # MÉTODOS ADICIONALES
     def validarEnTiempoReal(self, *args):
