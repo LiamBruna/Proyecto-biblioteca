@@ -1248,9 +1248,61 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         self.multa_nombre_usuario_label = ck.CTkLabel(self.frame_pagar_multa, text="Nombre: ",
                                                 font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
-        self.multa_nombre_usuario_label.place(x=200, y=450)
+        self.multa_nombre_usuario_label.place(x=30, y=450)
 
-        self.pagar_multa_button = ck.CTkButton(self.frame_pagar_multa, text="PAGAR MULTA", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI")) # command=self.mostrarDatosPrestamoPorRut
+        self.multa_nombre_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
+        self.multa_nombre_usuario_entry.place(x=140, y=455)
+
+        self.multa_apellido_usuario_label = ck.CTkLabel(self.frame_pagar_multa, text="Apellido: ",
+                                                font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
+        self.multa_apellido_usuario_label.place(x=320, y=450)
+
+        self.multa_apellido_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
+        self.multa_apellido_usuario_entry.place(x=430, y=455)
+
+        self.multa_rut_usuario_label = ck.CTkLabel(self.frame_pagar_multa, text="RUT: ",
+                                                font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
+        self.multa_rut_usuario_label.place(x=610, y=450)
+
+        self.multa_rut_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
+        self.multa_rut_usuario_entry.place(x=670, y=452)
+
+        self.multa_celular_usuario_label = ck.CTkLabel(self.frame_pagar_multa, text="Celular: ",
+                                                font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
+        self.multa_celular_usuario_label.place(x=850, y=450)
+
+        self.multa_celular_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
+        self.multa_celular_usuario_entry.place(x=950, y=452)
+
+        self.multa_correo_usuario_label = ck.CTkLabel(self.frame_pagar_multa, text="Correo electrónico: ",
+                                                font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
+        self.multa_correo_usuario_label.place(x=30, y=550)
+
+        self.multa_correo_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
+        self.multa_correo_usuario_entry.place(x=264, y=555)
+
+        self.multa_tipo_usuario_label = ck.CTkLabel(self.frame_pagar_multa, text="Tipo de usuario: ",
+                                                font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
+        self.multa_tipo_usuario_label.place(x=450, y=550)
+
+        self.multa_tipo_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
+        self.multa_tipo_usuario_entry.place(x=650, y=555)
+
+        self.multa_multa_usuario_label = ck.CTkLabel(self.frame_pagar_multa, text="Multa: ",
+                                                font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
+        self.multa_multa_usuario_label.place(x=850, y=550)
+
+        self.multa_multa_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
+        self.multa_multa_usuario_entry.place(x=930, y=555)
+
+        self.multa_monto_usuario_label = ck.CTkLabel(self.frame_pagar_multa, text="Monto: ",
+                                                font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
+        self.multa_monto_usuario_label.place(x=700, y=690)
+
+        self.multa_monto_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
+        self.multa_monto_usuario_entry.place(x=800, y=695)
+
+        self.pagar_multa_button = ck.CTkButton(self.frame_pagar_multa, text="PAGAR MULTA", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
         self.pagar_multa_button.place(x=1005, y=690)
 
         # FRAME SELECCIONADO POR DEFECTO
