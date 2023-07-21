@@ -102,6 +102,7 @@ class BD:
             # Actualizar la multa y el monto en la tabla usuario
             sql_actualizar = "UPDATE usuario SET MULTA = ?, MONTO = ? WHERE RUT_U = ?"
             self.cursor.execute(sql_actualizar, (multa, monto, rut_usuario))
+            self.connect.commit()
 
         return resultados   
     
@@ -367,3 +368,5 @@ class BD:
         except Exception as e:
             messagebox.showerror("Error al obtener el prestamo por RUT", f"{str(e)}")
             return None
+
+    # MÉTODOS PARA EL FRAME PAGAR MULTA

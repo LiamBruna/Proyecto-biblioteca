@@ -513,6 +513,8 @@ class VentanaPrincipal(ck.CTkToplevel):
         usuario_image = ck.CTkImage(Image.open("img\\usuarios.ico"), size=(28, 28))
         usuarios_registrados_image = ck.CTkImage(Image.open("img\\usuarios_registrados.ico"), size=(450, 120))
         registrar_usuario_imagen = ck.CTkImage(Image.open("img\\registrar_usuario.ico"), size=(450, 120))
+        pagar_multa_icono = ck.CTkImage(Image.open("img\\pagar_multa.ico"), size=(28, 28))
+        pagar_multa_imagen = ck.CTkImage(Image.open("img\\pagar_multa_imagen.ico"), size=(450, 120))
 
         # Crear icono en frame lateral
         self.frameNavegacion_label = ck.CTkLabel(self.frameNavegacion, text="  Biblioteca Virtual", image=logo_imagen,
@@ -575,19 +577,25 @@ class VentanaPrincipal(ck.CTkToplevel):
                                            command=self.frame_registrar_usuario_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
         self.frame_registrar_usuario_button.grid(row=8, column=0, sticky="ew")
 
-        # Botón de Usuarios en navegación
+        # Botón de Frame Usuarios en navegación
         self.usuarios_registrados_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Usuarios Registrados",
                                            fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
                                            image=usuario_image, anchor="w",command=self.usuarios_registrados_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
         self.usuarios_registrados_button.grid(row=10, column=0, sticky="ew")
 
+        # Botón de Frame Pagar Multa
+        self.frame_pagar_multa_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Pagar Multas",
+                                           fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
+                                           image=pagar_multa_icono, anchor="w",command=self.pagar_multa_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.frame_pagar_multa_button.grid(row=11, column=0, sticky="ew")
+
         # Menu de opciones para cambiar de apariencia la app
         self.menu_apariencia = ck.CTkOptionMenu(self.frameNavegacion, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"), values=["Dark", "Light"], command=self.evento_cambiar_apariencia)
-        self.menu_apariencia.grid(row=11, column=0, padx=20, pady=20, sticky="s")
+        self.menu_apariencia.grid(row=12, column=0, padx=20, pady=20, sticky="s")
 
         # Botón para cerrar sesión
         self.button_cerrarSesion = ck.CTkButton(self.frameNavegacion, font=ck.CTkFont(size=18, weight="bold", family="Segoe UI Historic"), text="Cerrar sesión", image=cerrar_sesion_imagen, command=self.cerrar_sesion)
-        self.button_cerrarSesion.grid(row=12, column=0, padx=20, pady=20, sticky="s")
+        self.button_cerrarSesion.grid(row=13, column=0, padx=20, pady=20, sticky="s")
 
         # Contenedor main para los frames
         self.main_frame = ck.CTkFrame(self, corner_radius=0, fg_color="transparent")
@@ -599,7 +607,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.inicio_frame = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.inicio_frame.grid(row=0, column=0, sticky="nsew")
         self.inicio_frame.grid_columnconfigure(0, weight=1)
-        self.inicio_frame.grid_rowconfigure(8, weight=1)
+        self.inicio_frame.grid_rowconfigure(1, weight=1)
 
         self.inicio_label_image = ck.CTkLabel(self.inicio_frame, text="", image=inicio_imagen_frame)
         self.inicio_label_image.grid(row=0, columnspan=1, padx=20)
@@ -608,23 +616,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.date_entry = DateEntry(self.inicio_frame, width=11,
                           date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"),
                           highlightbackground="deep sky blue", highlightthickness=1, corner_radius=10)
-        self.date_entry.grid(row=1, column=0, padx=10, pady=5)
-
-        # Crear el Frame contenedor del Treeview y el Scrollbar
-        self.treeview_frame_inicio = ck.CTkFrame(self.inicio_frame, bg_color="#29292A")
-        self.treeview_frame_inicio.grid(row=2, columnspan=3, padx=20, pady=5, sticky="nsew")
-        self.treeview_frame_inicio.grid_rowconfigure(0, weight=20)
-        self.treeview_frame_inicio.grid_columnconfigure(0, weight=1)
-
-        self.tabla_inicio = ttk.Treeview(self.treeview_frame_inicio)
-        self.tabla_inicio.grid(row=1, column=0, sticky="nsew")
-
-        ladoy = ttk.Scrollbar(self.treeview_frame_inicio, orient='vertical', command=self.tabla_inicio.yview)
-        ladoy.grid(row=1, column=1, sticky='ns')
-        
-        # Columnas que se mostrarán en la tabla
-        self.tabla_inicio.grid(sticky="nsew")
-        self.tabla_inicio['columns'] = ('Nombre', 'Apellido', 'RUT', 'Tipo de usuario', 'F. Devolución', 'ISBN', 'Titulo', 'Multa', 'Monto')
+        self.date_entry.place(x=50, y=80)
 
         # Estilo de la tabla para mostrar los datos
         estilo_tabla = ttk.Style()
@@ -633,6 +625,23 @@ class VentanaPrincipal(ck.CTkToplevel):
         estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
         estilo_tabla.configure('Item', foreground='transparent', focuscolor='DarkOrchid1')
         estilo_tabla.configure('TScrollbar', arrowcolor='DarkOrchid1', bordercolor='black', troughcolor='DarkOrchid1', background='white')
+
+        # Crear el Frame contenedor del Treeview y el Scrollbar
+        self.treeview_frame_inicio = ck.CTkFrame(self.inicio_frame)
+        self.treeview_frame_inicio.grid(row=1, columnspan=3, padx=20, pady=5, sticky="nsew")
+
+        self.tabla_inicio = ttk.Treeview(self.treeview_frame_inicio)
+        self.tabla_inicio.grid(row=0, column=0, sticky="nsew")
+
+        ladoy = ttk.Scrollbar(self.treeview_frame_inicio, orient='vertical', command=self.tabla_inicio.yview)
+        ladoy.grid(row=0, column=1, sticky='ns')
+
+        self.treeview_frame_inicio.grid_rowconfigure(0, weight=1)
+        self.treeview_frame_inicio.grid_columnconfigure(0, weight=1)
+        
+        # Columnas que se mostrarán en la tabla
+        self.tabla_inicio.grid(sticky="nsew")
+        self.tabla_inicio['columns'] = ('Nombre', 'Apellido', 'RUT', 'Tipo de usuario', 'F. Devolución', 'ISBN', 'Titulo', 'Multa', 'Monto')
 
         # Ajustar ancho mínimo y ancho de cada columna de encabezado
         self.tabla_inicio.column('#0', minwidth=60, width=70, anchor='center')
@@ -659,9 +668,9 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.tabla_inicio.heading('Monto', text='Monto', anchor='center')
 
         self.actualizar_button = ck.CTkButton(self.inicio_frame, text='ACTUALIZAR TABLA', font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"), command=self.mostrarDatosPrestamo) # 
-        self.actualizar_button.grid(columnspan=1, row=4, pady=5)
+        self.actualizar_button.grid(columnspan=1, row=2, pady=5)
 
-        # FRAME MODIFICAR CATALOGO
+        # ******************FRAME MODIFICAR CATALOGO******************
         self.catalogo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.catalogo.grid(row=0, column=0, sticky="nsew")
         self.catalogo.grid_columnconfigure(5, weight=1)
@@ -708,12 +717,18 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.frame_imagenes_catalogo.grid(row=2, column=0, padx=10, pady=3, columnspan=6, sticky="nsew")
 
         self.canvas = tk.Canvas(self.frame_imagenes_catalogo, bg="white")
-        self.canvas.grid(row=1, columnspan=6, sticky="nsew")
+        self.canvas.grid(row=0, column=0, sticky="nsew")
 
-        scrollbar = ttk.Scrollbar(self.frame_imagenes_catalogo, orient="vertical", command=self.canvas.yview)
-        scrollbar.grid(row=1, column=7, sticky="ns")
-        self.canvas.configure(yscrollcommand=scrollbar.set)
+        ladox = ttk.Scrollbar(self.frame_imagenes_catalogo, orient="horizontal", command=self.canvas.xview)
+        ladox.grid(row=1, column=0, sticky="ew")
 
+        ladoy = ttk.Scrollbar(self.frame_imagenes_catalogo, orient="vertical", command=self.canvas.yview)
+        ladoy.grid(row=0, column=1, sticky="ns")
+
+        self.canvas.grid_rowconfigure(0, weight=1)
+        self.canvas.grid_columnconfigure(0, weight=1)
+        self.canvas.grid(sticky="nsew")
+        
         self.frame_imagenes = ck.CTkFrame(self.canvas, corner_radius=0, fg_color="transparent")
         self.canvas.create_window((0, 0), window=self.frame_imagenes, anchor="center")
 
@@ -740,7 +755,7 @@ class VentanaPrincipal(ck.CTkToplevel):
                                                 command=self.mostrarTodosLosLibros)
         self.mostar_libros_button.grid(row=3, columnspan=6, padx=10, pady=10, sticky="se")
 
-        # FRAME ACTUALIZAR STOCK
+        # ******************FRAME ACTUALIZAR STOCK******************
         self.frame_stock = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.frame_stock.grid(row=0, column=0, sticky="nsew")
         self.frame_stock.grid_rowconfigure(8, weight=1)
@@ -800,7 +815,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.actualizar_stock_button = ck.CTkButton(self.frame_stock, command=self.actualizarStock, text="ACTUALIZAR", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.actualizar_stock_button.grid(row=27, column=2, columnspan=4, padx=10, pady=10)
 
-        # FRAME REALIZAR PRESTAMO
+        # ******************FRAME REALIZAR PRESTAMO******************
         self.frame_realizar_prestamo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.frame_realizar_prestamo.grid(row=0, column=0, sticky="nsew")
 
@@ -1111,7 +1126,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.registrar_usuario_button = ck.CTkButton(self.frame_registrar_usuario, text="REGISTRAR USUARIO", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), command=self.registrarUsuario)
         self.registrar_usuario_button.place(x=330, y=530)
 
-        # FRAME MOSTRAR USUARIOS REGISTRADOS
+        # ******************FRAME MOSTRAR USUARIOS REGISTRADOS******************
         self.frame_usuarios_registrados = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.frame_usuarios_registrados.grid(row=0, column=0, sticky="nsew")
         self.frame_usuarios_registrados.grid_columnconfigure(0, weight=1)  # Expansión horizontal
@@ -1138,9 +1153,6 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.tabla_uno = ttk.Treeview(self.frame_tabla_uno)
         self.tabla_uno.grid(column=0, row=0, sticky='nsew')
 
-        ladox = ttk.Scrollbar(self.frame_tabla_uno, orient='horizontal', command=self.tabla_uno.xview)
-        ladox.grid(column=0, row=1, sticky='ew')
-
         ladoy = ttk.Scrollbar(self.frame_tabla_uno, orient='vertical', command=self.tabla_uno.yview)
         ladoy.grid(column=1, row=0, sticky='ns')
 
@@ -1150,7 +1162,6 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.tabla_uno.grid(sticky='nsew')
 
         # Columnas que se mostrarán en la tabla
-        self.tabla_uno.configure(xscrollcommand=ladox.set, yscrollcommand=ladoy.set)
         self.tabla_uno['columns'] = ('Nombre', 'Apellido', 'Dirección', 'RUT', 'Celular', 'Correo electrónico', 'Tipo de usuario')
 
         # Ajustar ancho mínimo y ancho de cada columna de encabezado
@@ -1175,6 +1186,10 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         self.tabla_uno.bind("<<TreeviewSelect>>", self.obtener_filaUsuario)
 
+        # FRAME PAGAR MULTA
+        self.frame_pagar_multa = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+        self.frame_pagar_multa.grid(row=0, column=0, sticky="nsew")
+
         # FRAME SELECCIONADO POR DEFECTO
         self.seleccion_frame_nombre("inicio")
 
@@ -1189,6 +1204,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.frame_renovar_libro.configure(fg_color=("gray75", "gray25") if nombre == "renovar_libro" else "transparent")
         self.frame_registrar_usuario.configure(fg_color=("gray75", "gray25") if nombre == "registrar_usuario" else "transparent")
         self.frame_usuarios_registrados.configure(fg_color=("gray75", "gray25") if nombre == "usuarios_registrados" else "transparent")
+        self.frame_pagar_multa.configure(fg_color=("gray75", "gray25") if nombre == "pagar_multa" else "transparent")
         
         # Mostrar frame seleccionado
         if nombre == "inicio":
@@ -1201,6 +1217,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_renovar_libro.grid_forget()
             self.frame_registrar_usuario.grid_forget()
             self.frame_usuarios_registrados.grid_forget()
+            self.frame_pagar_multa.grid_forget()
         elif nombre == "catalogo":
             self.inicio_frame.grid_forget()
             self.catalogo.grid(row=0, column=0, sticky="nsew")
@@ -1211,6 +1228,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_renovar_libro.grid_forget()
             self.frame_registrar_usuario.grid_forget()
             self.frame_usuarios_registrados.grid_forget()
+            self.frame_pagar_multa.grid_forget()
         elif nombre == "stock":
             self.inicio_frame.grid_forget()
             self.catalogo.grid_forget()
@@ -1221,6 +1239,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_renovar_libro.grid_forget()
             self.frame_registrar_usuario.grid_forget()
             self.frame_usuarios_registrados.grid_forget()
+            self.frame_pagar_multa.grid_forget()
         elif nombre == "realizar_prestamo":
             self.inicio_frame.grid_forget()
             self.catalogo.grid_forget()
@@ -1231,6 +1250,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_renovar_libro.grid_forget()
             self.frame_registrar_usuario.grid_forget()
             self.frame_usuarios_registrados.grid_forget()
+            self.frame_pagar_multa.grid_forget()
         elif nombre == "libros_en_prestamo":
             self.inicio_frame.grid_forget()
             self.catalogo.grid_forget()
@@ -1241,6 +1261,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_renovar_libro.grid_forget()
             self.frame_registrar_usuario.grid_forget()
             self.frame_usuarios_registrados.grid_forget()
+            self.frame_pagar_multa.grid_forget()
         elif nombre == "prestamos_por_usuario":
             self.inicio_frame.grid_forget()
             self.catalogo.grid_forget()
@@ -1251,6 +1272,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_renovar_libro.grid_forget()
             self.frame_registrar_usuario.grid_forget()
             self.frame_usuarios_registrados.grid_forget()
+            self.frame_pagar_multa.grid_forget()
         elif nombre == "renovar_libro":
             self.inicio_frame.grid_forget()
             self.catalogo.grid_forget()
@@ -1261,6 +1283,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_renovar_libro.grid(row=0, column=0, sticky="nsew")
             self.frame_registrar_usuario.grid_forget()
             self.frame_usuarios_registrados.grid_forget()
+            self.frame_pagar_multa.grid_forget()
         elif nombre == "registrar_usuario":
             self.inicio_frame.grid_forget()
             self.catalogo.grid_forget()
@@ -1271,6 +1294,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_renovar_libro.grid_forget()
             self.frame_registrar_usuario.grid(row=0, column=0, sticky="nsew")
             self.frame_usuarios_registrados.grid_forget()
+            self.frame_pagar_multa.grid_forget()
         elif nombre == "usuarios_registrados":
             self.inicio_frame.grid_forget()
             self.catalogo.grid_forget()
@@ -1280,6 +1304,17 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_prestamos_por_usuario.grid_forget()
             self.frame_renovar_libro.grid_forget()
             self.frame_usuarios_registrados.grid(row=0, column=0, sticky="nsew")
+            self.frame_pagar_multa.grid_forget()
+        elif nombre == "pagar_multa":
+            self.inicio_frame.grid_forget()
+            self.catalogo.grid_forget()
+            self.frame_stock.grid_forget()
+            self.frame_realizar_prestamo.grid_forget()
+            self.frame_libros_en_prestamo.grid_forget()
+            self.frame_prestamos_por_usuario.grid_forget()
+            self.frame_renovar_libro.grid_forget()
+            self.frame_usuarios_registrados.grid_forget()
+            self.frame_pagar_multa.grid(row=0, column=0, sticky="nsew")
             
 
     # Métodos para mostrar el frame cuando se pulse el botón
@@ -1309,6 +1344,9 @@ class VentanaPrincipal(ck.CTkToplevel):
 
     def usuarios_registrados_button_evento(self):
         self.seleccion_frame_nombre("usuarios_registrados")
+
+    def pagar_multa_button_evento(self):
+        self.seleccion_frame_nombre("pagar_multa")
 
     # Método para cambiar la apariencia de la app
     def evento_cambiar_apariencia(self, new_appearance_mode):
