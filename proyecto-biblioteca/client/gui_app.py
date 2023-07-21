@@ -505,6 +505,14 @@ class VentanaPrincipal(ck.CTkToplevel):
         realizar_prestamo_icono = ck.CTkImage(Image.open("img\\realizar_prestamo_icono.ico"), size=(28, 28))
         libros_en_prestamo_image = ck.CTkImage(Image.open("img\\libros_en_prestamo.ico"), size=(450, 120))
         libros_en_prestamo_icono = ck.CTkImage(Image.open("img\\libros_prestamo.ico"), size=(28, 28))
+        prestamos_por_usuario_image = ck.CTkImage(Image.open("img\\prestamos_por_usuario.ico"), size=(450, 120))
+        prestamos_por_usuario_image_icon = ck.CTkImage(Image.open("img\\prestamos_por_usuario_icono.ico"), size=(28, 28))
+        renovar_libro_icono = ck.CTkImage(Image.open("img\\renovar_libro.ico"), size=(28, 28))
+        renovar_libro_image_titulo = ck.CTkImage(Image.open("img\\renovar_libro_titulo.ico"), size=(450, 120))
+        registrar_usuario_icono = ck.CTkImage(Image.open("img\\registrarse.ico"), size=(28, 28))
+        usuario_image = ck.CTkImage(Image.open("img\\usuarios.ico"), size=(28, 28))
+        usuarios_registrados_image = ck.CTkImage(Image.open("img\\usuarios_registrados.ico"), size=(450, 120))
+        registrar_usuario_imagen = ck.CTkImage(Image.open("img\\registrar_usuario.ico"), size=(450, 120))
 
         # Crear icono en frame lateral
         self.frameNavegacion_label = ck.CTkLabel(self.frameNavegacion, text="  Biblioteca Virtual", image=logo_imagen,
@@ -544,25 +552,54 @@ class VentanaPrincipal(ck.CTkToplevel):
                                            text="Libros en Préstamo", fg_color="transparent", text_color=("gray10", "gray90"),
                                            hover_color=("gray70", "gray30"), image=libros_en_prestamo_icono, anchor="w",
                                            command=self.frame_libros_en_prestamo_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
-        self.frame_libros_en_prestamo_button.grid(row=6, column=0, sticky="ew")
+        self.frame_libros_en_prestamo_button.grid(row=5, column=0, sticky="ew")
+
+        # Botón de frame Prestamos por Usuario
+        self.prestamos_por_usuario_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
+                                           text="Préstamos por Usuario", fg_color="transparent", text_color=("gray10", "gray90"),
+                                           hover_color=("gray70", "gray30"), image=prestamos_por_usuario_image_icon, anchor="w",
+                                           command=self.frame_prestamos_por_usuario_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.prestamos_por_usuario_button.grid(row=6, column=0, sticky="ew")
+
+        # Botón de Frame Renovar Libro
+        self.frame_renovar_libro_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
+                                           text="Renovación de Días para Libro", fg_color="transparent", text_color=("gray10", "gray90"),
+                                           hover_color=("gray70", "gray30"), image=renovar_libro_icono, anchor="w",
+                                           command=self.frame_renovar_libro_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.frame_renovar_libro_button.grid(row=7, column=0, sticky="ew")
+
+        # Botón de Frame Registrar Usuario
+        self.frame_registrar_usuario_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10,
+                                           text="Registrar Usuario", fg_color="transparent", text_color=("gray10", "gray90"),
+                                           hover_color=("gray70", "gray30"), image=registrar_usuario_icono, anchor="w",
+                                           command=self.frame_registrar_usuario_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.frame_registrar_usuario_button.grid(row=8, column=0, sticky="ew")
+
+        # Botón de Usuarios en navegación
+        self.usuarios_registrados_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Usuarios Registrados",
+                                           fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
+                                           image=usuario_image, anchor="w",command=self.usuarios_registrados_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.usuarios_registrados_button.grid(row=10, column=0, sticky="ew")
 
         # Menu de opciones para cambiar de apariencia la app
         self.menu_apariencia = ck.CTkOptionMenu(self.frameNavegacion, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"), values=["Dark", "Light"], command=self.evento_cambiar_apariencia)
-        self.menu_apariencia.grid(row=10, column=0, padx=20, pady=20, sticky="s")
+        self.menu_apariencia.grid(row=11, column=0, padx=20, pady=20, sticky="s")
 
         # Botón para cerrar sesión
         self.button_cerrarSesion = ck.CTkButton(self.frameNavegacion, font=ck.CTkFont(size=18, weight="bold", family="Segoe UI Historic"), text="Cerrar sesión", image=cerrar_sesion_imagen, command=self.cerrar_sesion)
-        self.button_cerrarSesion.grid(row=11, column=0, padx=20, pady=20, sticky="s")
+        self.button_cerrarSesion.grid(row=12, column=0, padx=20, pady=20, sticky="s")
 
         # Contenedor main para los frames
         self.main_frame = ck.CTkFrame(self, corner_radius=0, fg_color="transparent")
         self.main_frame.grid(row=0, column=1, sticky="nsew")
+        self.main_frame.grid_columnconfigure(0, weight=1)
+        self.main_frame.grid_rowconfigure(0, weight=1)
 
         # Frame inicio de app
         self.inicio_frame = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.inicio_frame.grid(row=0, column=0, sticky="nsew")
         self.inicio_frame.grid_columnconfigure(0, weight=1)
-        self.inicio_frame.grid_rowconfigure(1, weight=1)
+        self.inicio_frame.grid_rowconfigure(8, weight=1)
 
         self.inicio_label_image = ck.CTkLabel(self.inicio_frame, text="", image=inicio_imagen_frame)
         self.inicio_label_image.grid(row=0, columnspan=1, padx=20)
@@ -575,7 +612,9 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         # Crear el Frame contenedor del Treeview y el Scrollbar
         self.treeview_frame_inicio = ck.CTkFrame(self.inicio_frame, bg_color="#29292A")
-        self.treeview_frame_inicio.grid(row=2, columnspan=3, padx=20, pady=5)
+        self.treeview_frame_inicio.grid(row=2, columnspan=3, padx=20, pady=5, sticky="nsew")
+        self.treeview_frame_inicio.grid_rowconfigure(0, weight=20)
+        self.treeview_frame_inicio.grid_columnconfigure(0, weight=1)
 
         self.tabla_inicio = ttk.Treeview(self.treeview_frame_inicio)
         self.tabla_inicio.grid(row=1, column=0, sticky="nsew")
@@ -584,11 +623,16 @@ class VentanaPrincipal(ck.CTkToplevel):
         ladoy.grid(row=1, column=1, sticky='ns')
         
         # Columnas que se mostrarán en la tabla
-        self.tabla_inicio.configure(yscrollcommand=ladoy.set)
+        self.tabla_inicio.grid(sticky="nsew")
         self.tabla_inicio['columns'] = ('Nombre', 'Apellido', 'RUT', 'Tipo de usuario', 'F. Devolución', 'ISBN', 'Titulo', 'Multa', 'Monto')
 
-        style = ttk.Style()
-        style.configure('Treeview.Heading', font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
+        # Estilo de la tabla para mostrar los datos
+        estilo_tabla = ttk.Style()
+        estilo_tabla.configure("Treeview", font=ck.CTkFont(size=10, weight="bold", family="Segoe UI"), foreground='black', background='white')
+        estilo_tabla.map('Treeview', background=[('selected', 'green')], foreground=[('selected', 'black')])
+        estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        estilo_tabla.configure('Item', foreground='transparent', focuscolor='DarkOrchid1')
+        estilo_tabla.configure('TScrollbar', arrowcolor='DarkOrchid1', bordercolor='black', troughcolor='DarkOrchid1', background='white')
 
         # Ajustar ancho mínimo y ancho de cada columna de encabezado
         self.tabla_inicio.column('#0', minwidth=60, width=70, anchor='center')
@@ -615,7 +659,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.tabla_inicio.heading('Monto', text='Monto', anchor='center')
 
         self.actualizar_button = ck.CTkButton(self.inicio_frame, text='ACTUALIZAR TABLA', font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"), command=self.mostrarDatosPrestamo) # 
-        self.actualizar_button.grid(columnspan=1, row=3, pady=5)
+        self.actualizar_button.grid(columnspan=1, row=4, pady=5)
 
         # FRAME MODIFICAR CATALOGO
         self.catalogo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
@@ -697,59 +741,64 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.mostar_libros_button.grid(row=3, columnspan=6, padx=10, pady=10, sticky="se")
 
         # FRAME ACTUALIZAR STOCK
-        self.stock = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
-        self.stock.grid(row=0, column=0, sticky="nsew")
-        self.stock.grid_rowconfigure(8, weight=1)
+        self.frame_stock = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+        self.frame_stock.grid(row=0, column=0, sticky="nsew")
+        self.frame_stock.grid_rowconfigure(8, weight=1)
+        self.frame_stock.grid_columnconfigure(8, weight=1)
 
-        self.actualizar_stock_label_image = ck.CTkLabel(self.stock, text="", image=actualizar_stock_imagen)
-        self.actualizar_stock_label_image.grid(row=0, columnspan=3, padx=20)
+        self.frame_imagen_stock = ck.CTkFrame(self.frame_stock, corner_radius=0, fg_color="transparent")
+        self.frame_imagen_stock.grid(row=0, column=0, sticky="nsew")
+        self.frame_imagen_stock.grid_columnconfigure(3, weight=1)
 
-        self.buscar_libro_isbn_label = ck.CTkLabel(self.stock, text="Ingrese el ISBN del libro para actualizar stock: ",
+        self.actualizar_stock_label_image = ck.CTkLabel(self.frame_imagen_stock, text="", image=actualizar_stock_imagen)
+        self.actualizar_stock_label_image.grid(row=0, column=3, columnspan=2)
+
+        self.buscar_libro_isbn_label = ck.CTkLabel(self.frame_stock, text="Ingrese el ISBN del libro para actualizar stock: ",
                                                 font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
-        self.buscar_libro_isbn_label.grid(row=10, column=0, padx=10)
+        self.buscar_libro_isbn_label.grid(row=1, column=0, padx=10, pady=0)
 
-        self.buscar_libro_isbn_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.buscar_actualiza, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
-        self.buscar_libro_isbn_entry.grid(row=10, column=1, padx=10)
+        self.buscar_libro_isbn_entry = ck.CTkEntry(self.frame_stock, width=140, textvariable=self.buscar_actualiza, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
+        self.buscar_libro_isbn_entry.grid(row=1, column=1, padx=10)
         self.buscar_libro_isbn_entry.bind("<Return>", self.buscarLibroStock) # Al presionar enter, me devuelve el dato solicitado
 
         # Botón para buscar el libro
-        self.buscar_libro_isbn_button = ck.CTkButton(self.stock, command=self.buscarLibroStock, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
-        self.buscar_libro_isbn_button.grid(row=10, column=2, padx=3)
+        self.buscar_libro_isbn_button = ck.CTkButton(self.frame_stock, command=self.buscarLibroStock, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
+        self.buscar_libro_isbn_button.grid(row=1, column=2, padx=3)
 
         # Widgets del frame stock a mostrar
-        self.isbn_label = ck.CTkLabel(self.stock, text="ISBN: ",
+        self.isbn_label = ck.CTkLabel(self.frame_stock, text="ISBN: ",
                         font=ck.CTkFont(size=20, weight="bold"))
-        self.isbn_label.grid(row=15, column=0, pady=15)
+        self.isbn_label.grid(row=2, column=0, pady=5)
 
-        self.isbn_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.isbn, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), state="disabled")
-        self.isbn_entry.grid(row=15, columnspan=7, padx=10)
+        self.isbn_entry = ck.CTkEntry(self.frame_stock, width=140, textvariable=self.isbn, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), state="disabled")
+        self.isbn_entry.grid(row=2, columnspan=7, padx=10, pady=5)
         
-        self.titulo_label = ck.CTkLabel(self.stock, text="Titulo: ",
+        self.titulo_label = ck.CTkLabel(self.frame_stock, text="Titulo: ",
                         font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
-        self.titulo_label.grid(row=16, column=0, pady=10)
+        self.titulo_label.grid(row=4, column=0, pady=5)
 
-        self.titulo_entry = ck.CTkEntry(self.stock, width=200, textvariable=self.titulo, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), state="disabled")
-        self.titulo_entry.grid(row=16, columnspan=7, padx=10)
+        self.titulo_entry = ck.CTkEntry(self.frame_stock, width=200, textvariable=self.titulo, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), state="disabled")
+        self.titulo_entry.grid(row=4, columnspan=7, padx=10, pady=5)
 
-        self.numero_paginas_label = ck.CTkLabel(self.stock, text="N° de Paginas: ",
+        self.numero_paginas_label = ck.CTkLabel(self.frame_stock, text="N° de Paginas: ",
                         font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
-        self.numero_paginas_label.grid(row=17, column=0, pady=10)
+        self.numero_paginas_label.grid(row=6, column=0, pady=5)
 
-        self.numero_paginas_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.numero_paginas, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), state="disabled")
-        self.numero_paginas_entry.grid(row=17, columnspan=7, padx=10)
+        self.numero_paginas_entry = ck.CTkEntry(self.frame_stock, width=140, textvariable=self.numero_paginas, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"), state="disabled")
+        self.numero_paginas_entry.grid(row=6, columnspan=7, padx=10, pady=5)
 
         # Campo que se va a actualizar
-        self.stock_label = ck.CTkLabel(self.stock, text="Stock: ",
+        self.stock_label = ck.CTkLabel(self.frame_stock, text="Stock: ",
                         font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
-        self.stock_label.grid(row=18, column=0, pady=10)
+        self.stock_label.grid(row=7, column=0, pady=5)
 
-        self.stock_entry = ck.CTkEntry(self.stock, width=140, textvariable=self.stockLibro, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
-        self.stock_entry.grid(row=18, columnspan=7, padx=10)
+        self.stock_entry = ck.CTkEntry(self.frame_stock, width=140, textvariable=self.stockLibro, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
+        self.stock_entry.grid(row=7, columnspan=7, padx=10, pady=5)
         self.stock_entry.bind("<Return>", self.actualizarStock)
 
         # Botón para actualizar el stock del libro
-        self.actualizar_stock_button = ck.CTkButton(self.stock, command=self.actualizarStock, text="ACTUALIZAR", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
-        self.actualizar_stock_button.grid(row=25, column=2, padx=10, pady=10)
+        self.actualizar_stock_button = ck.CTkButton(self.frame_stock, command=self.actualizarStock, text="ACTUALIZAR", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
+        self.actualizar_stock_button.grid(row=27, column=2, columnspan=4, padx=10, pady=10)
 
         # FRAME REALIZAR PRESTAMO
         self.frame_realizar_prestamo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
@@ -806,6 +855,14 @@ class VentanaPrincipal(ck.CTkToplevel):
         treeview_frame = ck.CTkFrame(self.frame_realizar_prestamo)
         treeview_frame.grid(row=15, columnspan=3, padx=20, pady=5)
 
+        # Estilo de la tabla para mostrar los datos
+        estilo_tabla = ttk.Style()
+        estilo_tabla.configure("Treeview", font=ck.CTkFont(size=10, weight="bold", family="Segoe UI"), foreground='black', background='white')
+        estilo_tabla.map('Treeview', background=[('selected', 'green')], foreground=[('selected', 'black')])
+        estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        estilo_tabla.configure('Item', foreground='transparent', focuscolor='DarkOrchid1')
+        estilo_tabla.configure('TScrollbar', arrowcolor='DarkOrchid1', bordercolor='black', troughcolor='DarkOrchid1', background='white')
+
         # Crear el Treeview dentro del Frame
         self.treeview_prestamos = ttk.Treeview(treeview_frame, columns=("rut", "isbn", "f.inicio", "f.devolución", "tipo de usuario"), show="headings")
         self.treeview_prestamos.heading("rut", text="RUT")
@@ -839,7 +896,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.completar_prestamo_button = ck.CTkButton(self.frame_realizar_prestamo, command=self.realizarPrestamo, text="REALIZAR PRÉSTAMO", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
         self.completar_prestamo_button.grid(row=17, column=2, padx=5, pady=5)
 
-        # FRAME LIBROS EN PRÉSTAMO
+        # ******************FRAME LIBROS EN PRÉSTAMO******************
         self.frame_libros_en_prestamo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.frame_libros_en_prestamo.grid(row=0, column=0, sticky="nsew")
         self.frame_libros_en_prestamo.grid_columnconfigure(0, weight=1) # Expansión horizontal
@@ -853,21 +910,18 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         # Estilo de la tabla para mostrar los datos
         estilo_tabla = ttk.Style()
-        estilo_tabla.configure("Treeview", font=ck.CTkFont(size=10, weight="bold", family="Segoe UI Historic"), foreground='black', background='white')
+        estilo_tabla.configure("Treeview", font=ck.CTkFont(size=10, weight="bold", family="Segoe UI"), foreground='black', background='white')
         estilo_tabla.map('Treeview', background=[('selected', 'green')], foreground=[('selected', 'black')])
-        estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
+        estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
         estilo_tabla.configure('Item', foreground='transparent', focuscolor='DarkOrchid1')
         estilo_tabla.configure('TScrollbar', arrowcolor='DarkOrchid1', bordercolor='black', troughcolor='DarkOrchid1', background='white')
 
         # Mostrar la tabla en el frame libros en prestamo
         self.frame_tabla_dos = ck.CTkFrame(self.frame_libros_en_prestamo, corner_radius=0, fg_color="transparent")
-        self.frame_tabla_dos.grid(column=0, row=1, sticky='nsew')
+        self.frame_tabla_dos.grid(column=0, row=1, sticky='nsew', padx=10, pady=5)
 
         self.tabla_dos = ttk.Treeview(self.frame_tabla_dos)
         self.tabla_dos.grid(column=0, row=0, sticky='nsew')
-
-        ladox = ttk.Scrollbar(self.frame_tabla_dos, orient='horizontal', command=self.tabla_dos.xview)
-        ladox.grid(column=0, row=1, sticky='ew')
 
         ladoy = ttk.Scrollbar(self.frame_tabla_dos, orient='vertical', command=self.tabla_dos.yview)
         ladoy.grid(column=1, row=0, sticky='ns')
@@ -875,10 +929,9 @@ class VentanaPrincipal(ck.CTkToplevel):
         # Configurar expansión en todas las direcciones para el frame y la tabla
         self.frame_tabla_dos.grid_rowconfigure(0, weight=1)
         self.frame_tabla_dos.grid_columnconfigure(0, weight=1)
-        self.tabla_dos.grid(sticky='nsew')
-
+        
         # Columnas que se mostrarán en la tabla
-        self.tabla_dos.configure(xscrollcommand=ladox.set, yscrollcommand=ladoy.set)
+        self.tabla_dos.grid(sticky='nsew')
         self.tabla_dos['columns'] = ('Titulo', 'Estado')
 
         # Ajustar ancho mínimo y ancho de cada columna de encabezado
@@ -893,6 +946,235 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         self.tabla_dos.bind("<<TreeviewSelect>>", self.obtener_filaLibros)
 
+        # ******************FRAME PRESTAMOS POR USUARIO******************
+        self.frame_prestamos_por_usuario = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+        self.frame_prestamos_por_usuario.grid(row=0, column=0, sticky="nsew")
+
+        self.frame_prestamos_por_usuario_image = ck.CTkLabel(self.frame_prestamos_por_usuario, text="", image=prestamos_por_usuario_image)
+        self.frame_prestamos_por_usuario_image.grid(row=0, columnspan=3, padx=20)
+
+        self.rut_usuario_prestamos_label = ck.CTkLabel(self.frame_prestamos_por_usuario, text="Ingrese el RUT del usuario: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.rut_usuario_prestamos_label.grid(row=1, column=0, pady=5, padx=5, sticky="e")
+
+        self.rut_usuario_prestamos_entry = ck.CTkEntry(self.frame_prestamos_por_usuario, width=200, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.rut_usuario_prestamos_entry.grid(row=1, column=1, pady=5, padx=5, sticky="w")
+        self.rut_usuario_prestamos_entry.bind("<Return>", self.mostrarDatosPrestamoPorRut)
+
+        self.buscar_usuario_prestamo_button = ck.CTkButton(self.frame_prestamos_por_usuario, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), command=self.mostrarDatosPrestamoPorRut)
+        self.buscar_usuario_prestamo_button.grid(row=1, column=2, pady=5, padx=5)
+        
+        # Estilo de la tabla para mostrar los datos
+        estilo_tabla = ttk.Style()
+        estilo_tabla.configure("Treeview", font=ck.CTkFont(size=10, weight="bold", family="Segoe UI"), foreground='black', background='white')
+        estilo_tabla.map('Treeview', background=[('selected', 'green')], foreground=[('selected', 'black')])
+        estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        estilo_tabla.configure('Item', foreground='transparent', focuscolor='DarkOrchid1')
+        estilo_tabla.configure('TScrollbar', arrowcolor='DarkOrchid1', bordercolor='black', troughcolor='DarkOrchid1', background='white')
+
+        # Mostrar la tabla en el frame prestamos por usuario
+        self.frame_tabla_tres = ck.CTkFrame(self.frame_prestamos_por_usuario)
+        self.frame_tabla_tres.grid(column=0, row=2, columnspan=3, sticky='nsew', padx=10, pady=10)
+
+        self.tabla_tres = ttk.Treeview(self.frame_tabla_tres)
+        self.tabla_tres.grid(column=0, row=0, sticky="nsew")
+
+        ladoy = ttk.Scrollbar(self.frame_tabla_tres, orient='vertical', command=self.tabla_tres.yview)
+        ladoy.grid(column=2, row=0, sticky='ns')
+
+        # Configurar expansión en todas las direcciones para el frame
+        self.frame_prestamos_por_usuario.grid_rowconfigure(2, weight=1)
+        self.frame_prestamos_por_usuario.grid_columnconfigure(0, weight=1)
+
+        # Configurar expansión en todas las direcciones para el frame de la tabla
+        self.frame_tabla_tres.grid_rowconfigure(0, weight=1)
+        self.frame_tabla_tres.grid_columnconfigure(0, weight=1)
+
+        # Configurar expansión en todas las direcciones para el treeview
+        self.tabla_tres.grid(sticky='nsew')
+        self.tabla_tres['columns'] = ('ISBN', 'Titulo', 'Nombre', 'Apellido', 'RUT')
+
+        # Ajustar ancho mínimo y ancho de cada columna de encabezado
+        self.tabla_tres.column('#0', stretch=tk.NO, width=0)  # Eliminar la columna del ID
+        self.tabla_tres.column('ISBN', minwidth=60, width=70, anchor='center')
+        self.tabla_tres.column('Titulo', minwidth=100, width=130, anchor='center')
+        self.tabla_tres.column('Nombre', minwidth=100, width=120, anchor='center')
+        self.tabla_tres.column('Apellido', minwidth=100, width=120, anchor='center')
+        self.tabla_tres.column('RUT', minwidth=100, width=105, anchor='center')
+
+        # Configurar el texto de encabezado para que se muestre completo
+        self.tabla_tres.heading('#0', text='ID', anchor='center')
+        self.tabla_tres.heading('ISBN', text='ISBN', anchor='center')
+        self.tabla_tres.heading('Titulo', text='Titulo', anchor='center')
+        self.tabla_tres.heading('Nombre', text='Nombre', anchor='center')
+        self.tabla_tres.heading('Apellido', text='Apellido', anchor='center')
+        self.tabla_tres.heading('RUT', text='RUT', anchor='center')
+
+        # ******************FRAME RENOVAR LIBRO******************
+        self.frame_renovar_libro = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+        self.frame_renovar_libro.grid(row=0, column=0, sticky="nsew")
+
+        self.renovar_libro_image = ck.CTkLabel(self.frame_renovar_libro, text="", image=renovar_libro_image_titulo)
+        self.renovar_libro_image.grid(row=0, columnspan=3, padx=20)
+
+        self.rut_usuario_label = ck.CTkLabel(self.frame_renovar_libro, text="Ingrese el rut del usuario: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.rut_usuario_label.grid(row=3, column=0, pady=5, padx=5)
+
+        self.rut_usuario_entry = ck.CTkEntry(self.frame_renovar_libro, textvariable=self.rut_usuario, width=200, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.rut_usuario_entry.grid(row=3, column=1, pady=5, padx=5)
+
+        self.isbn_label = ck.CTkLabel(self.frame_renovar_libro, text="Ingrese el ISBN del libro: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.isbn_label.grid(row=4, column=0, pady=5, padx=5)
+
+        self.isbn_entry = ck.CTkEntry(self.frame_renovar_libro, textvariable=self.isbn, width=200, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.isbn_entry.grid(row=4, column=1, pady=5, padx=5)
+
+        self.buscar_usuario = ck.CTkButton(self.frame_renovar_libro, text="BUSCAR USUARIO", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), command=self.obtenerFechaDevolucion)
+        self.buscar_usuario.grid(row=4, column=2, pady=5, padx=5)
+
+        self.fecha_devolucion_label = ck.CTkLabel(self.frame_renovar_libro, text="Fecha Devolución de Préstamo: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.fecha_devolucion_label.grid(row=7, column=0, pady=5, padx=5)
+
+        self.fecha_devolucion_renovar = DateEntry(self.frame_renovar_libro, width=16,
+                          date_pattern='yyyy/mm/dd', font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"),
+                          highlightbackground="deep sky blue", highlightthickness=1, corner_radius=10)
+        self.fecha_devolucion_renovar.grid(row=7, column=1, pady=5, padx=5)
+
+        self.sumar_dias = ck.CTkButton(self.frame_renovar_libro, text="SUMAR DÍAS", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), command=self.sumarDiasRenovacion)
+        self.sumar_dias.grid(row=7, column=2, pady=5, padx=5)
+
+        self.renovar_libro_button = ck.CTkButton(self.frame_renovar_libro, text="RENOVAR LIBRO", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), command=self.renovarLibro)
+        self.renovar_libro_button.place(x=330, y=260)
+
+        # ******************FRAME REGISTRAR USUARIO******************
+        self.frame_registrar_usuario = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+        self.frame_registrar_usuario.grid(row=0, column=0, sticky="nsew")
+
+        self.registrar_usuario_image_label = ck.CTkLabel(self.frame_registrar_usuario, text="", image=registrar_usuario_imagen)
+        self.registrar_usuario_image_label.grid(row=0, columnspan=2, padx=20)
+
+        self.nombre_usuario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese el nombre del usuario: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.nombre_usuario_label.grid(row=10, column=0, pady=5, padx=5)
+
+        self.nombre_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.nombre_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.nombre_usuario_entry.grid(row=10, column=1, pady=10, padx=5)
+
+        self.apellido_ususario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese el apellido del usuario: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.apellido_ususario_label.grid(row=11, column=0, pady=5, padx=5)
+
+        self.apellido_ususario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.apellido_ususario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.apellido_ususario_entry.grid(row=11, column=1, pady=10, padx=5)
+
+        self.direccion_usuario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese la dirección del usuario: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.direccion_usuario_label.grid(row=12, column=0, pady=5, padx=5)
+
+        self.direccion_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.direccion_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.direccion_usuario_entry.grid(row=12, column=1, pady=10, padx=5)
+
+        self.rut_usuario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese el RUT del usuario: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.rut_usuario_label.grid(row=13, column=0, pady=5, padx=5)
+
+        self.rut_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.rut_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.rut_usuario_entry.grid(row=13, column=1, pady=10, padx=5)
+
+        self.celular_usuario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese el celular del usuario: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.celular_usuario_label.grid(row=14, column=0, pady=5, padx=5)
+
+        self.codigo_pais_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.codigo_pais, width=70, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
+        self.codigo_pais_entry.place(x=338, y=350)
+
+        self.celular_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.celular_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.celular_usuario_entry.grid(row=14, column=1, pady=10, padx=5)
+
+        self.correo_usuario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese el correo electrónico del usuario: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.correo_usuario_label.grid(row=15, column=0, pady=5, padx=5)
+
+        self.correo_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.correo_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.correo_usuario_entry.grid(row=15, column=1, pady=10, padx=5)
+
+        self.tipo_usuario_label = ck.CTkLabel(self.frame_registrar_usuario, text="Ingrese el tipo de usuario: ",
+                                                font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.tipo_usuario_label.grid(row=16, column=0, pady=5, padx=5)
+
+        self.tipo_usuario_entry = ck.CTkEntry(self.frame_registrar_usuario, textvariable=self.tipo_usuario, width=140, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.tipo_usuario_entry.grid(row=16, column=1, pady=10, padx=5)
+
+        self.registrar_usuario_button = ck.CTkButton(self.frame_registrar_usuario, text="REGISTRAR USUARIO", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), command=self.registrarUsuario)
+        self.registrar_usuario_button.place(x=330, y=530)
+
+        # FRAME MOSTRAR USUARIOS REGISTRADOS
+        self.frame_usuarios_registrados = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+        self.frame_usuarios_registrados.grid(row=0, column=0, sticky="nsew")
+        self.frame_usuarios_registrados.grid_columnconfigure(0, weight=1)  # Expansión horizontal
+        self.frame_usuarios_registrados.grid_rowconfigure(1, weight=1)  # Expansión vertical
+
+        self.usuarios_registrados_label_image = ck.CTkLabel(self.frame_usuarios_registrados, text="", image=usuarios_registrados_image)
+        self.usuarios_registrados_label_image.grid(row=0, columnspan=1, padx=20)
+
+        self.actualizar_button = ck.CTkButton(self.frame_usuarios_registrados, text='ACTUALIZAR TABLA', font=ck.CTkFont(size=15, weight="bold", family="Segoe UI"), command=self.mostrarDatosUsuario)
+        self.actualizar_button.grid(columnspan=1, row=2, pady=5)
+        
+        # Estilo de la tabla para mostrar los datos
+        estilo_tabla = ttk.Style()
+        estilo_tabla.configure("Treeview", font=ck.CTkFont(size=10, weight="bold", family="Segoe UI"), foreground='black', background='white')
+        estilo_tabla.map('Treeview', background=[('selected', 'green')], foreground=[('selected', 'black')])
+        estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        estilo_tabla.configure('Item', foreground='transparent', focuscolor='DarkOrchid1')
+        estilo_tabla.configure('TScrollbar', arrowcolor='DarkOrchid1', bordercolor='black', troughcolor='DarkOrchid1', background='white')
+
+        # Mostrar la tabla en el frame usuario
+        self.frame_tabla_uno = ck.CTkFrame(self.frame_usuarios_registrados)
+        self.frame_tabla_uno.grid(column=0, row=1, sticky='nsew', padx=10)
+
+        self.tabla_uno = ttk.Treeview(self.frame_tabla_uno)
+        self.tabla_uno.grid(column=0, row=0, sticky='nsew')
+
+        ladox = ttk.Scrollbar(self.frame_tabla_uno, orient='horizontal', command=self.tabla_uno.xview)
+        ladox.grid(column=0, row=1, sticky='ew')
+
+        ladoy = ttk.Scrollbar(self.frame_tabla_uno, orient='vertical', command=self.tabla_uno.yview)
+        ladoy.grid(column=1, row=0, sticky='ns')
+
+        # Configurar expansión en todas las direcciones para el frame y la tabla
+        self.frame_tabla_uno.grid_rowconfigure(0, weight=1)
+        self.frame_tabla_uno.grid_columnconfigure(0, weight=1)
+        self.tabla_uno.grid(sticky='nsew')
+
+        # Columnas que se mostrarán en la tabla
+        self.tabla_uno.configure(xscrollcommand=ladox.set, yscrollcommand=ladoy.set)
+        self.tabla_uno['columns'] = ('Nombre', 'Apellido', 'Dirección', 'RUT', 'Celular', 'Correo electrónico', 'Tipo de usuario')
+
+        # Ajustar ancho mínimo y ancho de cada columna de encabezado
+        self.tabla_uno.column('#0', minwidth=60, width=70, anchor='center')
+        self.tabla_uno.column('Nombre', minwidth=100, width=130, anchor='center')
+        self.tabla_uno.column('Apellido', minwidth=100, width=120, anchor='center')
+        self.tabla_uno.column('Dirección', minwidth=100, width=140, anchor='center')
+        self.tabla_uno.column('RUT', minwidth=100, width=105, anchor='center')
+        self.tabla_uno.column('Celular', minwidth=100, width=105, anchor='center')
+        self.tabla_uno.column('Correo electrónico', minwidth=100, width=170, anchor='center')
+        self.tabla_uno.column('Tipo de usuario', minwidth=100, width=120, anchor='center')
+
+        # Configurar el texto de encabezado para que se muestre completo
+        self.tabla_uno.heading('#0', text='Id', anchor='center')
+        self.tabla_uno.heading('Nombre', text='Nombre', anchor='center')
+        self.tabla_uno.heading('Apellido', text='Apellido', anchor='center')
+        self.tabla_uno.heading('Dirección', text='Dirección', anchor='center')
+        self.tabla_uno.heading('RUT', text='RUT', anchor='center')
+        self.tabla_uno.heading('Celular', text='Celular', anchor='center')
+        self.tabla_uno.heading('Correo electrónico', text='Correo electrónico', anchor='center')
+        self.tabla_uno.heading('Tipo de usuario', text='Tipo de usuario', anchor='center')
+
+        self.tabla_uno.bind("<<TreeviewSelect>>", self.obtener_filaUsuario)
+
         # FRAME SELECCIONADO POR DEFECTO
         self.seleccion_frame_nombre("inicio")
 
@@ -900,42 +1182,104 @@ class VentanaPrincipal(ck.CTkToplevel):
     def seleccion_frame_nombre(self, nombre):
         self.inicio_button.configure(fg_color=("gray75", "gray25") if nombre == "inicio" else "transparent")
         self.catalogo.configure(fg_color=("gray75", "gray25") if nombre == "catalogo" else "transparent")
-        self.stock.configure(fg_color=("gray75", "gray25") if nombre == "stock" else "transparent")
+        self.frame_stock.configure(fg_color=("gray75", "gray25") if nombre == "stock" else "transparent")
         self.frame_realizar_prestamo.configure(fg_color=("gray75", "gray25") if nombre == "realizar_prestamo" else "transparent")
+        self.frame_libros_en_prestamo.configure(fg_color=("gray75", "gray25") if nombre == "libros_prestamo" else "transparent")
+        self.frame_prestamos_por_usuario.configure(fg_color=("gray75", "gray25") if nombre == "prestamos_por_usuario" else "transparent")
+        self.frame_renovar_libro.configure(fg_color=("gray75", "gray25") if nombre == "renovar_libro" else "transparent")
+        self.frame_registrar_usuario.configure(fg_color=("gray75", "gray25") if nombre == "registrar_usuario" else "transparent")
+        self.frame_usuarios_registrados.configure(fg_color=("gray75", "gray25") if nombre == "usuarios_registrados" else "transparent")
         
-
-
         # Mostrar frame seleccionado
         if nombre == "inicio":
             self.inicio_frame.grid(row=0, column=0, sticky="nsew")
             self.catalogo.grid_forget()
-            self.stock.grid_forget()
+            self.frame_stock.grid_forget()
             self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid_forget()
-        if nombre == "catalogo":
+            self.frame_prestamos_por_usuario.grid_forget()
+            self.frame_renovar_libro.grid_forget()
+            self.frame_registrar_usuario.grid_forget()
+            self.frame_usuarios_registrados.grid_forget()
+        elif nombre == "catalogo":
             self.inicio_frame.grid_forget()
             self.catalogo.grid(row=0, column=0, sticky="nsew")
-            self.stock.grid_forget()
+            self.frame_stock.grid_forget()
             self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid_forget()
-        if nombre == "stock":
+            self.frame_prestamos_por_usuario.grid_forget()
+            self.frame_renovar_libro.grid_forget()
+            self.frame_registrar_usuario.grid_forget()
+            self.frame_usuarios_registrados.grid_forget()
+        elif nombre == "stock":
             self.inicio_frame.grid_forget()
             self.catalogo.grid_forget()
-            self.stock.grid(row=0, column=0, sticky="nsew")
+            self.frame_stock.grid(row=0, column=0, sticky="nsew")
             self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid_forget()
-        if nombre == "realizar_prestamo":
+            self.frame_prestamos_por_usuario.grid_forget()
+            self.frame_renovar_libro.grid_forget()
+            self.frame_registrar_usuario.grid_forget()
+            self.frame_usuarios_registrados.grid_forget()
+        elif nombre == "realizar_prestamo":
             self.inicio_frame.grid_forget()
             self.catalogo.grid_forget()
-            self.stock.grid_forget()
+            self.frame_stock.grid_forget()
             self.frame_realizar_prestamo.grid(row=0, column=0, sticky="nsew")
             self.frame_libros_en_prestamo.grid_forget()
-        if nombre == "libros_en_prestamo":
+            self.frame_prestamos_por_usuario.grid_forget()
+            self.frame_renovar_libro.grid_forget()
+            self.frame_registrar_usuario.grid_forget()
+            self.frame_usuarios_registrados.grid_forget()
+        elif nombre == "libros_en_prestamo":
             self.inicio_frame.grid_forget()
             self.catalogo.grid_forget()
-            self.stock.grid_forget()
+            self.frame_stock.grid_forget()
             self.frame_realizar_prestamo.grid_forget()
             self.frame_libros_en_prestamo.grid(row=0, column=0, sticky="nsew")
+            self.frame_prestamos_por_usuario.grid_forget()
+            self.frame_renovar_libro.grid_forget()
+            self.frame_registrar_usuario.grid_forget()
+            self.frame_usuarios_registrados.grid_forget()
+        elif nombre == "prestamos_por_usuario":
+            self.inicio_frame.grid_forget()
+            self.catalogo.grid_forget()
+            self.frame_stock.grid_forget()
+            self.frame_realizar_prestamo.grid_forget()
+            self.frame_libros_en_prestamo.grid_forget()
+            self.frame_prestamos_por_usuario.grid(row=0, column=0, sticky="nsew")
+            self.frame_renovar_libro.grid_forget()
+            self.frame_registrar_usuario.grid_forget()
+            self.frame_usuarios_registrados.grid_forget()
+        elif nombre == "renovar_libro":
+            self.inicio_frame.grid_forget()
+            self.catalogo.grid_forget()
+            self.frame_stock.grid_forget()
+            self.frame_realizar_prestamo.grid_forget()
+            self.frame_libros_en_prestamo.grid_forget()
+            self.frame_prestamos_por_usuario.grid_forget()
+            self.frame_renovar_libro.grid(row=0, column=0, sticky="nsew")
+            self.frame_registrar_usuario.grid_forget()
+            self.frame_usuarios_registrados.grid_forget()
+        elif nombre == "registrar_usuario":
+            self.inicio_frame.grid_forget()
+            self.catalogo.grid_forget()
+            self.frame_stock.grid_forget()
+            self.frame_realizar_prestamo.grid_forget()
+            self.frame_libros_en_prestamo.grid_forget()
+            self.frame_prestamos_por_usuario.grid_forget()
+            self.frame_renovar_libro.grid_forget()
+            self.frame_registrar_usuario.grid(row=0, column=0, sticky="nsew")
+            self.frame_usuarios_registrados.grid_forget()
+        elif nombre == "usuarios_registrados":
+            self.inicio_frame.grid_forget()
+            self.catalogo.grid_forget()
+            self.frame_stock.grid_forget()
+            self.frame_realizar_prestamo.grid_forget()
+            self.frame_libros_en_prestamo.grid_forget()
+            self.frame_prestamos_por_usuario.grid_forget()
+            self.frame_renovar_libro.grid_forget()
+            self.frame_usuarios_registrados.grid(row=0, column=0, sticky="nsew")
             
 
     # Métodos para mostrar el frame cuando se pulse el botón
@@ -953,6 +1297,18 @@ class VentanaPrincipal(ck.CTkToplevel):
 
     def frame_libros_en_prestamo_button_evento(self):
         self.seleccion_frame_nombre("libros_en_prestamo")
+
+    def frame_prestamos_por_usuario_button_evento(self):
+        self.seleccion_frame_nombre("prestamos_por_usuario")
+
+    def frame_renovar_libro_button_evento(self):
+        self.seleccion_frame_nombre("renovar_libro")
+
+    def frame_registrar_usuario_button_evento(self):
+        self.seleccion_frame_nombre("registrar_usuario")
+
+    def usuarios_registrados_button_evento(self):
+        self.seleccion_frame_nombre("usuarios_registrados")
 
     # Método para cambiar la apariencia de la app
     def evento_cambiar_apariencia(self, new_appearance_mode):
@@ -1166,9 +1522,9 @@ class VentanaPrincipal(ck.CTkToplevel):
         barra = BarraProgreso(total_elementos)
 
         # Nostrar barra de progreso en el Frame
-        self.barra_progreso_label = ck.CTkLabel(self.stock, text="",
+        self.barra_progreso_label = ck.CTkLabel(self.frame_stock, text="",
                                                 font=ck.CTkFont(size=14, weight="bold", family="Segoe UI Historic"))
-        self.barra_progreso_label.place(x=40, y=370)
+        self.barra_progreso_label.place(x=40, y=430)
 
         # Realizar el préstamo
         for i in range(total_elementos):
@@ -1636,7 +1992,45 @@ class VentanaPrincipal(ck.CTkToplevel):
                 self.frame_imagenes_catalogo.grid_rowconfigure(i // 8, weight=1)  # Expansión vertical
                 self.frame_imagenes_catalogo.grid_columnconfigure(i % 8, weight=1)  # Expansión horizontal
 
-    # Método para validar el correo electrónico
+    # MÉTODOS PARA FRAME PRESTAMOS POR USUARIO
+    # Método para mostrar los prestamos por usuario
+    def mostrarDatosPrestamoPorRut(self, event=None):
+        rut_usuario = self.rut_usuario_prestamos_entry.get()
+
+        if rut_usuario:
+            # Validar el RUT ingresado
+            if self.validarRut(rut_usuario):
+                # Obtener datos del préstamo por el RUT del usuario
+                datos_prestamo = self.bd.obtenerPrestamoUsuarioRut(rut_usuario)
+
+                if datos_prestamo is not None:
+                    if datos_prestamo:  # Si la lista no está vacía
+                        # Eliminar cualquier dato previo en la tabla
+                        self.tabla_tres.delete(*self.tabla_tres.get_children())
+
+                        # Insertar los datos en la tabla
+                        for prestamo in datos_prestamo:
+                            self.tabla_tres.insert('', 'end', values=prestamo)
+                    else:
+                        messagebox.showinfo("Búsqueda de préstamo", f"No se encontraron préstamos para el RUT: {rut_usuario}.")
+                else:
+                    messagebox.showerror("Búsqueda de préstamo", f"El RUT {rut_usuario} no se encuentra en la base de datos.")
+            else:
+                messagebox.showerror("RUT inválido", "El RUT ingresado no es válido. Por favor, ingrese un RUT válido.")
+        else:
+            messagebox.showwarning("Campo vacío", "Por favor, ingrese un RUT de usuario para realizar la búsqueda.")
+
+    # MÉTODOS ADICIONALES
+    def validarEnTiempoReal(self, *args):
+        # Validar número de celular
+        entrada_celular = self.celular_usuario.get()
+        if not entrada_celular.isdigit():
+            self.celular_usuario_entry.delete(0, tk.END)
+            self.celular_usuario_entry.insert(0, "".join(filter(str.isdigit, entrada_celular)))
+
+        # Método para validar el correo electrónico
+    
+    # Métodos para validad el correo ingresado
     def validarCorreo(self, correo):
         patron = r'^[\w\.-]+@\w+\.\w+$'
 
@@ -1666,11 +2060,13 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         return dv == dvEsperado
 
+    # Método para limpiar los valores en los entry's
     def limpiarCamposRenovacion(self):
         self.rut_usuario.set('')
         self.isbn.set('')
         self.fecha_devolucion.set_date(datetime.now().date())
-        
+
+    # Método para limpiar los valores en los entry's    
     def limpiarCamposUsuario(self):
         self.nombre_usuario.set('')
         self.apellido_ususario.set('')
@@ -1680,6 +2076,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.correo_usuario.set('')
         self.tipo_usuario.set('')
     
+    # Método para limpiar los valores en los entry's
     def limpiarCamposPrestamo(self):
         self.rut_usuario.set('')
         self.isbn.set('')
@@ -1694,38 +2091,6 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.titulo.set('')
         self.numero_paginas.set('')
         self.stockLibro.set('')
-
-    # MÉTODOS PARA FRAME PRESTAMOS POR USUARIO
-    # Método para mostrar los prestamos por usuario
-    def mostrarDatosPrestamoPorRut(self, event = None):
-        rut_usuario = self.rut_usuario_prestamos_entry.get()
-
-        if rut_usuario:
-            # Validar el RUT ingresado
-            if self.validarRut(rut_usuario):
-                # Obtener datos del préstamo por el RUT del usuario
-                datos_prestamo = self.bd.obtenerPrestamoUsuarioRut(rut_usuario)
-
-                if datos_prestamo:
-                    # Eliminar cualquier dato previo en la tabla
-                    self.tabla_tres.delete(*self.tabla_tres.get_children())
-
-                    # Insertar los datos en la tabla
-                    for prestamo in datos_prestamo:
-                        self.tabla_tres.insert('', 'end', values=prestamo)
-                else:
-                    messagebox.showerror("Búsqueda de préstamo", f"No se encontraron préstamos para el RUT: {rut_usuario}.")
-            else:
-                messagebox.showerror("RUT inválido", "El RUT ingresado no es válido. Por favor, ingrese un RUT válido.")
-        else:
-            messagebox.showwarning("Campo vacío", "Por favor, ingrese un RUT de usuario para realizar la búsqueda.")
-
-    def validarEnTiempoReal(self, *args):
-        # Validar número de celular
-        entrada_celular = self.celular_usuario.get()
-        if not entrada_celular.isdigit():
-            self.celular_usuario_entry.delete(0, tk.END)
-            self.celular_usuario_entry.insert(0, "".join(filter(str.isdigit, entrada_celular)))
 
     # Método para cerrar sesion en la app
     def cerrar_sesion(self):

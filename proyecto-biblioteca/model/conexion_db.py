@@ -342,7 +342,23 @@ class BD:
             messagebox.showerror("Error al obtener libros por ISBN", f"{str(e)}")
 
     # MÉTODOS PARA FRAME PRESTAMOS POR USUARIO
+    def verificarRutEnBaseDeDatos(self, rut):
+        sql = "SELECT COUNT(*) FROM usuario WHERE RUT_U = ?"
+        try:
+            self.cursor.execute(sql, (rut,))
+            result = self.cursor.fetchone()
+            if result[0] > 0:
+                return True
+            else:
+                return False
+        except Exception as e:
+            messagebox.showerror("Error al verificar el RUT en la base de datos", f"{str(e)}")
+            return False
+
     def obtenerPrestamoUsuarioRut(self, rut):
+        if not self.verificarRutEnBaseDeDatos(rut):
+            return None
+
         sql = "SELECT l.ISBN, l.TITULO, u.NOMBRE_U, u.APELLIDO_U, u.RUT_U FROM libro l LEFT JOIN prestamo p ON l.ISBN = p.ISBN LEFT JOIN usuario u ON u.RUT_U = p.RUT_U WHERE u.RUT_U = ?"
         try:
             self.cursor.execute(sql, (rut,))
@@ -350,3 +366,4 @@ class BD:
             return result
         except Exception as e:
             messagebox.showerror("Error al obtener el prestamo por RUT", f"{str(e)}")
+            return None
