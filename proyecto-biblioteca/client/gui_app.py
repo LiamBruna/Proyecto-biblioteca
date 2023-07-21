@@ -1186,9 +1186,65 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         self.tabla_uno.bind("<<TreeviewSelect>>", self.obtener_filaUsuario)
 
-        # FRAME PAGAR MULTA
+        # ******************FRAME PAGAR MULTA******************
         self.frame_pagar_multa = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.frame_pagar_multa.grid(row=0, column=0, sticky="nsew")
+        self.frame_pagar_multa.grid_columnconfigure(0, weight=1)
+
+        self.pagar_multa_imagen_label = ck.CTkLabel(self.frame_pagar_multa, text="", image=pagar_multa_imagen)
+        self.pagar_multa_imagen_label.grid(row=0, column=0, columnspan=3, pady=10)
+
+        self.buscar_rut_multa_label = ck.CTkLabel(self.frame_pagar_multa, text="Ingrese el RUT del usuario: ",
+                                                font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
+        self.buscar_rut_multa_label.grid(row=1, columnspan=2, pady=5, padx=5, sticky="w")
+
+        self.buscar_rut_multa_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.buscar_rut_multa_entry.place(x=330, y=148)
+
+        self.buscar_rut_multa_button = ck.CTkButton(self.frame_pagar_multa, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI")) # command=self.mostrarDatosPrestamoPorRut
+        self.buscar_rut_multa_button.place(x=490, y=148)
+
+        # Frame para el Treeview
+        self.frame_tabla_multa = ck.CTkFrame(self.frame_pagar_multa)
+        self.frame_tabla_multa.grid(column=0, row=2, sticky='nsew', padx=10)
+
+        self.tabla_multa = ttk.Treeview(self.frame_tabla_multa)
+        self.tabla_multa.grid(column=0, row=0, sticky='nsew')
+
+        ladoy = ttk.Scrollbar(self.frame_tabla_multa, orient='vertical', command=self.tabla_multa.yview)
+        ladoy.grid(column=1, row=0, sticky='ns')
+
+        # Configurar expansión en todas las direcciones para el frame y la tabla
+        self.frame_tabla_multa.grid_rowconfigure(1, weight=1)
+        self.frame_tabla_multa.grid_columnconfigure(0, weight=1)
+        self.tabla_multa.grid(sticky="nsew")
+
+        # Columnas que se mostrarán en la tabla
+        self.tabla_multa['columns'] = ('Nombre', 'Apellido', 'Dirección', 'RUT', 'Celular', 'Correo electrónico', 'Tipo de usuario', 'Multa', 'Monto')
+
+        # Ajustar ancho mínimo y ancho de cada columna de encabezado
+        self.tabla_multa.column('#0', minwidth=60, width=70, anchor='center')
+        self.tabla_multa.column('Nombre', minwidth=100, width=130, anchor='center')
+        self.tabla_multa.column('Apellido', minwidth=100, width=120, anchor='center')
+        self.tabla_multa.column('Dirección', minwidth=100, width=140, anchor='center')
+        self.tabla_multa.column('RUT', minwidth=100, width=105, anchor='center')
+        self.tabla_multa.column('Celular', minwidth=100, width=105, anchor='center')
+        self.tabla_multa.column('Correo electrónico', minwidth=100, width=170, anchor='center')
+        self.tabla_multa.column('Tipo de usuario', minwidth=100, width=120, anchor='center')
+        self.tabla_multa.column('Multa', minwidth=100, width=120, anchor='center')
+        self.tabla_multa.column('Monto', minwidth=100, width=120, anchor='center')
+
+        # Configurar el texto de encabezado para que se muestre completo
+        self.tabla_multa.heading('#0', text='Id', anchor='center')
+        self.tabla_multa.heading('Nombre', text='Nombre', anchor='center')
+        self.tabla_multa.heading('Apellido', text='Apellido', anchor='center')
+        self.tabla_multa.heading('Dirección', text='Dirección', anchor='center')
+        self.tabla_multa.heading('RUT', text='RUT', anchor='center')
+        self.tabla_multa.heading('Celular', text='Celular', anchor='center')
+        self.tabla_multa.heading('Correo electrónico', text='Correo electrónico', anchor='center')
+        self.tabla_multa.heading('Tipo de usuario', text='Tipo de usuario', anchor='center')
+        self.tabla_multa.heading('Multa', text='Multa', anchor='center')
+        self.tabla_multa.heading('Monto', text='Monto', anchor='center')
 
         # FRAME SELECCIONADO POR DEFECTO
         self.seleccion_frame_nombre("inicio")
