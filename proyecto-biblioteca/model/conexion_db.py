@@ -371,10 +371,26 @@ class BD:
 
     # MÉTODOS PARA EL FRAME PAGAR MULTA
     def obtenerUsuarioMulta(self, rut):
-        sql = "SELECT NOMBRE_U, APELLIDO_U, DIRECCION_U, RUT_U, CELULAR_U, CORREO_U, TIPO_U, MULTA, MONTO FROM usuario WHERE RUT_U = ?"
+        sql = "SELECT U.NOMBRE_U, U.APELLIDO_U, U.DIRECCION_U, U.RUT_U, U.CELULAR_U, U.CORREO_U, U.TIPO_U, U.MULTA, SUM(U.MONTO) AS MONTO FROM usuario U LEFT JOIN prestamo P ON U.RUT_U = P.RUT_U WHERE U.RUT_U = ? AND P.F_DEVOLUCION < date('now') GROUP BY U.RUT_U"
         try:
             self.cursor.execute(sql, (rut,))
             result = self.cursor.fetchall()
             return result
         except Exception as e:
             messagebox.showerror("Error al obtener el usuario por RUT", f"{str(e)}")
+
+    def marcarMultaPagada(self, rut):
+        sql = "UPDATE usuario SET MULTA = 'Pagado' WHERE RUT_U = ?"
+        try:
+            self.cursor.execute(sql, (rut,))
+            self.connect.commit()
+        except Exception as e:
+            messagebox.showerror("Error al marcar multa como pagada", f"{str(e)}")
+
+    def eliminarPrestamo(self, rut):
+        sql = "DELETE FROM prestamo WHERE RUT_U = ?"
+        try:
+            self.cursor.execute(sql, (rut,))
+            self.connect.commit()
+        except Exception as e:
+            messagebox.showerror("Error al eliminar préstamo", f"{str(e)}")

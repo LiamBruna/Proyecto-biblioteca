@@ -589,13 +589,18 @@ class VentanaPrincipal(ck.CTkToplevel):
                                            image=pagar_multa_icono, anchor="w",command=self.pagar_multa_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
         self.frame_pagar_multa_button.grid(row=11, column=0, sticky="ew")
 
+        self.frame_devolver_libro_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Devolver Libros",
+                                           fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
+                                           image=pagar_multa_icono, anchor="w",command=self.devolver_libro_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.frame_devolver_libro_button.grid(row=12, column=0, sticky="ew")
+
         # Menu de opciones para cambiar de apariencia la app
         self.menu_apariencia = ck.CTkOptionMenu(self.frameNavegacion, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"), values=["Dark", "Light"], command=self.evento_cambiar_apariencia)
-        self.menu_apariencia.grid(row=12, column=0, padx=20, pady=20, sticky="s")
+        self.menu_apariencia.grid(row=13, column=0, padx=20, pady=20, sticky="s")
 
         # Botón para cerrar sesión
         self.button_cerrarSesion = ck.CTkButton(self.frameNavegacion, font=ck.CTkFont(size=18, weight="bold", family="Segoe UI Historic"), text="Cerrar sesión", image=cerrar_sesion_imagen, command=self.cerrar_sesion)
-        self.button_cerrarSesion.grid(row=13, column=0, padx=20, pady=20, sticky="s")
+        self.button_cerrarSesion.grid(row=14, column=0, padx=20, pady=20, sticky="s")
 
         # Contenedor main para los frames
         self.main_frame = ck.CTkFrame(self, corner_radius=0, fg_color="transparent")
@@ -1302,8 +1307,25 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.multa_monto_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
         self.multa_monto_usuario_entry.place(x=800, y=695)
 
-        self.pagar_multa_button = ck.CTkButton(self.frame_pagar_multa, text="PAGAR MULTA", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.pagar_multa_button = ck.CTkButton(self.frame_pagar_multa, text="PAGAR MULTA", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), command=self.pagarMulta)
         self.pagar_multa_button.place(x=1005, y=690)
+
+        # ******************FRAME PARA DEVOLVER LIBROS******************
+        self.frame_devolver_libro = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
+        self.frame_devolver_libro.grid(row=0, column=0, sticky="nsew")
+
+        self.devolver_libro_label_imagen = ck.CTkLabel(self.frame_devolver_libro, text="", image=pagar_multa_imagen)
+        self.devolver_libro_label_imagen.grid(row=0, column=0, columnspan=3, pady=10)
+
+        self.buscar_rut_devolver_libro_label = ck.CTkLabel(self.frame_devolver_libro, text="Ingrese el RUT del usuario: ",
+                                                font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
+        self.buscar_rut_devolver_libro_label.grid(row=1, columnspan=2, pady=5, padx=10, sticky="w")
+
+        self.buscar_rut_devolver_libro_entry = ck.CTkEntry(self.frame_devolver_libro, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        self.buscar_rut_devolver_libro_entry.place(x=330, y=148)
+
+        self.buscar_rut_devolver_libro_button = ck.CTkButton(self.frame_devolver_libro, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), command=self.cargarDatosTablaMultas) # command=self.mostrarDatosPrestamoPorRut
+        self.buscar_rut_devolver_libro_button.place(x=490, y=148)
 
         # FRAME SELECCIONADO POR DEFECTO
         self.seleccion_frame_nombre("inicio")
@@ -1320,6 +1342,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.frame_registrar_usuario.configure(fg_color=("gray75", "gray25") if nombre == "registrar_usuario" else "transparent")
         self.frame_usuarios_registrados.configure(fg_color=("gray75", "gray25") if nombre == "usuarios_registrados" else "transparent")
         self.frame_pagar_multa.configure(fg_color=("gray75", "gray25") if nombre == "pagar_multa" else "transparent")
+        self.frame_devolver_libro.configure(fg_color=("gray75", "gray25") if nombre == "devolver_libro" else "transparent")
         
         # Mostrar frame seleccionado
         if nombre == "inicio":
@@ -1333,6 +1356,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_registrar_usuario.grid_forget()
             self.frame_usuarios_registrados.grid_forget()
             self.frame_pagar_multa.grid_forget()
+            self.frame_devolver_libro.grid_forget()
         elif nombre == "catalogo":
             self.inicio_frame.grid_forget()
             self.catalogo.grid(row=0, column=0, sticky="nsew")
@@ -1344,6 +1368,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_registrar_usuario.grid_forget()
             self.frame_usuarios_registrados.grid_forget()
             self.frame_pagar_multa.grid_forget()
+            self.frame_devolver_libro.grid_forget()
         elif nombre == "stock":
             self.inicio_frame.grid_forget()
             self.catalogo.grid_forget()
@@ -1355,6 +1380,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_registrar_usuario.grid_forget()
             self.frame_usuarios_registrados.grid_forget()
             self.frame_pagar_multa.grid_forget()
+            self.frame_devolver_libro.grid_forget()
         elif nombre == "realizar_prestamo":
             self.inicio_frame.grid_forget()
             self.catalogo.grid_forget()
@@ -1366,6 +1392,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_registrar_usuario.grid_forget()
             self.frame_usuarios_registrados.grid_forget()
             self.frame_pagar_multa.grid_forget()
+            self.frame_devolver_libro.grid_forget()
         elif nombre == "libros_en_prestamo":
             self.inicio_frame.grid_forget()
             self.catalogo.grid_forget()
@@ -1377,6 +1404,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_registrar_usuario.grid_forget()
             self.frame_usuarios_registrados.grid_forget()
             self.frame_pagar_multa.grid_forget()
+            self.frame_devolver_libro.grid_forget()
         elif nombre == "prestamos_por_usuario":
             self.inicio_frame.grid_forget()
             self.catalogo.grid_forget()
@@ -1388,6 +1416,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_registrar_usuario.grid_forget()
             self.frame_usuarios_registrados.grid_forget()
             self.frame_pagar_multa.grid_forget()
+            self.frame_devolver_libro.grid_forget()
         elif nombre == "renovar_libro":
             self.inicio_frame.grid_forget()
             self.catalogo.grid_forget()
@@ -1399,6 +1428,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_registrar_usuario.grid_forget()
             self.frame_usuarios_registrados.grid_forget()
             self.frame_pagar_multa.grid_forget()
+            self.frame_devolver_libro.grid_forget()
         elif nombre == "registrar_usuario":
             self.inicio_frame.grid_forget()
             self.catalogo.grid_forget()
@@ -1410,6 +1440,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_registrar_usuario.grid(row=0, column=0, sticky="nsew")
             self.frame_usuarios_registrados.grid_forget()
             self.frame_pagar_multa.grid_forget()
+            self.frame_devolver_libro.grid_forget()
         elif nombre == "usuarios_registrados":
             self.inicio_frame.grid_forget()
             self.catalogo.grid_forget()
@@ -1420,6 +1451,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_renovar_libro.grid_forget()
             self.frame_usuarios_registrados.grid(row=0, column=0, sticky="nsew")
             self.frame_pagar_multa.grid_forget()
+            self.frame_devolver_libro.grid_forget()
         elif nombre == "pagar_multa":
             self.inicio_frame.grid_forget()
             self.catalogo.grid_forget()
@@ -1430,6 +1462,18 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.frame_renovar_libro.grid_forget()
             self.frame_usuarios_registrados.grid_forget()
             self.frame_pagar_multa.grid(row=0, column=0, sticky="nsew")
+            self.frame_devolver_libro.grid_forget()
+        elif nombre == "devolver_libro":
+            self.inicio_frame.grid_forget()
+            self.catalogo.grid_forget()
+            self.frame_stock.grid_forget()
+            self.frame_realizar_prestamo.grid_forget()
+            self.frame_libros_en_prestamo.grid_forget()
+            self.frame_prestamos_por_usuario.grid_forget()
+            self.frame_renovar_libro.grid_forget()
+            self.frame_usuarios_registrados.grid_forget()
+            self.frame_pagar_multa.grid_forget()
+            self.frame_devolver_libro.grid(row=0, column=0, sticky="nsew")
             
 
     # Métodos para mostrar el frame cuando se pulse el botón
@@ -1462,6 +1506,9 @@ class VentanaPrincipal(ck.CTkToplevel):
 
     def pagar_multa_button_evento(self):
         self.seleccion_frame_nombre("pagar_multa")
+    
+    def devolver_libro_button_evento(self):
+        self.seleccion_frame_nombre("devolver_libro")
 
     # Método para cambiar la apariencia de la app
     def evento_cambiar_apariencia(self, new_appearance_mode):
@@ -2246,6 +2293,28 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.multa_tipo_usuario_entry.configure(state="disabled")
         self.multa_multa_usuario_entry.configure(state="disabled")
         self.multa_monto_usuario_entry.configure(state="disabled")
+
+    def pagarMulta(self):
+        rut_usuario = self.buscar_rut_multa_entry.get()
+        monto = self.multa_monto_usuario_entry.get()
+
+        if rut_usuario:
+            # Validar el RUT ingresado
+            if self.validarRut(rut_usuario):
+                # Marcar la multa como pagada en la tabla "usuario"
+                self.bd.marcarMultaPagada(rut_usuario)
+
+                # Eliminar el préstamo del usuario
+                self.bd.eliminarPrestamo(rut_usuario)
+
+                # Actualizar la tabla de multas para reflejar los cambios
+                self.cargarDatosTablaMultas()
+
+                messagebox.showinfo("Pagar multa", f"La multa con RUT: {rut_usuario} ha sido pagada, monto total: {monto}")
+            else:
+                messagebox.showerror("RUT inválido", "El RUT ingresado no es válido. Por favor, ingrese un RUT válido.")
+        else:
+            messagebox.showwarning("Campo vacío", "Por favor, ingrese un RUT de usuario para realizar el pago de la multa.")
 
     # MÉTODOS ADICIONALES
     def validarEnTiempoReal(self, *args):
