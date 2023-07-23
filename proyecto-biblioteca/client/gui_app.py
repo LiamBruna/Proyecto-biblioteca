@@ -528,6 +528,8 @@ class VentanaPrincipal(ck.CTkToplevel):
         registrar_usuario_imagen = ck.CTkImage(Image.open("img\\registrar_usuario.ico"), size=(450, 120))
         pagar_multa_icono = ck.CTkImage(Image.open("img\\pagar_multa.ico"), size=(28, 28))
         pagar_multa_imagen = ck.CTkImage(Image.open("img\\pagar_multa_imagen.ico"), size=(450, 120))
+        devolver_libros_imagen = ck.CTkImage(Image.open("img\\devolver_libros_imagen.ico"), size=(450, 120))
+        devolver_libros_icono = ck.CTkImage(Image.open("img\\devolver_libros_icono.ico"), size=(28, 28))
 
         # Crear icono en frame lateral
         self.frameNavegacion_label = ck.CTkLabel(self.frameNavegacion, text="  Biblioteca Virtual", image=logo_imagen,
@@ -604,7 +606,7 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         self.frame_devolver_libro_button = ck.CTkButton(self.frameNavegacion, corner_radius=0, height=40, border_spacing=10, text="Devolver Libros",
                                            fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                           image=pagar_multa_icono, anchor="w",command=self.devolver_libro_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+                                           image=devolver_libros_icono, anchor="w",command=self.devolver_libro_button_evento, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
         self.frame_devolver_libro_button.grid(row=12, column=0, sticky="ew")
 
         # Menu de opciones para cambiar de apariencia la app
@@ -1340,7 +1342,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.frame_devolver_libro.grid_rowconfigure(1, weight=6)
         self.frame_devolver_libro.grid_rowconfigure(0, weight=1)
 
-        self.devolver_libro_label_imagen = ck.CTkLabel(self.frame_devolver_libro, text="", image=pagar_multa_imagen)
+        self.devolver_libro_label_imagen = ck.CTkLabel(self.frame_devolver_libro, text="", image=devolver_libros_imagen)
         self.devolver_libro_label_imagen.grid(row=0, columnspan=1, padx=20)
 
         self.buscar_rut_devolver_libro_label = ck.CTkLabel(self.frame_devolver_libro, text="Ingrese el RUT del usuario: ",
