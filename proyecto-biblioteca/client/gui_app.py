@@ -469,18 +469,18 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         self.prestamo_seleccionado = None
 
-        # Variables de texto para el Frame de stock
+        # Variables para el Frame de stock
         self.stockLibro = ck.IntVar(value="")
         self.numero_paginas = ck.IntVar(value="")
         self.titulo = ck.StringVar()
         self.isbn = ck.StringVar()
         self.buscar_actualiza = ck.StringVar()
 
-        # Variables de texto para el Frame Realizar Préstamo
+        # Variables para el Frame Realizar Préstamo
         self.rut_usuario = ck.StringVar()
         self.tipo_usuario = ck.StringVar()
 
-        # Variables de texto para el Frame Registrar Usuario
+        # Variables para el Frame Registrar Usuario
         self.nombre_usuario = ck.StringVar()
         self.apellido_ususario = ck.StringVar()
         self.direccion_usuario = ck.StringVar()
@@ -488,6 +488,17 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.celular_usuario = ck.StringVar()
         self.celular_usuario.trace("w", self.validarEnTiempoReal)
         self.correo_usuario = ck.StringVar()
+
+        # Variables para el Frame Pagar Multa
+        self.multa_nombre_usuario = ck.StringVar()
+        self.multa_apellido_usuario = ck.StringVar()
+        self.multa_rut_usuario = ck.StringVar()
+        self.multa_celular_usuario = ck.StringVar()
+        self.multa_correo_usuario = ck.StringVar()
+        self.multa_tipo_usuario = ck.StringVar()
+        self.multa_multa_usuario = ck.StringVar()
+        self.multa_monto_usuario = ck.StringVar()
+        self.multa_isbn_usuario = ck.StringVar()
 
         # Crear Frame lateral izquierdo para la navegación
         self.frameNavegacion = ck.CTkFrame(self, corner_radius=0)
@@ -610,7 +621,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.main_frame.grid_columnconfigure(0, weight=1)
         self.main_frame.grid_rowconfigure(0, weight=1)
 
-        # Frame inicio de app
+        # ******************FRAME INICIO APP******************
         self.inicio_frame = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.inicio_frame.grid(row=0, column=0, sticky="nsew")
         self.inicio_frame.grid_columnconfigure(0, weight=1)
@@ -681,6 +692,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.catalogo = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.catalogo.grid(row=0, column=0, sticky="nsew")
         self.catalogo.grid_columnconfigure(5, weight=1)
+        self.catalogo.grid_rowconfigure(2, weight=2)
 
         self.catalogo_image_label = ck.CTkLabel(self.catalogo, text="", image=catalogo_imagen)
         self.catalogo_image_label.grid(row=0, column=0, columnspan=6, padx=20)
@@ -732,7 +744,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         ladoy = ttk.Scrollbar(self.frame_imagenes_catalogo, orient="vertical", command=self.canvas.yview)
         ladoy.grid(row=0, column=1, sticky="ns")
 
-        self.canvas.grid_rowconfigure(0, weight=1)
+        self.canvas.grid_rowconfigure(0, weight=2)
         self.canvas.grid_columnconfigure(0, weight=1)
         self.canvas.grid(sticky="nsew")
         
@@ -752,7 +764,7 @@ class VentanaPrincipal(ck.CTkToplevel):
             if imagen_bytes is not None:
                 imagen_flip = self.crear_imagen_flip(imagen_bytes, titulo, f"ISBN: {isbn}\nAutor: {nombre} {apellido}\nNacionalidad: {nacionalidad}")
                 imagen_flip.grid(row=i // 8, column=i % 8, padx=10, pady=10, sticky="nsew")
-                self.frame_imagenes.grid_rowconfigure(i // 8, weight=1)  # Expansión vertical
+                self.frame_imagenes.grid_rowconfigure(i // 8, weight=2)  # Expansión vertical
                 self.frame_imagenes.grid_columnconfigure(i % 8, weight=1)  # Expansión horizontal
 
         self.canvas.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
@@ -1259,63 +1271,63 @@ class VentanaPrincipal(ck.CTkToplevel):
                                                 font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
         self.multa_nombre_usuario_label.place(x=30, y=450)
 
-        self.multa_nombre_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
+        self.multa_nombre_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled", textvariable=self.multa_nombre_usuario)
         self.multa_nombre_usuario_entry.place(x=140, y=455)
 
         self.multa_apellido_usuario_label = ck.CTkLabel(self.frame_pagar_multa, text="Apellido: ",
                                                 font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
         self.multa_apellido_usuario_label.place(x=320, y=450)
 
-        self.multa_apellido_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
+        self.multa_apellido_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled", textvariable=self.multa_apellido_usuario)
         self.multa_apellido_usuario_entry.place(x=430, y=455)
 
         self.multa_rut_usuario_label = ck.CTkLabel(self.frame_pagar_multa, text="RUT: ",
                                                 font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
         self.multa_rut_usuario_label.place(x=610, y=450)
 
-        self.multa_rut_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
+        self.multa_rut_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled", textvariable=self.multa_rut_usuario)
         self.multa_rut_usuario_entry.place(x=670, y=452)
 
         self.multa_celular_usuario_label = ck.CTkLabel(self.frame_pagar_multa, text="Celular: ",
                                                 font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
         self.multa_celular_usuario_label.place(x=850, y=450)
 
-        self.multa_celular_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
+        self.multa_celular_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled", textvariable=self.multa_celular_usuario)
         self.multa_celular_usuario_entry.place(x=950, y=452)
 
         self.multa_correo_usuario_label = ck.CTkLabel(self.frame_pagar_multa, text="Correo electrónico: ",
                                                 font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
         self.multa_correo_usuario_label.place(x=30, y=550)
 
-        self.multa_correo_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
+        self.multa_correo_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled", textvariable=self.multa_correo_usuario)
         self.multa_correo_usuario_entry.place(x=264, y=555)
 
         self.multa_tipo_usuario_label = ck.CTkLabel(self.frame_pagar_multa, text="Tipo de usuario: ",
                                                 font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
         self.multa_tipo_usuario_label.place(x=450, y=550)
 
-        self.multa_tipo_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
+        self.multa_tipo_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled", textvariable=self.multa_tipo_usuario)
         self.multa_tipo_usuario_entry.place(x=650, y=555)
 
         self.multa_multa_usuario_label = ck.CTkLabel(self.frame_pagar_multa, text="Multa: ",
                                                 font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
         self.multa_multa_usuario_label.place(x=850, y=550)
 
-        self.multa_multa_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
+        self.multa_multa_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled", textvariable=self.multa_multa_usuario)
         self.multa_multa_usuario_entry.place(x=930, y=555)
 
         self.multa_monto_usuario_label = ck.CTkLabel(self.frame_pagar_multa, text="Monto: ",
                                                 font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
         self.multa_monto_usuario_label.place(x=700, y=690)
 
-        self.multa_monto_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
+        self.multa_monto_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled", textvariable=self.multa_monto_usuario)
         self.multa_monto_usuario_entry.place(x=800, y=695)
 
         self.multa_isbn_usuario_label = ck.CTkLabel(self.frame_pagar_multa, text="ISBN: ",
                                                 font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
         self.multa_isbn_usuario_label.place(x=400, y=690)
 
-        self.multa_isbn_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
+        self.multa_isbn_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled", textvariable=self.multa_isbn_usuario)
         self.multa_isbn_usuario_entry.place(x=480, y=695)
 
         self.pagar_multa_button = ck.CTkButton(self.frame_pagar_multa, text="PAGAR MULTA", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), command=self.pagarMulta)
@@ -1340,6 +1352,9 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         self.buscar_rut_devolver_libro_button = ck.CTkButton(self.frame_devolver_libro, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), command=self.buscarPrestamosPorRut) # command=self.mostrarDatosPrestamoPorRut
         self.buscar_rut_devolver_libro_button.place(x=480, y=148)
+
+        self.actualizar_tabla_devolver_button = ck.CTkButton(self.frame_devolver_libro, text="ACTUALIZAR TABLA", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), command=self.cargarDatosTablaDevolverLibro) # command=self.mostrarDatosPrestamoPorRut
+        self.actualizar_tabla_devolver_button.place(x=845, y=148)
 
         # Estilo de la tabla para mostrar los datos
         estilo_tabla = ttk.Style()
@@ -2002,7 +2017,7 @@ class VentanaPrincipal(ck.CTkToplevel):
         apellido = self.apellido_ususario.get()
         direccion = self.direccion_usuario.get()
         rut = self.rut_usuario.get()
-        celular = self.celular_usuario.get() + self.codigo_pais_entry.get()
+        celular = self.codigo_pais_entry.get() + self.celular_usuario.get()
         correo = self.correo_usuario.get()
         tipo = self.tipo_usuario.get()
 
@@ -2010,7 +2025,6 @@ class VentanaPrincipal(ck.CTkToplevel):
             messagebox.showerror("Registrar Usuario", "Debe de ingresar un rut.")
 
         if self.validarRut(rut):
-            if celular.isdigit():
                 if self.validarCorreo(correo):
                     # Crear instancia de BarraProgreso
                     total_elementos = 100
@@ -2019,14 +2033,14 @@ class VentanaPrincipal(ck.CTkToplevel):
                     # Nostrar barra de progreso en el Frame
                     self.barra_progreso_label = ck.CTkLabel(self.frame_registrar_usuario, text="",
                                                             font=ck.CTkFont(size=14, weight="bold", family="Segoe UI Historic"))
-                    self.barra_progreso_label.place(x=80, y=520)
+                    self.barra_progreso_label.place(x=30, y=570)
 
                     # Realizar el préstamo
                     for i in range(total_elementos):
                         mensaje_progreso = barra.actualizar()
                         self.barra_progreso_label.configure(text=mensaje_progreso)
                         self.frame_registrar_usuario.update() # Actualizar la ventana
-                        time.sleep(0.1)
+                        time.sleep(0.003)
 
                     self.bd.registrarUsuario(nombre, apellido, direccion, rut, celular, correo, tipo)
                     self.limpiarCamposUsuario()
@@ -2035,8 +2049,6 @@ class VentanaPrincipal(ck.CTkToplevel):
                     self.frame_registrar_usuario.update() # Actualizar la ventana
                 else:
                     messagebox.showerror("Registrar Usuario", f"El correo {correo} no es valido.")
-            else:
-                messagebox.showerror("Registrar Usuario", "El número de celular no es valido.")
         else:
             messagebox.showerror("Registrar Usuario", f"El RUT {rut} ingresado no es valido.")
 
@@ -2380,13 +2392,11 @@ class VentanaPrincipal(ck.CTkToplevel):
             if self.validarRut(rut_usuario):
                 # Marcar la multa como pagada en la tabla "usuario"
                 self.bd.marcarMultaPagada(rut_usuario, isbn)
-
-                # Eliminar el préstamo del usuario
-                #self.bd.eliminarPrestamo(rut_usuario)
+                self.limpiarCamposPagarMulta()
 
                 # Actualizar la tabla de multas para reflejar los cambios
                 self.cargarDatosTablaMultas()
-
+                
                 messagebox.showinfo("Pagar multa", f"La multa con RUT: {rut_usuario} ha sido pagada, monto total: {monto}")
             else:
                 messagebox.showerror("RUT inválido", "El RUT ingresado no es válido. Por favor, ingrese un RUT válido.")
@@ -2428,25 +2438,57 @@ class VentanaPrincipal(ck.CTkToplevel):
             self.prestamo_seleccionado = None
 
     def devolverLibro(self):
-        if self.prestamo_seleccionado:
-            isbn_seleccionado = self.prestamo_seleccionado[5]  # ISBN del libro seleccionado
+        selected_item = self.tabla_devolver_libro.selection()
+        if not selected_item:
+            messagebox.showwarning("Selección requerida", "Por favor, seleccione un préstamo de la tabla para devolver el libro.")
+            return
+
+        isbn = self.tabla_devolver_libro.item(selected_item, "values")[5]  # Obtener el ISBN seleccionado
+
+        # Obtener el estado de la multa utilizando el ISBN seleccionado
+        multa_estado = self.bd.obtenerEstadoMultaPorISBN(isbn)
+
+        if multa_estado == "No pagado":
+            messagebox.showerror("Devolución de Libros", "El usuario tiene una multa impaga. Debe pagar la multa antes de devolver un libro.")
+        else:
+            # Devolver el libro utilizando el ISBN seleccionado
+            self.bd.devolverLibro(isbn)
+
+            # Actualizar la tabla de préstamos
+            self.buscarPrestamosPorRut()
+
+            messagebox.showinfo("Devolución de Libros", "Libro devuelto con éxito.")
+
+    def cargarDatosTablaDevolverLibro(self):
+        try:
+            # Obtener el RUT del usuario ingresado en el campo de búsqueda
             rut_usuario = self.buscar_rut_devolver_libro_entry.get()
 
-            # Verificar si el usuario tiene una multa impaga
-            multa_impaga = self.bd.obtenerUsuarioMulta(rut_usuario)
+            if not rut_usuario:
+                messagebox.showwarning("Campo vacío", "Por favor, ingrese un RUT de usuario para realizar la búsqueda.")
+                return
 
-            if multa_impaga:
-                messagebox.showerror("Devolución de Libros", f"El usuario tiene una multa impaga. Debe pagar la multa antes de devolver un libro.")
-            else:
-                # Proceder a devolver el libro eliminando el préstamo
-                self.bd.devolverLibro(isbn_seleccionado, rut_usuario)
+            # Validar el RUT ingresado
+            if not self.validarRut(rut_usuario):
+                messagebox.showerror("RUT inválido", "El RUT ingresado no es válido. Por favor, ingrese un RUT válido.")
+                return
 
-                # Actualizar la tabla de préstamos
-                self.buscarPrestamosPorRut()  # Método para cargar nuevamente los préstamos del usuario
+            # Obtener los datos de los préstamos por el RUT del usuario
+            datos_prestamos = self.bd.obtenerDevolverLibroRut(rut_usuario)
+            messagebox.showinfo("Busqueda de préstamos", "Tabla actualizada.")
 
-                messagebox.showinfo("Devolución de Libros", "El libro ha sido devuelto con éxito.")
-        else:
-            messagebox.showwarning("Devolución de Libros", "Por favor, seleccione un préstamo de la tabla para devolver el libro.")
+            if not datos_prestamos:
+                messagebox.showinfo("Búsqueda de préstamos", f"No se encontraron préstamos para el RUT: {rut_usuario}.")
+                return
+
+            # Limpiar la tabla
+            self.tabla_devolver_libro.delete(*self.tabla_devolver_libro.get_children())
+
+            # Insertar los datos en la tabla
+            for prestamo in datos_prestamos:
+                self.tabla_devolver_libro.insert('', 'end', values=prestamo)
+        except Exception as e:
+            messagebox.showerror("Error al cargar datos en la tabla", f"{str(e)}")
 
     # MÉTODOS ADICIONALES
     def validarEnTiempoReal(self, *args):
@@ -2519,6 +2561,18 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.titulo.set('')
         self.numero_paginas.set('')
         self.stockLibro.set('')
+
+    # Método para limpiar los valores en los entry´s
+    def limpiarCamposPagarMulta(self):
+        self.multa_nombre_usuario.set('')
+        self.multa_apellido_usuario.set('')
+        self.multa_rut_usuario.set('')
+        self.multa_celular_usuario.set('')
+        self.multa_correo_usuario.set('')
+        self.multa_tipo_usuario.set('')
+        self.multa_multa_usuario.set('')
+        self.multa_monto_usuario.set('')
+        self.multa_isbn_usuario.set('')
 
     # Método para cerrar sesion en la app
     def cerrar_sesion(self):
