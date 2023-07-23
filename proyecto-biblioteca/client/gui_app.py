@@ -467,6 +467,8 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.title("Biblioteca Virtual")
         self.resizable(0, 0)
 
+        self.prestamo_seleccionado = None
+
         # Variables de texto para el Frame de stock
         self.stockLibro = ck.IntVar(value="")
         self.numero_paginas = ck.IntVar(value="")
@@ -1225,10 +1227,11 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.tabla_multa.grid(sticky="nsew")
 
         # Columnas que se mostrarán en la tabla
-        self.tabla_multa['columns'] = ('Nombre', 'Apellido', 'Dirección', 'RUT', 'Celular', 'Correo electrónico', 'Tipo de usuario', 'Multa', 'Monto')
+        self.tabla_multa['columns'] = ('ISBN Libro', 'Nombre', 'Apellido', 'Dirección', 'RUT', 'Celular', 'Correo electrónico', 'Tipo de usuario', 'Multa', 'Monto')
 
         # Ajustar ancho mínimo y ancho de cada columna de encabezado
         self.tabla_multa.column('#0', minwidth=60, width=0, anchor='center', stretch=False)
+        self.tabla_multa.column('ISBN Libro', minwidth=100, width=130, anchor='center')
         self.tabla_multa.column('Nombre', minwidth=100, width=130, anchor='center')
         self.tabla_multa.column('Apellido', minwidth=100, width=120, anchor='center')
         self.tabla_multa.column('Dirección', minwidth=100, width=140, anchor='center')
@@ -1241,6 +1244,7 @@ class VentanaPrincipal(ck.CTkToplevel):
 
         # Configurar el texto de encabezado para que se muestre completo
         self.tabla_multa.heading('#0', text='Id', anchor='center')
+        self.tabla_multa.heading('ISBN Libro', text='ISBN Libro', anchor='center')
         self.tabla_multa.heading('Nombre', text='Nombre', anchor='center')
         self.tabla_multa.heading('Apellido', text='Apellido', anchor='center')
         self.tabla_multa.heading('Dirección', text='Dirección', anchor='center')
@@ -1307,25 +1311,89 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.multa_monto_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
         self.multa_monto_usuario_entry.place(x=800, y=695)
 
+        self.multa_isbn_usuario_label = ck.CTkLabel(self.frame_pagar_multa, text="ISBN: ",
+                                                font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
+        self.multa_isbn_usuario_label.place(x=400, y=690)
+
+        self.multa_isbn_usuario_entry = ck.CTkEntry(self.frame_pagar_multa, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), state="disabled")
+        self.multa_isbn_usuario_entry.place(x=480, y=695)
+
         self.pagar_multa_button = ck.CTkButton(self.frame_pagar_multa, text="PAGAR MULTA", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), command=self.pagarMulta)
         self.pagar_multa_button.place(x=1005, y=690)
 
-        # ******************FRAME PARA DEVOLVER LIBROS******************
+        # ******************FRAME DEVOLVER LIBROS******************
         self.frame_devolver_libro = ck.CTkFrame(self.main_frame, corner_radius=0, fg_color="transparent")
         self.frame_devolver_libro.grid(row=0, column=0, sticky="nsew")
+        self.frame_devolver_libro.grid_columnconfigure(0, weight=1)
+        self.frame_devolver_libro.grid_rowconfigure(1, weight=6)
+        self.frame_devolver_libro.grid_rowconfigure(0, weight=1)
 
         self.devolver_libro_label_imagen = ck.CTkLabel(self.frame_devolver_libro, text="", image=pagar_multa_imagen)
-        self.devolver_libro_label_imagen.grid(row=0, column=0, columnspan=3, pady=10)
+        self.devolver_libro_label_imagen.grid(row=0, columnspan=1, padx=20)
 
         self.buscar_rut_devolver_libro_label = ck.CTkLabel(self.frame_devolver_libro, text="Ingrese el RUT del usuario: ",
-                                                font=ck.CTkFont(size=25, weight="bold", family="Segoe UI"))
-        self.buscar_rut_devolver_libro_label.grid(row=1, columnspan=2, pady=5, padx=10, sticky="w")
+                                                font=ck.CTkFont(size=23, weight="bold", family="Segoe UI"))
+        self.buscar_rut_devolver_libro_label.place(x=18, y=146)
 
         self.buscar_rut_devolver_libro_entry = ck.CTkEntry(self.frame_devolver_libro, width=150, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
-        self.buscar_rut_devolver_libro_entry.place(x=330, y=148)
+        self.buscar_rut_devolver_libro_entry.place(x=320, y=148)
 
-        self.buscar_rut_devolver_libro_button = ck.CTkButton(self.frame_devolver_libro, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), command=self.cargarDatosTablaMultas) # command=self.mostrarDatosPrestamoPorRut
-        self.buscar_rut_devolver_libro_button.place(x=490, y=148)
+        self.buscar_rut_devolver_libro_button = ck.CTkButton(self.frame_devolver_libro, text="BUSCAR", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), command=self.buscarPrestamosPorRut) # command=self.mostrarDatosPrestamoPorRut
+        self.buscar_rut_devolver_libro_button.place(x=480, y=148)
+
+        # Estilo de la tabla para mostrar los datos
+        estilo_tabla = ttk.Style()
+        estilo_tabla.configure("Treeview", font=ck.CTkFont(size=10, weight="bold", family="Segoe UI"), foreground='black', background='white')
+        estilo_tabla.map('Treeview', background=[('selected', 'green')], foreground=[('selected', 'black')])
+        estilo_tabla.configure('Heading', background='white', foreground='navy', padding=3, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"))
+        estilo_tabla.configure('Item', foreground='transparent', focuscolor='DarkOrchid1')
+        estilo_tabla.configure('TScrollbar', arrowcolor='DarkOrchid1', bordercolor='black', troughcolor='DarkOrchid1', background='white')
+
+        # Crear el Frame contenedor del Treeview y el Scrollbar
+        self.frame_tabla_devolver_libro = ck.CTkFrame(self.frame_devolver_libro)
+        self.frame_tabla_devolver_libro.grid(row=1, columnspan=3, padx=20, pady=15, sticky="nsew")
+
+        self.tabla_devolver_libro = ttk.Treeview(self.frame_tabla_devolver_libro)
+        self.tabla_devolver_libro.grid(row=0, column=0, sticky="nsew")
+
+        ladoy = ttk.Scrollbar(self.frame_tabla_devolver_libro, orient='vertical', command=self.tabla_devolver_libro.yview)
+        ladoy.grid(row=0, column=1, sticky='ns')
+
+        self.frame_tabla_devolver_libro.grid_rowconfigure(0, weight=1)
+        self.frame_tabla_devolver_libro.grid_columnconfigure(0, weight=1)
+        
+        # Columnas que se mostrarán en la tabla
+        self.tabla_devolver_libro.grid(sticky="nsew")
+        self.tabla_devolver_libro['columns'] = ('Nombre', 'Apellido', 'RUT', 'Tipo de usuario', 'F. Devolución', 'ISBN', 'Titulo', 'Multa', 'Monto')
+
+        # Ajustar ancho mínimo y ancho de cada columna de encabezado
+        self.tabla_devolver_libro.column('#0', minwidth=60, width=0, anchor='center', stretch=False)
+        self.tabla_devolver_libro.column('Nombre', minwidth=100, width=130, anchor='center')
+        self.tabla_devolver_libro.column('Apellido', minwidth=100, width=120, anchor='center')
+        self.tabla_devolver_libro.column('RUT', minwidth=100, width=120, anchor='center')
+        self.tabla_devolver_libro.column('Tipo de usuario', minwidth=130, width=105, anchor='center')
+        self.tabla_devolver_libro.column('F. Devolución', minwidth=130, width=105, anchor='center')
+        self.tabla_devolver_libro.column('ISBN', minwidth=60, width=70, anchor='center')
+        self.tabla_devolver_libro.column('Titulo', minwidth=100, width=120, anchor='center')
+        self.tabla_devolver_libro.column('Multa', minwidth=100, width=120, anchor='center')
+        self.tabla_devolver_libro.column('Monto', minwidth=100, width=120, anchor='center')
+
+        # Configurar el texto de encabezado para que se muestre completo
+        self.tabla_devolver_libro.heading('#0', text='Id', anchor='center')
+        self.tabla_devolver_libro.heading('Nombre', text='Nombre', anchor='center')
+        self.tabla_devolver_libro.heading('Apellido', text='Apellido', anchor='center')
+        self.tabla_devolver_libro.heading('RUT', text='RUT', anchor='center')
+        self.tabla_devolver_libro.heading('Tipo de usuario', text='Tipo de usuario', anchor='center')
+        self.tabla_devolver_libro.heading('F. Devolución', text='F. Devolución', anchor='center')
+        self.tabla_devolver_libro.heading('ISBN', text='ISBN', anchor='center')
+        self.tabla_devolver_libro.heading('Titulo', text='Titulo', anchor='center')
+        self.tabla_devolver_libro.heading('Multa', text='Multa', anchor='center')
+        self.tabla_devolver_libro.heading('Monto', text='Monto', anchor='center')
+
+        self.tabla_devolver_libro.bind("<ButtonRelease-1>", self.seleccionarFilaPrestamo)
+
+        self.devolver_libro_button = ck.CTkButton(self.frame_devolver_libro, text="DEVOLVER LIBRO", font=ck.CTkFont(size=20, weight="bold", family="Segoe UI"), command=self.devolverLibro) # command=self.mostrarDatosPrestamoPorRut
+        self.devolver_libro_button.grid(row=2, columnspan=2, padx=20, pady=10)
 
         # FRAME SELECCIONADO POR DEFECTO
         self.seleccion_frame_nombre("inicio")
@@ -1513,7 +1581,6 @@ class VentanaPrincipal(ck.CTkToplevel):
     # Método para cambiar la apariencia de la app
     def evento_cambiar_apariencia(self, new_appearance_mode):
         ck.set_appearance_mode(new_appearance_mode)
-
 
     # MÉTODOS PARA EL FRAME INICIO
     def mostrarDatosPrestamo(self):
@@ -1785,6 +1852,10 @@ class VentanaPrincipal(ck.CTkToplevel):
         isbn = self.isbn.get()
         tipo_usuario = self.bd.obtenerTipoUsuario(rut)
         self.fecha_devolucion.get_date()
+
+        if not rut:
+            messagebox.showerror("Realizar Préstamo", "El campo RUT no puede estar vacío.")
+            return
 
         if self.validarRut(rut):
             if tipo_usuario:
@@ -2192,7 +2263,7 @@ class VentanaPrincipal(ck.CTkToplevel):
                 self.frame_imagenes_catalogo.grid_rowconfigure(i // 8, weight=1)  # Expansión vertical
                 self.frame_imagenes_catalogo.grid_columnconfigure(i % 8, weight=1)  # Expansión horizontal
 
-    # MÉTODOS PARA FRAME PRESTAMOS POR USUARIO
+    # MÉTODOS PARA FRAME PAGAR MULTAS
     # Método para mostrar los prestamos por usuario
     def mostrarDatosPrestamoPorRut(self, event=None):
         rut_usuario = self.rut_usuario_prestamos_entry.get()
@@ -2254,35 +2325,39 @@ class VentanaPrincipal(ck.CTkToplevel):
         # Actualizar los Entry con los datos del usuario seleccionado
         self.multa_nombre_usuario_entry.configure(state="normal")
         self.multa_nombre_usuario_entry.delete(0, tk.END)
-        self.multa_nombre_usuario_entry.insert(0, values[0])  # Nombre
+        self.multa_nombre_usuario_entry.insert(0, values[1])  # Nombre
 
         self.multa_apellido_usuario_entry.configure(state="normal")
         self.multa_apellido_usuario_entry.delete(0, tk.END)
-        self.multa_apellido_usuario_entry.insert(0, values[1])  # Apellido
+        self.multa_apellido_usuario_entry.insert(0, values[2])  # Apellido
 
         self.multa_rut_usuario_entry.configure(state="normal")
         self.multa_rut_usuario_entry.delete(0, tk.END)
-        self.multa_rut_usuario_entry.insert(0, values[3])  # RUT
+        self.multa_rut_usuario_entry.insert(0, values[4])  # RUT
 
         self.multa_celular_usuario_entry.configure(state="normal")
         self.multa_celular_usuario_entry.delete(0, tk.END)
-        self.multa_celular_usuario_entry.insert(0, values[4])  # Celular
+        self.multa_celular_usuario_entry.insert(0, values[5])  # Celular
 
         self.multa_correo_usuario_entry.configure(state="normal")
         self.multa_correo_usuario_entry.delete(0, tk.END)
-        self.multa_correo_usuario_entry.insert(0, values[5])  # Correo electrónico
+        self.multa_correo_usuario_entry.insert(0, values[6])  # Correo electrónico
 
         self.multa_tipo_usuario_entry.configure(state="normal")
         self.multa_tipo_usuario_entry.delete(0, tk.END)
-        self.multa_tipo_usuario_entry.insert(0, values[6])  # Tipo de usuario
+        self.multa_tipo_usuario_entry.insert(0, values[7])  # Tipo de usuario
 
         self.multa_multa_usuario_entry.configure(state="normal")
         self.multa_multa_usuario_entry.delete(0, tk.END)
-        self.multa_multa_usuario_entry.insert(0, values[7])  # Multa
+        self.multa_multa_usuario_entry.insert(0, values[8])  # Multa
 
         self.multa_monto_usuario_entry.configure(state="normal")
         self.multa_monto_usuario_entry.delete(0, tk.END)
-        self.multa_monto_usuario_entry.insert(0, values[8])  # Monto
+        self.multa_monto_usuario_entry.insert(0, values[9])  # Monto
+
+        self.multa_isbn_usuario_entry.configure(state="normal")
+        self.multa_isbn_usuario_entry.delete(0, tk.END)
+        self.multa_isbn_usuario_entry.insert(0, values[0])  # Monto
 
         # Bloquear los Entry para que no se puedan editar
         self.multa_nombre_usuario_entry.configure(state="disabled")
@@ -2293,19 +2368,21 @@ class VentanaPrincipal(ck.CTkToplevel):
         self.multa_tipo_usuario_entry.configure(state="disabled")
         self.multa_multa_usuario_entry.configure(state="disabled")
         self.multa_monto_usuario_entry.configure(state="disabled")
+        self.multa_isbn_usuario_entry.configure(state="disabled")
 
     def pagarMulta(self):
         rut_usuario = self.buscar_rut_multa_entry.get()
         monto = self.multa_monto_usuario_entry.get()
+        isbn = self.multa_isbn_usuario_entry.get()
 
         if rut_usuario:
             # Validar el RUT ingresado
             if self.validarRut(rut_usuario):
                 # Marcar la multa como pagada en la tabla "usuario"
-                self.bd.marcarMultaPagada(rut_usuario)
+                self.bd.marcarMultaPagada(rut_usuario, isbn)
 
                 # Eliminar el préstamo del usuario
-                self.bd.eliminarPrestamo(rut_usuario)
+                #self.bd.eliminarPrestamo(rut_usuario)
 
                 # Actualizar la tabla de multas para reflejar los cambios
                 self.cargarDatosTablaMultas()
@@ -2315,6 +2392,61 @@ class VentanaPrincipal(ck.CTkToplevel):
                 messagebox.showerror("RUT inválido", "El RUT ingresado no es válido. Por favor, ingrese un RUT válido.")
         else:
             messagebox.showwarning("Campo vacío", "Por favor, ingrese un RUT de usuario para realizar el pago de la multa.")
+
+    # MÉTODOS PARA FRAME DEVOLVER LIBROS
+    # Método para buscar el prestamo por el RUT del usuario
+    def buscarPrestamosPorRut(self):
+        rut_usuario = self.buscar_rut_devolver_libro_entry.get()
+
+        if rut_usuario:
+            # Validar el RUT ingresado
+            if self.validarRut(rut_usuario):
+                # Obtener datos de los préstamos por el RUT del usuario
+                datos_prestamos = self.bd.obtenerDevolverLibroRut(rut_usuario)
+
+                if datos_prestamos:  # Si la lista no está vacía
+                    # Limpiar la tabla
+                    self.tabla_devolver_libro.delete(*self.tabla_devolver_libro.get_children())
+
+                    # Insertar los datos en la tabla
+                    for prestamo in datos_prestamos:
+                        self.tabla_devolver_libro.insert('', 'end', values=prestamo)
+                else:
+                    messagebox.showinfo("Búsqueda de préstamos", f"No se encontraron préstamos para el RUT: {rut_usuario}.")
+            else:
+                messagebox.showerror("RUT inválido", "El RUT ingresado no es válido. Por favor, ingrese un RUT válido.")
+        else:
+            messagebox.showwarning("Campo vacío", "Por favor, ingrese un RUT de usuario para realizar la búsqueda.")
+
+    # Método para seleccionar la fila de la tabla
+    def seleccionarFilaPrestamo(self, event):
+        selected_item = self.tabla_devolver_libro.selection()
+        if selected_item:
+            prestamo_seleccionado = self.tabla_devolver_libro.item(selected_item[0], "values")
+            self.prestamo_seleccionado = prestamo_seleccionado  # Almacenar la información del préstamo seleccionado
+        else:
+            self.prestamo_seleccionado = None
+
+    def devolverLibro(self):
+        if self.prestamo_seleccionado:
+            isbn_seleccionado = self.prestamo_seleccionado[5]  # ISBN del libro seleccionado
+            rut_usuario = self.buscar_rut_devolver_libro_entry.get()
+
+            # Verificar si el usuario tiene una multa impaga
+            multa_impaga = self.bd.obtenerUsuarioMulta(rut_usuario)
+
+            if multa_impaga:
+                messagebox.showerror("Devolución de Libros", f"El usuario tiene una multa impaga. Debe pagar la multa antes de devolver un libro.")
+            else:
+                # Proceder a devolver el libro eliminando el préstamo
+                self.bd.devolverLibro(isbn_seleccionado, rut_usuario)
+
+                # Actualizar la tabla de préstamos
+                self.buscarPrestamosPorRut()  # Método para cargar nuevamente los préstamos del usuario
+
+                messagebox.showinfo("Devolución de Libros", "El libro ha sido devuelto con éxito.")
+        else:
+            messagebox.showwarning("Devolución de Libros", "Por favor, seleccione un préstamo de la tabla para devolver el libro.")
 
     # MÉTODOS ADICIONALES
     def validarEnTiempoReal(self, *args):

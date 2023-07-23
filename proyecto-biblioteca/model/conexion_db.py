@@ -84,7 +84,7 @@ class BD:
         FROM prestamo p
         LEFT JOIN usuario u ON p.RUT_U = u.RUT_U
         LEFT JOIN libro l ON p.ISBN = l.ISBN
-        WHERE p.F_DEVOLUCION < date('now');
+        WHERE p.F_DEVOLUCION < date('now')
         """
 
         self.cursor.execute(sql)
@@ -371,7 +371,7 @@ class BD:
 
     # MÉTODOS PARA EL FRAME PAGAR MULTA
     def obtenerUsuarioMulta(self, rut):
-        sql = "SELECT U.NOMBRE_U, U.APELLIDO_U, U.DIRECCION_U, U.RUT_U, U.CELULAR_U, U.CORREO_U, U.TIPO_U, U.MULTA, SUM(U.MONTO) AS MONTO FROM usuario U LEFT JOIN prestamo P ON U.RUT_U = P.RUT_U WHERE U.RUT_U = ? AND P.F_DEVOLUCION < date('now') GROUP BY U.RUT_U"
+        sql = "SELECT p.ISBN, U.NOMBRE_U, U.APELLIDO_U, U.DIRECCION_U, U.RUT_U, U.CELULAR_U, U.CORREO_U, U.TIPO_U, U.MULTA, U.MONTO FROM usuario U LEFT JOIN prestamo P ON U.RUT_U = P.RUT_U WHERE U.RUT_U = ? AND P.F_DEVOLUCION < date('now') AND U.MULTA = 'No pagado'"
         try:
             self.cursor.execute(sql, (rut,))
             result = self.cursor.fetchall()
@@ -379,18 +379,41 @@ class BD:
         except Exception as e:
             messagebox.showerror("Error al obtener el usuario por RUT", f"{str(e)}")
 
-    def marcarMultaPagada(self, rut):
-        sql = "UPDATE usuario SET MULTA = 'Pagado' WHERE RUT_U = ?"
+
+    def marcarMultaPagada(self, rut, isbn):
+        sql = "UPDATE usuario SET MULTA = 'Pagado', MONTO = 0 WHERE RUT_U = ? AND RUT_U IN (SELECT RUT_U FROM prestamo WHERE ISBN = ?)"
         try:
-            self.cursor.execute(sql, (rut,))
+            self.cursor.execute(sql, (rut, isbn))
             self.connect.commit()
         except Exception as e:
             messagebox.showerror("Error al marcar multa como pagada", f"{str(e)}")
 
-    def eliminarPrestamo(self, rut):
-        sql = "DELETE FROM prestamo WHERE RUT_U = ?"
+    '''def eliminarPrestamo(self, rut, isbn):
+        sql = "DELETE FROM prestamo WHERE RUT_U = ? AND ISBN = ?"
         try:
-            self.cursor.execute(sql, (rut,))
+            self.cursor.execute(sql, (rut, isbn,))
             self.connect.commit()
         except Exception as e:
-            messagebox.showerror("Error al eliminar préstamo", f"{str(e)}")
+            messagebox.showerror("Error al eliminar préstamo", f"{str(e)}")'''
+
+    # MÉTODOS PARA EL FRAME DEVOLVER LIBROS
+    def obtenerDevolverLibroRut(self, rut):
+        sql = "SELECT u.NOMBRE_U, u.APELLIDO_U, p.RUT_U, u.TIPO_U, p.F_DEVOLUCION, p.ISBN, l.TITULO, u.MULTA, u.MONTO FROM prestamo p LEFT JOIN usuario u ON p.RUT_U = u.RUT_U LEFT JOIN libro l ON p.ISBN = l.ISBN WHERE p.F_DEVOLUCION < date('now') AND u.RUT_U = ?"
+        try:
+            self.cursor.execute(sql, (rut,))
+            result = self.cursor.fetchall()
+            return result
+        except Exception as e:
+            messagebox.showerror("Devolver Libros", f"{str(e)}")
+
+    def devolverLibro(self, isbn, rut_usuario):
+        sql = "DELETE FROM prestamo WHERE RUT_U = ? AND ISBN = ?"
+        try:
+            self.cursor.execute(sql, (rut_usuario, isbn))
+            self.connect.commit()
+        except Exception as e:
+            messagebox.showerror("Error al devolver el libro", f"{str(e)}")
+
+
+'''es que esa es la cuestion ahora, en mi paquet gui_app donde tengo mis frames, tengo que hacer un metodo devolver libro pero con condiciones y ya te dire cuales:
+1.- si el usuario en la columna de uno de los pretamos dice "No pagado", no podra devolver el libro a no ser que el usuario primero pague la multa.'''
