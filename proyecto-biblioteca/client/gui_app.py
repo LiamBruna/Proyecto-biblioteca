@@ -17,6 +17,30 @@ from babel.numbers import format_currency # Modulo para que los DateEntry´s fun
 from model.conexion_db import BD
 from client.barra import BarraProgreso
 
+# Ventana Términos y Condiciones de Uso
+class VentanaTerminosCondiciones(ck.CTkToplevel):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.parent = parent
+        self.title("Términos y Condiciones de Uso")
+        self.after(250, lambda: self.iconbitmap('img\libros.ico'))
+        self.resizable(0,0)
+        self.geometry("500x400")
+
+        # Agregar un Text widget con Scrollbar para mostrar los Términos y Condiciones
+        terminos_texto = ck.CTkTextbox(self, wrap="word", font=ck.CTkFont(size=12, weight="bold", family="Segoe UI Historic"))
+
+        # Contenido de los Términos y Condiciones de Uso
+        contenido_terminos = """TÉRMINOS Y CONDICIONES DE USO\nBienvenido/a a la aplicación "Biblioteca Virtual". Antes de utilizar esta aplicación, te pedimos que leas atentamente los siguientes Términos y Condiciones de Uso, ya que el acceso y uso de esta aplicación implican la aceptación plena y sin reservas de estos términos.\n\n1. Aceptación de los Términos:\nAl utilizar la aplicación "Biblioteca Virtual", aceptas estar legalmente vinculado por estos Términos y Condiciones de Uso. Si no estás de acuerdo con estos términos, por favor, no utilices la aplicación.\n\n2. Uso de la Aplicación:\nLa aplicación "Biblioteca Virtual" está diseñada para ser utilizada únicamente con fines personales y no comerciales.\nLos usuarios son responsables de cualquier contenido que compartan a través de la aplicación y deben asegurarse de que dicho contenido cumpla con las leyes aplicables y no infrinja los derechos de terceros.\nSe prohíbe el uso de la aplicación para actividades ilegales, ofensivas, dañinas o que puedan interferir con el funcionamiento normal de la aplicación o su infraestructura.\n\n3. Registro y Cuentas de Usuario:\nAlgunas funciones de la aplicación pueden requerir que los usuarios se registren y creen una cuenta. Los usuarios son responsables de mantener la confidencialidad de sus credenciales de acceso y de todas las actividades que ocurran en su cuenta.\n\n4. Privacidad:\nLa privacidad de los usuarios es importante para nosotros. Nuestra Política de Privacidad describe cómo recopilamos, utilizamos, almacenamos y protegemos la información personal de los usuarios. Al utilizar la aplicación, aceptas nuestra Política de Privacidad.\n\n5. Propiedad Intelectual:\nTodos los derechos de propiedad intelectual relacionados con la aplicación y su contenido (textos, imágenes, logotipos, etc.) son propiedad de sus respectivos propietarios y están protegidos por las leyes de propiedad intelectual aplicables.\n\n6. Modificaciones a los Términos:\nNos reservamos el derecho de modificar estos Términos y Condiciones en cualquier momento. Cualquier cambio será efectivo una vez publicado en la aplicación. Se recomienda a los usuarios revisar periódicamente los Términos y Condiciones para estar al tanto de las actualizaciones.\n\n7. Limitación de Responsabilidad:\nEl uso de la aplicación es bajo la responsabilidad del usuario. No nos hacemos responsables de cualquier daño, pérdida o perjuicio que pueda surgir del uso de la aplicación o del contenido compartido por los usuarios.\n\n8. Ley Aplicable y Jurisdicción:\nEstos Términos y Condiciones se rigen por las leyes del país en el que está registrada la entidad responsable de la aplicación. Cualquier disputa relacionada con la aplicación estará sujeta a la jurisdicción de los tribunales competentes de dicho país.\n\n9. Contacto:\nSi tienes alguna pregunta o inquietud sobre estos Términos y Condiciones de Uso, puedes ponerte en contacto con nosotros a través de biblioteca.virtual@gmail.com o +56 952458474.\n\nFecha de última actualización: 23-07-2023."""
+
+        # Insertar el contenido en el Text widget
+        terminos_texto.insert("1.0", contenido_terminos)
+
+        # Deshabilitar la edición del Text widget
+        terminos_texto.configure(state="disabled")
+
+        terminos_texto.pack(side="left", fill="both", expand=True)
+
 # Ventana de registro
 class VentanaRegistro(ck.CTkToplevel):
     def __init__(self, parent=None):
@@ -31,6 +55,8 @@ class VentanaRegistro(ck.CTkToplevel):
 
         self.mostrar_contraseña = tk.BooleanVar(value=False)  # Variable para controlar la visibilidad de la contraseña
         
+        self.terminos_condiciones = tk.BooleanVar()
+
         self.celular = ck.StringVar()
         self.celular.trace("w", self.validarEnTiempoReal)
 
@@ -59,7 +85,7 @@ class VentanaRegistro(ck.CTkToplevel):
 
         frame_registro = ck.CTkFrame(master=fondo, corner_radius=15)
         frame_registro.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
-        frame_registro.configure(width=500, height=500)
+        frame_registro.configure(width=500, height=550)
 
         label_log = ck.CTkLabel(master=frame_registro, text="Registrarse", font=ck.CTkFont(size=30, weight="bold", family="Segoe UI Historic"))
         label_log.place(x=170, y=30)
@@ -90,6 +116,13 @@ class VentanaRegistro(ck.CTkToplevel):
         self.contraseña_entry_confirmar.place(x=90, y=380)
         self.contraseña_entry_confirmar.bind("<Return>", self.registrar)
 
+        self.terminos_checkbox = ck.CTkCheckBox(frame_registro, text="Acepto los Términos y Condiciones de Uso", variable=self.terminos_condiciones, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
+        self.terminos_checkbox.place(x=30, y=480)
+
+        # Botón "Leer más" para los Términos y Condiciones de Uso
+        self.leer_mas_button = ck.CTkButton(frame_registro, text="Leer más", command=self.mostrarTerminosCondiciones, height=10, width=10, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
+        self.leer_mas_button.place(x=400, y=480)
+
         # Este es un checkbox para mostrar la contraseña que estamos ingresando
         self.mostrarContraseña_Registro = tk.BooleanVar()
         mostrar_contraseña_checkbox = ck.CTkCheckBox(frame_registro, text="Mostrar contraseña", variable=self.mostrarContraseña_Registro, command=self.mostrarContraseñaRegistro, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
@@ -102,7 +135,8 @@ class VentanaRegistro(ck.CTkToplevel):
         button_registrar.place(x=100, y=430)
 
         self.volver_button = ck.CTkButton(master = frame_registro, command=self.volverLogin, text="Volver", font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
-        self.volver_button.place(x=338, y=460)
+        self.volver_button.place(x=345, y=510)
+
 
 # Método para validar el correo electrónico
     def validarCorreo(self, correo):
@@ -178,6 +212,11 @@ class VentanaRegistro(ck.CTkToplevel):
         if not self.validarRut(rut): # Validación del RUT
             messagebox.showerror("Error de registro", f"Rut {rut} no válido.")
             return
+        
+        # Verificar si el checkbox de términos y condiciones está marcado
+        if not self.terminos_condiciones.get():
+            messagebox.showwarning("Términos y Condiciones", "Debe aceptar los Términos y Condiciones de Uso para registrarse.")
+            return
 
         if self.bd.registro(nombre, apellido, correo, contraseña, rut, celular):
             self.withdraw()  # Oculta la ventana de registro
@@ -194,6 +233,9 @@ class VentanaRegistro(ck.CTkToplevel):
     def volverLogin(self):
         self.destroy()
         self.parent.deiconify()
+
+    def mostrarTerminosCondiciones(self):
+        ventana_terminos = VentanaTerminosCondiciones(self)
 
 # Ventana recuperar contraseña
 class VentanaRecuperarContraseña(ck.CTkToplevel):
