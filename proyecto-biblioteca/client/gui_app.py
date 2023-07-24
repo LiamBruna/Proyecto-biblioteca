@@ -13,6 +13,7 @@ from datetime import datetime, timedelta
 import numpy as np
 import cv2
 from babel.numbers import format_currency # Modulo para que los DateEntry´s funcionen
+from tkinter import *
 
 from model.conexion_db import BD
 from client.barra import BarraProgreso
