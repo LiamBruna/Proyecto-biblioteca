@@ -48,7 +48,7 @@ class VentanaRegistro(ck.CTkToplevel):
         self.parent = parent
         self.title("Biblioteca Virtual")
         self.after(250, lambda: self.iconbitmap('img\libros.ico'))
-        self.geometry("700x600")
+        self.geometry("1240x650")
         self.resizable(0, 0)
 
         self.bd = BD()
@@ -62,80 +62,372 @@ class VentanaRegistro(ck.CTkToplevel):
 
         self.codigo_pais = ck.IntVar(value="+56 9")
 
-        # Crear imagen de fondo como PhotoImage
-        
-        # Ruta de la imagen .ico
-        ruta_icono = "img\\pattern.ico"
+        # ================Background Image ====================
+        imagen_fondo = ck.CTkImage(Image.open("img\\image_1.png"), size=(1000, 600))
+        bg_image = ck.CTkLabel(
+            self,
+            text="",
+            image=imagen_fondo
+        )
+        bg_image.place(x=120, y=28)
 
-        # Abrir el archivo .ico
-        ico_imagen = Image.open(ruta_icono)
+        # ================ NOMBRE DE LA APP ====================
+        logo_app = ck.CTkImage(Image.open("img\\libros.ico"), size=(80, 80))
+        headerText_image_label1 = ck.CTkLabel(
+            bg_image,
+            image=logo_app,
+            bg_color="#272A37"
+        )
+        headerText_image_label1.place(x=20, y=10)
 
-        # Obtener el tamaño de la ventana
-        ancho_ventana, alto_ventana = 700, 600
+        nombre_app_label = Label(
+            bg_image,
+            text="Biblioteca Virtual",
+            fg="#FFFFFF",
+            font=ck.CTkFont(size=25, weight="bold", family="Segoe UI Historic"),
+            bg="#272A37"
+        )
+        nombre_app_label.place(x=110, y=32)
 
-        # Escalar la imagen con el algoritmo LANCZOS para mejorar la calidad
-        imagen_escalada = ico_imagen.resize((ancho_ventana, alto_ventana), Image.LANCZOS)
+        # ================ HEADER CREAR CUENTA ====================
+        crear_cuenta_label = Label(
+            bg_image,
+            text="Crear nueva cuenta",
+            fg="#FFFFFF",
+            font=ck.CTkFont(size=28, weight="bold", family="Segoe UI Historic"),
+            bg="#272A37"
+        )
+        crear_cuenta_label.place(x=75, y=90)
 
-        # Crear el PhotoImage utilizando la imagen escalada
-        imagen_fondo = ImageTk.PhotoImage(imagen_escalada)
+        # ================ TEXTO YA TIENE CUENTA? ====================
+        ya_registrado_label = Label(
+            bg_image,
+            text="¿Ya esta registrado?",
+            fg="#FFFFFF",
+            font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"),
+            bg="#272A37"
+        )
+        ya_registrado_label.place(x=75, y=150)
 
-        # Crear etiqueta para la imagen de fondo
-        fondo = ck.CTkLabel(master=self, image=imagen_fondo)
-        fondo.pack()
+        # ================ IR A INICIAR SESIÓN ====================
+        self.volver_login_button = Button(
+            bg_image,
+            text="Iniciar Sesión",
+            fg="#206DB4",
+            font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"),
+            bg="#272A37",
+            bd=0,
+            cursor="hand2",
+            activebackground="#272A37",
+            activeforeground="#ffffff",
+            command=lambda: self.volverLogin()
+        )
+        self.volver_login_button.place(x=230, y=148, width=150, height=35)
 
-        frame_registro = ck.CTkFrame(master=fondo, corner_radius=15)
-        frame_registro.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
-        frame_registro.configure(width=500, height=550)
+        # ================ SECCIÓN NOMBRE ====================
+        nombre_imagen = ck.CTkImage(Image.open("img\\input_img.png"), size=(190, 50))
+        nombre_imagen_Label = ck.CTkLabel(
+            bg_image,
+            image=nombre_imagen,
+            bg_color="#272A37"
+        )
+        nombre_imagen_Label.place(x=80, y=190)
 
-        label_log = ck.CTkLabel(master=frame_registro, text="Registrarse", font=ck.CTkFont(size=30, weight="bold", family="Segoe UI Historic"))
-        label_log.place(x=170, y=30)
+        firstName_text = Label(
+            nombre_imagen_Label,
+            text="Nombre",
+            fg="#FFFFFF",
+            font=ck.CTkFont(size=13, weight="bold", family="Segoe UI Historic"),
+            bg="#3D404B"
+        )
+        firstName_text.place(x=25, y=0)
 
-        # Crea los campos de entrada de datos para el registro
-        self.nombre_entry = ck.CTkEntry(frame_registro, placeholder_text='Nombre (*)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
-        self.nombre_entry.place(x=90, y=80)
+        self.nombre_entry = Entry(
+            nombre_imagen_Label,
+            bd=0,
+            bg="#3D404B",
+            highlightthickness=0,
+            font=ck.CTkFont(size=16, weight="bold", family="Segoe UI Historic"),
+            fg="white"
+        )
+        self.nombre_entry.place(x=8, y=17, width=140, height=27)
 
-        self.apellido_entry = ck.CTkEntry(frame_registro, placeholder_text='Apellido (*)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
-        self.apellido_entry.place(x=90, y=130)
 
-        self.rut_entry = ck.CTkEntry(frame_registro, placeholder_text='RUT (con puntos y guión)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
-        self.rut_entry.place(x=90, y=180)
+        # ================ SECCIÓN APELLIDO ====================
+        apellido_imagen = ck.CTkImage(Image.open("img\\input_img.png"), size=(190, 50))
+        apellido_imagen_Label = ck.CTkLabel(
+            bg_image,
+            image=apellido_imagen,
+            bg_color="#272A37"
+        )
+        apellido_imagen_Label.place(x=293, y=190)
 
-        self.correo_entry = ck.CTkEntry(frame_registro, placeholder_text='Correo electrónico (*)', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
-        self.correo_entry.place(x=90, y=230)
+        lastName_text = Label(
+            apellido_imagen_Label,
+            text="Apellido",
+            fg="#FFFFFF",
+            font=ck.CTkFont(size=13, weight="bold", family="Segoe UI Historic"),
+            bg="#3D404B",
+            height=1
+        )
+        lastName_text.place(x=25, y=0)
 
-        self.codigo_pais_entry = ck.CTkEntry(frame_registro, textvariable=self.codigo_pais, width=60, height=40, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"), state="disabled")
-        self.codigo_pais_entry.place(x=90, y=280)
+        self.apellido_entry = Entry(
+            apellido_imagen_Label,
+            bd=0,
+            bg="#3D404B",
+            highlightthickness=0,
+            font=("yu gothic ui SemiBold", 16 * -1),
+            fg="white"
+        )
+        self.apellido_entry.place(x=8, y=17, width=140, height=27)
 
-        self.celular_entry = ck.CTkEntry(frame_registro, placeholder_text='N° de Celular (*)', textvariable=self.celular, width=150, height=40, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
-        self.celular_entry.place(x=160, y=280)
+        # ================ SECCIÓN RUT ====================
+        rut_imagen = ck.CTkImage(Image.open("img\\email.png"), size=(400, 50))
+        rut_imagen_Label = ck.CTkLabel(
+            bg_image,
+            image=rut_imagen,
+            bg_color="#272A37"
+        )
+        rut_imagen_Label.place(x=80, y=255)
 
-        self.contraseña_entry = ck.CTkEntry(frame_registro, placeholder_text='Contraseña', width=220, height=40, show="*",font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
-        self.contraseña_entry.place(x=90, y=330)
+        rut_text = Label(
+            rut_imagen_Label,
+            text="RUT",
+            fg="#FFFFFF",
+            font=ck.CTkFont(size=13 * 1, weight="bold", family="Segoe UI Historic"),
+            bg="#3D404B"
+        )
+        rut_text.place(x=25, y=0)
 
-        self.contraseña_entry_confirmar = ck.CTkEntry(frame_registro, placeholder_text='Confirmar Contraseña', width=220, height=40, show="*", font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
-        self.contraseña_entry_confirmar.place(x=90, y=380)
-        self.contraseña_entry_confirmar.bind("<Return>", self.registrar)
+        self.rut_entry = Entry(
+            rut_imagen_Label,
+            bd=0,
+            bg="#3D404B",
+            highlightthickness=0,
+            font=ck.CTkFont(size=14, weight="bold", family="Segoe UI Historic"),
+            fg="white"
+        )
+        self.rut_entry.place(x=8, y=17, width=354, height=27)
 
-        self.terminos_checkbox = ck.CTkCheckBox(frame_registro, text="Acepto los Términos y Condiciones de Uso", variable=self.terminos_condiciones, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
-        self.terminos_checkbox.place(x=30, y=480)
+       # ================ SECCIÓN EMAIL ====================
+        email_imagen = ck.CTkImage(Image.open("img\\email.png"), size=(400, 50))
+        email_imagen_Label = ck.CTkLabel(
+            bg_image,
+            text="",
+            image=email_imagen,
+            bg_color="#272A37"
+        )
+        email_imagen_Label.place(x=80, y=320)
 
-        # Botón "Leer más" para los Términos y Condiciones de Uso
-        self.leer_mas_button = ck.CTkButton(frame_registro, text="Leer más", command=self.mostrarTerminosCondiciones, height=10, width=10, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
-        self.leer_mas_button.place(x=400, y=480)
+        email_text = Label(
+            email_imagen_Label,
+            text="Email",
+            fg="#FFFFFF",
+            font=ck.CTkFont(size=13 * 1, weight="bold", family="Segoe UI Historic"),
+            bg="#3D404B"
+        )
+        email_text.place(x=25, y=0)
+
+        self.correo_entry = Entry(
+            email_imagen_Label,
+            bd=0,
+            bg="#3D404B",
+            highlightthickness=0,
+            font=ck.CTkFont(size=18, weight="bold", family="Segoe UI Historic"),
+            fg="white"
+        )
+        self.correo_entry.place(x=8, y=17, width=354, height=27)
+
+        # ================ SECCIÓN CÓDIGO CELULAR ====================
+        codigo_celular_image = ck.CTkImage(Image.open("img\\input_img.png"), size=(195, 50))
+        codigo_celular_image_Label = ck.CTkLabel(
+            bg_image,
+            image=codigo_celular_image,
+            bg_color="#272A37",
+            text=""
+        )
+        codigo_celular_image_Label.place(x=80, y=385)
+
+        codigo_celular_text = Label(
+            codigo_celular_image_Label,
+            text="Código País",
+            fg="#FFFFFF",
+            font=ck.CTkFont(size=13 * 1, weight="bold", family="Segoe UI Historic"),
+            bg="#3D404B"
+        )
+        codigo_celular_text.place(x=12, y=0)
+
+        self.codigo_pais_entry = Entry(
+            codigo_celular_image_Label,
+            bd=0,
+            bg="#3D404B",
+            highlightthickness=0,
+            font=ck.CTkFont(size=18, weight="bold", family="Segoe UI Historic"),
+            fg="white",
+            textvariable=self.codigo_pais
+        )
+        self.codigo_pais_entry.place(x=8, y=17, width=354, height=27)
+
+        # ================ SECCIÓN CELULAR ====================
+        celular_image = ck.CTkImage(Image.open("img\\email.png"), size=(380, 50))
+        celular_image_Label = ck.CTkLabel(
+            bg_image,
+            image=celular_image,
+            bg_color="#272A37",
+            text=""
+        )
+        celular_image_Label.place(x=280, y=385)
+
+        celular_text = Label(
+            celular_image_Label,
+            text="Celular",
+            fg="#FFFFFF",
+            font=ck.CTkFont(size=13 * 1, weight="bold", family="Segoe UI Historic"),
+            bg="#3D404B"
+        )
+        celular_text.place(x=12, y=0)
+
+        self.celular_entry = Entry(
+            celular_image_Label,
+            bd=0,
+            bg="#3D404B",
+            highlightthickness=0,
+            font=ck.CTkFont(size=18, weight="bold", family="Segoe UI Historic"),
+            fg="white"
+        )
+        self.celular_entry.place(x=8, y=17, width=354, height=27)
+
+        # ================ SECCIÓN CONTRASEÑA ====================
+        passwordName_image = ck.CTkImage(Image.open("img\\input_img.png"), size=(195, 50))
+        passwordName_image_Label = ck.CTkLabel(
+            bg_image,
+            image=passwordName_image,
+            bg_color="#272A37"
+        )
+        passwordName_image_Label.place(x=80, y=450)
+
+        passwordName_text = Label(
+            passwordName_image_Label,
+            text="Password",
+            fg="#FFFFFF",
+            font=("yu gothic ui SemiBold", 13 * -1),
+            bg="#3D404B"
+        )
+        passwordName_text.place(x=25, y=0)
+
+        self.contraseña_entry = Entry(
+            passwordName_image_Label,
+            bd=0,
+            bg="#3D404B",
+            highlightthickness=0,
+            font=("yu gothic ui SemiBold", 16 * -1),
+            fg="white"
+        )
+        self.contraseña_entry.place(x=8, y=17, width=140, height=20)
+
+        # ================ SECCIÓN CONFIRMAR CONTRASEÑA ====================
+        confirm_passwordName_image = ck.CTkImage(Image.open("img\\input_img.png"), size=(195, 50))
+        confirm_passwordName_image_Label = ck.CTkLabel(
+            bg_image,
+            image=confirm_passwordName_image,
+            bg_color="#272A37"
+        )
+        confirm_passwordName_image_Label.place(x=293, y=450)
+
+        confirm_passwordName_text = Label(
+            confirm_passwordName_image_Label,
+            text="Confirm Password",
+            fg="#FFFFFF",
+            font=("yu gothic ui SemiBold", 13 * -1),
+            bg="#3D404B"
+        )
+        confirm_passwordName_text.place(x=25, y=0)
+
+        self.contraseña_entry_confirmar = Entry(
+            confirm_passwordName_image_Label,
+            bd=0,
+            bg="#3D404B",
+            highlightthickness=0,
+            font=("yu gothic ui SemiBold", 16 * -1),
+            fg="white"
+        )
+        self.contraseña_entry_confirmar.place(x=8, y=17, width=140, height=27)
+
+        # =============== REGISTRARSE BUTTON ====================
+        submit_button = ck.CTkButton(
+            bg_image,
+            text="Registrarse",
+            font=ck.CTkFont(size=25, weight="bold", family="Segoe UI Historic"),
+            width=350, 
+            height=65,
+            corner_radius=15,
+            command=lambda: self.registrar()
+        )
+        submit_button .place(x=110, y=515)
+
+        # ================ DESARROLLADORES HEADER ====================
+        desarrolladores_image = ck.CTkImage(Image.open("img\\headerText_image.png"), size=(30, 30))
+        desarrolladores_image_label = ck.CTkLabel(
+            bg_image,
+            image=desarrolladores_image,
+            bg_color="#272A37",
+            text=""
+        )
+        desarrolladores_image_label.place(x=710, y=505)
+
+        headerText3 = Label(
+            bg_image,
+            text="Desarrollado por Aesir",
+            fg="#FFFFFF",
+            font=("yu gothic ui bold", 20 * -1),
+            bg="#272A37"
+        )
+        headerText3.place(x=750, y=500)
 
         # Este es un checkbox para mostrar la contraseña que estamos ingresando
         self.mostrarContraseña_Registro = tk.BooleanVar()
-        mostrar_contraseña_checkbox = ck.CTkCheckBox(frame_registro, text="Mostrar contraseña", variable=self.mostrarContraseña_Registro, command=self.mostrarContraseñaRegistro, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
-        mostrar_contraseña_checkbox.place(x=320, y=388)
+        mostrar_contraseña_checkbox = ck.CTkCheckBox(self, 
+            text="Mostrar contraseña", 
+            variable=self.mostrarContraseña_Registro, 
+            command=self.mostrarContraseñaRegistro, 
+            font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"),
+            bg_color="#272A37"
+        )
+        mostrar_contraseña_checkbox.place(x=620, y=490)
 
-        self.registro_photo = ck.CTkImage(Image.open("img\\registro.ico"), size=(30,30))
+        # ================ TÉRMINOS Y CONDICIONES DE USO ====================
+        self.terminos_checkbox = ck.CTkCheckBox(self, 
+            text="Acepto los Términos y Condiciones de Uso", 
+            variable=self.terminos_condiciones, 
+            font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"),
+            bg_color="#272A37"
+        )
+        self.terminos_checkbox.place(x=610, y=580)
 
-        # Botón para registrarse
-        button_registrar = ck.CTkButton(frame_registro, width=200, text="Registrarse", command=self.registrar, image=self.registro_photo, font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"))
-        button_registrar.place(x=100, y=430)
+        self.leer_mas_button = Button(
+            bg_image,
+            text="Leer más",
+            fg="#206DB4",
+            font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"),
+            bg="#272A37",
+            bd=0,
+            cursor="hand2",
+            activebackground="#272A37",
+            activeforeground="#ffffff",
+            command=lambda: self.mostrarTerminosCondiciones()
+        )
+        self.leer_mas_button.place(x=820, y=548, width=150, height=35)
 
-        self.volver_button = ck.CTkButton(master = frame_registro, command=self.volverLogin, text="Volver", font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
-        self.volver_button.place(x=345, y=510)
+        # ================ VERSIÓN ====================
+        version_label = Label(
+            bg_image,
+            text="Versión 1.0.0",
+            fg="#FFFFFF",
+            font=ck.CTkFont(size=12, weight="bold", family="Segoe UI Historic"),
+            bg="#272A37"
+        )
+        version_label.place(x=15, y=572)
 
 
 # Método para validar el correo electrónico
@@ -412,91 +704,211 @@ class Frame(ck.CTkFrame):
 
         self.correo_actual = None
 
-        # Crear imagen de fondo como PhotoImage
+        # ================ IMAGEN DE FONDO ====================
+        imagen_fondo_login = ck.CTkImage(Image.open("img\\image_1.png"), size=(1000, 600))
+        bg_imagenLogin = ck.CTkLabel(
+            self,
+            image=imagen_fondo_login,
+            text=""
+        )
+        bg_imagenLogin.place(x=120, y=28)
 
-        # Ruta de la imagen .ico
-        ruta_icono = "img\\pattern.ico"
+        # ================ NOMBRE DE LA APP ====================
+        Login_headerText_image_left = ck.CTkImage(Image.open("img\\libros.ico"), size=(80, 80))
+        Login_headerText_image_label1 = ck.CTkLabel(
+            bg_imagenLogin,
+            text="",
+            image=Login_headerText_image_left,
+            bg_color="#272A37"
+            #bg="#272A37"
+        )
+        Login_headerText_image_label1.place(x=30, y=20)
 
-        # Abrir el archivo .ico
-        ico_imagen = Image.open(ruta_icono)
+        Login_headerText1 = Label(
+            bg_imagenLogin,
+            text="Biblioteca Virtual",
+            fg="#FFFFFF",
+            font=ck.CTkFont(size=26, weight="bold", family="Segoe UI Historic"),
+            bg="#272A37"
+        )
+        Login_headerText1.place(x=110, y=42)
 
-        # Obtener el tamaño de la ventana
-        ancho_ventana, alto_ventana = 700, 600
+        # ================ LOGIN TO ACCOUNT HEADER ====================
+        loginAccount_header = Label(
+            bg_imagenLogin,
+            text="Inicia Sesión para continuar",
+            fg="#FFFFFF",
+            font=ck.CTkFont(size=18, weight="bold", family="Segoe UI Historic"),
+            bg="#272A37"
+        )
+        loginAccount_header.place(x=75, y=121)
 
-        # Escalar la imagen con el algoritmo LANCZOS para mejorar la calidad
-        imagen_escalada = ico_imagen.resize((ancho_ventana, alto_ventana), Image.LANCZOS)
+        # ================ NO ESTA REGISTRADO? ====================
+        self.login_label = Label(
+            bg_imagenLogin,
+            text="¿No estás registrado?",
+            fg="#FFFFFF",
+            font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"),
+            bg="#272A37"
+        )
+        self.login_label.place(x=75, y=187)
 
-        # Crear el PhotoImage utilizando la imagen escalada
-        imagen_fondo = ImageTk.PhotoImage(imagen_escalada)
+        # ================ REGISTRARSE ====================
+        self.registrarse_button = Button(
+            bg_imagenLogin,
+            text="Registrarse",
+            fg="#206DB4",
+            font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"),
+            bg="#272A37",
+            bd=0,
+            cursor="hand2",
+            activebackground="#272A37",
+            activeforeground="#ffffff",
+            command=lambda: self.abrir_ventana_registro()
+        )
+        self.registrarse_button.place(x=260, y=185, width=85, height=35)
 
-        # Crear etiqueta para la imagen de fondo
-        fondo = ck.CTkLabel(master=self.root, image=imagen_fondo)
-        fondo.pack()
+        # ================ Sección Email ====================
+        Login_rut_imagen = ck.CTkImage(Image.open("img\\email.png"), size=(400, 50))
+        Login_rut_imagen_Label = ck.CTkLabel(
+            bg_imagenLogin,
+            image=Login_rut_imagen,
+            bg_color="#272A37",
+            text=""
+        )
+        Login_rut_imagen_Label.place(x=76, y=242)
 
-        frame=ck.CTkFrame(master=fondo, width=320, height=360, corner_radius=15)
-        frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        Login_emailName_text = Label(
+            Login_rut_imagen_Label,
+            text="Email account: ",
+            fg="white",
+            font=ck.CTkFont(size=13, weight="bold", family="Segoe UI Historic"),
+            bg="#3D404B"
+        )
+        Login_emailName_text.place(x=25, y=0)
 
-        label_log = ck.CTkLabel(master=frame, text="Iniciar Sesión", font=ck.CTkFont(size=30, weight="bold", family="Segoe UI Historic"))
-        label_log.place(x=60, y=40)
+        Login_emailName_icon = PhotoImage(file="img\\email-icon.png")
+        Login_emailName_icon_Label = Label(
+            Login_rut_imagen_Label,
+            image=Login_emailName_icon,
+            bg="#3D404B"
+        )
+        Login_emailName_icon_Label.place(x=370, y=15)
 
-        self.correo = ck.CTkEntry(master=frame, placeholder_text='Correo electrónico', width=220, height=40, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
-        self.correo.place(x=50, y=80)
+        self.correo = Entry(
+            Login_rut_imagen_Label,
+            bd=0,
+            bg="#3D404B",
+            fg="white",
+            highlightthickness=0,
+            font=ck.CTkFont(size=16, weight="bold", family="Segoe UI Historic"),
+        )
+        self.correo.place(x=8, y=17, width=354, height=27)
 
-        self.contraseña = tk.StringVar()
-        self.contraseña_entry = ck.CTkEntry(master=frame, placeholder_text='Contraseña', width=220, height=40, show="*", font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
-        self.contraseña_entry.place(x=50, y=130)
+        # ================ Sección Contraseña ====================
+        Login_passwordName_image = ck.CTkImage(Image.open("img\\email.png"), size=(400, 50))
+        Login_passwordName_image_Label = ck.CTkLabel(
+            bg_imagenLogin,
+            image=Login_passwordName_image,
+            bg_color="#272A37",
+            text=""
+        )
+        Login_passwordName_image_Label.place(x=80, y=330)
+
+        Login_passwordName_text = Label(
+            Login_passwordName_image_Label,
+            text="Contraseña",
+            fg="#FFFFFF",
+            font=ck.CTkFont(size=13, weight="bold", family="Segoe UI Historic"),
+            bg="#3D404B"
+        )
+        Login_passwordName_text.place(x=25, y=0)
+
+        Login_passwordName_icon = PhotoImage(file="img\\pass-icon.png")
+        Login_passwordName_icon_Label = Label(
+            Login_passwordName_image_Label,
+            image=Login_passwordName_icon,
+            bg="#3D404B"
+        )
+        Login_passwordName_icon_Label.place(x=370, y=15)
+
+        self.contraseña_entry = Entry(
+            Login_passwordName_image_Label,
+            bd=0,
+            bg="#3D404B",
+            highlightthickness=0,
+            font=ck.CTkFont(size=16, weight="bold", family="Segoe UI Historic"),
+            fg="white"
+        )
+        self.contraseña_entry.place(x=8, y=17, width=354, height=27)
         self.contraseña_entry.bind("<Return>", self.login)
 
         # Checkbox para mostrar/ocultar la contraseña
         self.mostrar_contraseña = tk.BooleanVar()
-        self.checkbox_mostrar_contraseña = ck.CTkCheckBox(master=frame, text="Mostrar contraseña", variable=self.mostrar_contraseña, command=self.mostrarContraseña, font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"))
-        self.checkbox_mostrar_contraseña.place(x=30, y=180)
+        self.checkbox_mostrar_contraseña = ck.CTkCheckBox(master=self, 
+            text="Mostrar contraseña", 
+            variable=self.mostrar_contraseña, 
+            command=self.mostrarContraseña, 
+            font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"),
+            bg_color="#272A37"
+        )
+        self.checkbox_mostrar_contraseña.place(x=610, y=370)
 
-        iniciar_sesion_photo = ck.CTkImage(Image.open("img\\iniciar_sesion.ico"), size=(25, 25))
-        self.button_login = ck.CTkButton(master=frame, text="Iniciar sesión", command=self.login, image=iniciar_sesion_photo, font=ck.CTkFont(size=18, weight="bold", family="Segoe UI Historic"))
-        self.button_login.place(x=80, y=220)
+        # =============== INICIAR SESIÓN BUTTON ====================
+        self.login_button = ck.CTkButton(
+            bg_imagenLogin,
+            text="Iniciar Sesión",
+            font=ck.CTkFont(size=25, weight="bold", family="Segoe UI Historic"),
+            width=350, 
+            height=65,
+            corner_radius=15,
+            command=lambda: self.login()
+        )
+        self.login_button.place(x=100, y=445)
 
-        registrarse_photo = ck.CTkImage(Image.open("img\\registrarse.ico"), size=(25, 25))
-        self.button_registrar = ck.CTkButton(master=frame, text="Registrarse", command=self.abrir_ventana_registro, image=registrarse_photo, font=ck.CTkFont(size=18, weight="bold", family="Segoe UI Historic"))
-        self.button_registrar.place(x=86, y=270)
+        # ================ Desarrolladores ====================
+        desarrolladores_image = ck.CTkImage(Image.open("img\\headerText_image.png"), size=(30, 30))
+        desarrolladores_image_label = ck.CTkLabel(
+            bg_imagenLogin,
+            image=desarrolladores_image,
+            bg_color="#272A37",
+            text=""
+        )
+        desarrolladores_image_label.place(x=660, y=535)
 
-        self.button_olvido_contraseña = ck.CTkButton(master=frame, text="¿Olvidó su contraseña?", font=ck.CTkFont(size=18, weight="bold", family="Segoe UI Historic"), command=self.abrir_ventana_recuperar_contraseña)
-        self.button_olvido_contraseña.place(x=48, y=320)
+        desarrolladores_label = Label(
+            bg_imagenLogin,
+            text="Desarrollado por Aesir",
+            fg="#FFFFFF",
+            font=ck.CTkFont(size=20, weight="bold", family="Segoe UI Historic"),
+            bg="#272A37"
+        )
+        desarrolladores_label.place(x=700, y=530)
 
-    def login(self, event=None):
-        correo = self.correo.get()
-        contraseña = self.contraseña_entry.get()
+        # ================ Olvido su contraseña? ====================
+        self.recuperar_contraseña_button = Button(
+            bg_imagenLogin,
+            text="¿Olvidaste tu contraseña?",
+            fg="#206DB4",
+            font=ck.CTkFont(size=15, weight="bold", family="Segoe UI Historic"),
+            bg="#272A37",
+            bd=0,
+            activebackground="#272A37",
+            activeforeground="#ffffff",
+            cursor="hand2",
+            command=lambda: self.abrir_ventana_recuperar_contraseña(),
+        )
+        self.recuperar_contraseña_button.place(x=190, y=400, width=190, height=35)
 
-        if not correo:
-            messagebox.showerror("Error de inicio de sesión", "Debe ingresar un correo.")
-            return
-
-        # Verifica si el correo existe en la base de datos
-        if self.bd.login(correo, contraseña):
-            self.root.withdraw()
-            ventana_principal = VentanaPrincipal(self.root, correo)
-            self.root.wait_window(ventana_principal)
-            self.limparCampos()
-
-    def mostrarContraseña(self):
-        if self.mostrar_contraseña.get():
-            self.contraseña_entry.configure(show="")
-        else:
-            self.contraseña_entry.configure(show="*")
-
-    def abrir_ventana_registro(self):
-        self.root.withdraw()
-        ventana_registro = VentanaRegistro(self.root)
-        self.root.wait_window(ventana_registro)
-
-    def abrir_ventana_recuperar_contraseña(self):
-        self.root.withdraw()
-        ventana_recuperar_contraseña = VentanaRecuperarContraseña(self.root)
-        self.root.wait_window(ventana_recuperar_contraseña)
-
-    def limparCampos(self):
-        self.correo.delete(0, 'end')
-        self.contraseña_entry.delete(0, 'end')
+        # ================ VERSIÓN ====================
+        version_label = Label(
+            bg_imagenLogin,
+            text="Versión 1.0.0",
+            fg="#FFFFFF",
+            font=ck.CTkFont(size=12, weight="bold", family="Segoe UI Historic"),
+            bg="#272A37"
+        )
+        version_label.place(x=15, y=572)
         
 # Ventana principal de la aplicación
 class VentanaPrincipal(ck.CTkToplevel):
